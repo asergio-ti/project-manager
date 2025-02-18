@@ -1,0 +1,901 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Data Schema",
+  "description": "Schema para o módulo de dados do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["data"],
+  "properties": {
+    "data": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "modelo", "persistência", "distribuição", "integração", "qualidade", "segurança", "governança"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "modelo": {
+          "type": "object",
+          "required": ["entidades", "relacionamentos", "atributos", "restrições"],
+          "properties": {
+            "entidades": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "descrição", "atributos", "relacionamentos"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^ENT-\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "atributos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "tipo", "descrição", "obrigatório", "validação"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        },
+                        "obrigatório": {
+                          "type": "boolean"
+                        },
+                        "validação": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["regra", "mensagem"],
+                            "properties": {
+                              "regra": {
+                                "type": "string"
+                              },
+                              "mensagem": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "relacionamentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["entidade", "tipo", "cardinalidade", "descrição"],
+                      "properties": {
+                        "entidade": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string",
+                          "enum": ["1:1", "1:N", "N:1", "N:M"]
+                        },
+                        "cardinalidade": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "relacionamentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "entidades", "tipo", "atributos"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^REL-\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "entidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "minItems": 2
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["associação", "agregação", "composição", "herança"]
+                  },
+                  "atributos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "tipo", "descrição"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "atributos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tipo", "domínio", "validação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "domínio": {
+                    "type": "object",
+                    "required": ["tipo", "valores", "restrições"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "valores": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "restrições": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "validação": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["regra", "mensagem"],
+                      "properties": {
+                        "regra": {
+                          "type": "string"
+                        },
+                        "mensagem": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "restrições": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "entidades", "validação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["chave", "unicidade", "referencial", "check"]
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "entidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "validação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "persistência": {
+          "type": "object",
+          "required": ["bancos", "armazenamento", "cache", "backup"],
+          "properties": {
+            "bancos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "tipo", "versão", "configuração"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^DB-\\d+$"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object",
+                    "required": ["conexão", "pool", "timeout"],
+                    "properties": {
+                      "conexão": {
+                        "type": "object"
+                      },
+                      "pool": {
+                        "type": "object"
+                      },
+                      "timeout": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "armazenamento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "configuração", "retenção", "backup"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  },
+                  "retenção": {
+                    "type": "object"
+                  },
+                  "backup": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "cache": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "política", "configuração", "invalidação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "política": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  },
+                  "invalidação": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "backup": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "frequência", "retenção", "restauração"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "retenção": {
+                    "type": "string"
+                  },
+                  "restauração": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "distribuição": {
+          "type": "object",
+          "required": ["estratégia", "particionamento", "replicação", "sincronização"],
+          "properties": {
+            "estratégia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "implementação", "configuração"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "particionamento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "chave", "estratégia", "distribuição"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "chave": {
+                    "type": "string"
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  },
+                  "distribuição": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "replicação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "modo", "consistência", "sincronização"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "modo": {
+                    "type": "string"
+                  },
+                  "consistência": {
+                    "type": "string"
+                  },
+                  "sincronização": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "sincronização": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "estratégia", "conflitos", "resolução"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  },
+                  "conflitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "resolução": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "integração": {
+          "type": "object",
+          "required": ["fontes", "transformação", "carregamento", "qualidade"],
+          "properties": {
+            "fontes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "tipo", "conexão", "extração"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^SRC-\\d+$"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "conexão": {
+                    "type": "object"
+                  },
+                  "extração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "transformação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "regras", "mapeamento", "validação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "mapeamento": {
+                    "type": "object"
+                  },
+                  "validação": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "carregamento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "destino", "estratégia", "validação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "destino": {
+                    "type": "object"
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  },
+                  "validação": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "qualidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["dimensão", "métricas", "regras", "ações"],
+                "properties": {
+                  "dimensão": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ações": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["métricas", "validação", "monitoramento", "governança"],
+          "properties": {
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "cálculo", "limites"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "cálculo": {
+                    "type": "string"
+                  },
+                  "limites": {
+                    "type": "object",
+                    "required": ["mínimo", "alvo", "máximo"],
+                    "properties": {
+                      "mínimo": {
+                        "type": "number"
+                      },
+                      "alvo": {
+                        "type": "number"
+                      },
+                      "máximo": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "validação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "regras", "ações", "relatórios"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ações": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "relatórios": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "monitoramento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "métricas", "alertas", "ações"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "alertas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "ações": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "governança": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["aspecto", "políticas", "processos", "responsáveis"],
+                "properties": {
+                  "aspecto": {
+                    "type": "string"
+                  },
+                  "políticas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "processos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "responsáveis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "segurança": {
+          "type": "object",
+          "required": ["classificação", "criptografia", "acesso", "auditoria"],
+          "properties": {
+            "classificação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nível", "critérios", "controles", "tratamento"],
+                "properties": {
+                  "nível": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "controles": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "tratamento": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "criptografia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "algoritmo", "chaves", "processos"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "algoritmo": {
+                    "type": "string"
+                  },
+                  "chaves": {
+                    "type": "object"
+                  },
+                  "processos": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "acesso": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nível", "perfis", "permissões", "políticas"],
+                "properties": {
+                  "nível": {
+                    "type": "string"
+                  },
+                  "perfis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "permissões": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "políticas": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "auditoria": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "eventos", "armazenamento", "análise"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "eventos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "armazenamento": {
+                    "type": "object"
+                  },
+                  "análise": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "governança": {
+          "type": "object",
+          "required": ["políticas", "processos", "papéis", "métricas"],
+          "properties": {
+            "políticas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "regras", "conformidade"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "conformidade": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "processos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "etapas", "responsáveis", "artefatos"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "etapas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "responsáveis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "artefatos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "papéis": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["título", "responsabilidades", "habilidades", "níveis"],
+                "properties": {
+                  "título": {
+                    "type": "string"
+                  },
+                  "responsabilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "habilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "níveis": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "coleta", "análise"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "coleta": {
+                    "type": "object"
+                  },
+                  "análise": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

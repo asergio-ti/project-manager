@@ -1,0 +1,301 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Product Roadmap Schema",
+  "description": "Schema para documento de roadmap do produto",
+  "type": "object",
+  "required": ["productRoadmap"],
+  "properties": {
+    "productRoadmap": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visão", "objetivos", "releases", "épicos", "features", "dependências"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "visão": {
+          "type": "object",
+          "required": ["curto", "médio", "longo"],
+          "properties": {
+            "curto": {
+              "type": "object",
+              "required": ["descrição", "objetivos", "prazo"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "objetivos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "prazo": {
+                  "type": "string"
+                }
+              }
+            },
+            "médio": {
+              "type": "object",
+              "required": ["descrição", "objetivos", "prazo"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "objetivos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "prazo": {
+                  "type": "string"
+                }
+              }
+            },
+            "longo": {
+              "type": "object",
+              "required": ["descrição", "objetivos", "prazo"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "objetivos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "prazo": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "objetivos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "descrição", "tipo", "métricas", "prioridade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^OBJ-\\d+$"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["negócio", "produto", "tecnologia"]
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "atual", "alvo", "prazo"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "atual": {
+                      "type": "number"
+                    },
+                    "alvo": {
+                      "type": "number"
+                    },
+                    "prazo": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta"]
+              }
+            }
+          }
+        },
+        "releases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "nome", "descrição", "data", "escopo", "status"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "escopo": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^(EPIC|FEAT)-\\d+$"
+                }
+              },
+              "status": {
+                "type": "string",
+                "enum": ["planejada", "em_desenvolvimento", "concluída"]
+              }
+            }
+          }
+        },
+        "épicos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "título", "descrição", "objetivoId", "features", "prioridade", "esforço", "status"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^EPIC-\\d+$"
+              },
+              "título": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "objetivoId": {
+                "type": "string",
+                "pattern": "^OBJ-\\d+$"
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^FEAT-\\d+$"
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta"]
+              },
+              "esforço": {
+                "type": "string",
+                "enum": ["baixo", "médio", "alto"]
+              },
+              "status": {
+                "type": "string",
+                "enum": ["backlog", "planejado", "em_desenvolvimento", "concluído"]
+              }
+            }
+          }
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "título", "descrição", "épicoId", "critériosAceitação", "prioridade", "esforço", "status"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^FEAT-\\d+$"
+              },
+              "título": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "épicoId": {
+                "type": "string",
+                "pattern": "^EPIC-\\d+$"
+              },
+              "critériosAceitação": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta"]
+              },
+              "esforço": {
+                "type": "string",
+                "enum": ["baixo", "médio", "alto"]
+              },
+              "status": {
+                "type": "string",
+                "enum": ["backlog", "planejada", "em_desenvolvimento", "concluída"]
+              }
+            }
+          }
+        },
+        "dependências": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "origem", "destino", "descrição", "impacto"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^DEP-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["bloqueia", "influencia", "relacionada"]
+              },
+              "origem": {
+                "type": "string",
+                "pattern": "^(EPIC|FEAT)-\\d+$"
+              },
+              "destino": {
+                "type": "string",
+                "pattern": "^(EPIC|FEAT)-\\d+$"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "string",
+                "enum": ["baixo", "médio", "alto"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

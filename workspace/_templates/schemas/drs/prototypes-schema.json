@@ -1,0 +1,213 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DRS Prototypes Schema",
+  "description": "Schema para definição e organização dos protótipos funcionais do projeto",
+  "type": "object",
+  "required": ["prototypes"],
+  "properties": {
+    "prototypes": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "structure", "components"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "structure": {
+          "type": "object",
+          "required": ["baseDir", "directories"],
+          "properties": {
+            "baseDir": {
+              "type": "string",
+              "default": "prototypes/",
+              "description": "Diretório base para os protótipos"
+            },
+            "directories": {
+              "type": "object",
+              "required": ["components", "pages", "layouts", "styles"],
+              "properties": {
+                "components": {
+                  "type": "object",
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "default": "components/"
+                    },
+                    "description": {
+                      "type": "string",
+                      "default": "Componentes TSX reutilizáveis"
+                    }
+                  }
+                },
+                "pages": {
+                  "type": "object",
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "default": "pages/"
+                    },
+                    "description": {
+                      "type": "string",
+                      "default": "Protótipos de páginas"
+                    }
+                  }
+                },
+                "layouts": {
+                  "type": "object",
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "default": "layouts/"
+                    },
+                    "description": {
+                      "type": "string",
+                      "default": "Layouts base do sistema"
+                    }
+                  }
+                },
+                "styles": {
+                  "type": "object",
+                  "required": ["path", "description"],
+                  "properties": {
+                    "path": {
+                      "type": "string",
+                      "default": "styles/"
+                    },
+                    "description": {
+                      "type": "string",
+                      "default": "Estilos e temas"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "type", "path", "requirements"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^PROTO-\\d+$",
+                "description": "Identificador único do protótipo"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome do componente"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["component", "page", "layout"],
+                "description": "Tipo do protótipo"
+              },
+              "path": {
+                "type": "string",
+                "description": "Caminho relativo ao baseDir"
+              },
+              "requirements": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "IDs dos requisitos relacionados"
+                }
+              },
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "description": "IDs de outros protótipos necessários"
+                }
+              },
+              "documentation": {
+                "type": "object",
+                "required": ["description", "props", "examples"],
+                "properties": {
+                  "description": {
+                    "type": "string"
+                  },
+                  "props": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["name", "type", "description"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "required": {
+                          "type": "boolean",
+                          "default": false
+                        }
+                      }
+                    }
+                  },
+                  "examples": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["name", "code"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

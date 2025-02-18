@@ -1,0 +1,681 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Performance Schema",
+  "description": "Schema para o módulo de performance do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["performance"],
+  "properties": {
+    "performance": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "objetivos", "métricas", "testes", "monitoramento", "otimização", "capacidade", "recursos"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "objetivos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "critérios", "prioridade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^PERF-O\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["Alta", "Média", "Baixa"]
+              }
+            }
+          }
+        },
+        "métricas": {
+          "type": "object",
+          "required": ["tempoResposta", "throughput", "latência", "utilização"],
+          "properties": {
+            "tempoResposta": {
+              "type": "object",
+              "required": ["médio", "p90", "p95", "p99", "máximo"],
+              "properties": {
+                "médio": {
+                  "type": "string"
+                },
+                "p90": {
+                  "type": "string"
+                },
+                "p95": {
+                  "type": "string"
+                },
+                "p99": {
+                  "type": "string"
+                },
+                "máximo": {
+                  "type": "string"
+                }
+              }
+            },
+            "throughput": {
+              "type": "object",
+              "required": ["médio", "pico", "sustentável"],
+              "properties": {
+                "médio": {
+                  "type": "string"
+                },
+                "pico": {
+                  "type": "string"
+                },
+                "sustentável": {
+                  "type": "string"
+                }
+              }
+            },
+            "latência": {
+              "type": "object",
+              "required": ["rede", "processamento", "banco", "cache"],
+              "properties": {
+                "rede": {
+                  "type": "string"
+                },
+                "processamento": {
+                  "type": "string"
+                },
+                "banco": {
+                  "type": "string"
+                },
+                "cache": {
+                  "type": "string"
+                }
+              }
+            },
+            "utilização": {
+              "type": "object",
+              "required": ["cpu", "memória", "disco", "rede"],
+              "properties": {
+                "cpu": {
+                  "type": "string"
+                },
+                "memória": {
+                  "type": "string"
+                },
+                "disco": {
+                  "type": "string"
+                },
+                "rede": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "testes": {
+          "type": "object",
+          "required": ["carga", "stress", "escalabilidade", "resistência"],
+          "properties": {
+            "carga": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "usuários", "duração", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "usuários": {
+                    "type": "string"
+                  },
+                  "duração": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "stress": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "carga", "duração", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "carga": {
+                    "type": "string"
+                  },
+                  "duração": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "escalabilidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "etapas", "métricas", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "etapas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "resistência": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "duração", "condições", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "duração": {
+                    "type": "string"
+                  },
+                  "condições": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "monitoramento": {
+          "type": "object",
+          "required": ["ferramentas", "métricas", "alertas", "dashboards"],
+          "properties": {
+            "ferramentas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "propósito", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "fonte", "frequência", "retenção"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "retenção": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "alertas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["condição", "severidade", "ação", "notificação"],
+                "properties": {
+                  "condição": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["Info", "Warning", "Error", "Critical"]
+                  },
+                  "ação": {
+                    "type": "string"
+                  },
+                  "notificação": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "dashboards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "métricas", "atualização"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "atualização": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "otimização": {
+          "type": "object",
+          "required": ["estratégias", "técnicas", "ferramentas", "resultados"],
+          "properties": {
+            "estratégias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "benefícios", "custos"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "benefícios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "custos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "técnicas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "aplicação", "impacto"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "aplicação": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "ferramentas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "propósito", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "resultados": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["métrica", "antes", "depois", "impacto"],
+                "properties": {
+                  "métrica": {
+                    "type": "string"
+                  },
+                  "antes": {
+                    "type": "string"
+                  },
+                  "depois": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "capacidade": {
+          "type": "object",
+          "required": ["atual", "planejada", "limites", "crescimento"],
+          "properties": {
+            "atual": {
+              "type": "object",
+              "required": ["usuários", "transações", "dados", "recursos"],
+              "properties": {
+                "usuários": {
+                  "type": "string"
+                },
+                "transações": {
+                  "type": "string"
+                },
+                "dados": {
+                  "type": "string"
+                },
+                "recursos": {
+                  "type": "string"
+                }
+              }
+            },
+            "planejada": {
+              "type": "object",
+              "required": ["usuários", "transações", "dados", "recursos"],
+              "properties": {
+                "usuários": {
+                  "type": "string"
+                },
+                "transações": {
+                  "type": "string"
+                },
+                "dados": {
+                  "type": "string"
+                },
+                "recursos": {
+                  "type": "string"
+                }
+              }
+            },
+            "limites": {
+              "type": "object",
+              "required": ["técnicos", "negócio", "custos"],
+              "properties": {
+                "técnicos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "negócio": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "custos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "crescimento": {
+              "type": "object",
+              "required": ["projeções", "gatilhos", "ações"],
+              "properties": {
+                "projeções": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "gatilhos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ações": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "recursos": {
+          "type": "object",
+          "required": ["computação", "armazenamento", "rede", "serviços"],
+          "properties": {
+            "computação": {
+              "type": "object",
+              "required": ["cpu", "memória", "instâncias"],
+              "properties": {
+                "cpu": {
+                  "type": "object",
+                  "required": ["tipo", "quantidade", "utilização"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "quantidade": {
+                      "type": "string"
+                    },
+                    "utilização": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "memória": {
+                  "type": "object",
+                  "required": ["tipo", "quantidade", "utilização"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "quantidade": {
+                      "type": "string"
+                    },
+                    "utilização": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "instâncias": {
+                  "type": "object",
+                  "required": ["tipo", "quantidade", "distribuição"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "quantidade": {
+                      "type": "string"
+                    },
+                    "distribuição": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "armazenamento": {
+              "type": "object",
+              "required": ["tipo", "capacidade", "iops", "latência"],
+              "properties": {
+                "tipo": {
+                  "type": "string"
+                },
+                "capacidade": {
+                  "type": "string"
+                },
+                "iops": {
+                  "type": "string"
+                },
+                "latência": {
+                  "type": "string"
+                }
+              }
+            },
+            "rede": {
+              "type": "object",
+              "required": ["bandwidth", "latência", "throughput", "conexões"],
+              "properties": {
+                "bandwidth": {
+                  "type": "string"
+                },
+                "latência": {
+                  "type": "string"
+                },
+                "throughput": {
+                  "type": "string"
+                },
+                "conexões": {
+                  "type": "string"
+                }
+              }
+            },
+            "serviços": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tipo", "recursos", "limites"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "recursos": {
+                    "type": "object"
+                  },
+                  "limites": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "performanceRequirements": {
+      "deviceCompatibility": ["// Lista de dispositivos mencionados"],
+      "responseTimeTargets": "// Tempo de resposta mencionado"
+    }
+  }
+} 

@@ -1,0 +1,397 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Document Control Schema",
+  "description": "Schema para documento de controle",
+  "type": "object",
+  "required": ["documentControl"],
+  "properties": {
+    "documentControl": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "informaçõesGerais", "históricoRevisões", "aprovações", "distribuição", "referências", "glossário"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "informaçõesGerais": {
+          "type": "object",
+          "required": ["título", "código", "tipo", "classificação", "proprietário", "localização"],
+          "properties": {
+            "título": {
+              "type": "string"
+            },
+            "código": {
+              "type": "string",
+              "pattern": "^DOC-\\d{4}-\\d{2}$"
+            },
+            "tipo": {
+              "type": "string",
+              "enum": ["especificação", "manual", "procedimento", "política", "relatório"]
+            },
+            "classificação": {
+              "type": "string",
+              "enum": ["público", "interno", "confidencial", "restrito"]
+            },
+            "proprietário": {
+              "type": "object",
+              "required": ["nome", "departamento", "contato"],
+              "properties": {
+                "nome": {
+                  "type": "string"
+                },
+                "departamento": {
+                  "type": "string"
+                },
+                "contato": {
+                  "type": "string",
+                  "pattern": "^[\\w\\.]+@[\\w\\.]+$"
+                }
+              }
+            },
+            "localização": {
+              "type": "object",
+              "required": ["física", "digital"],
+              "properties": {
+                "física": {
+                  "type": "string"
+                },
+                "digital": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "uri"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "históricoRevisões": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "autor", "descrição", "mudanças", "revisores"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "autor": {
+                "type": "string",
+                "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "mudanças": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "seção", "descrição"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["adição", "remoção", "modificação", "correção"]
+                    },
+                    "seção": {
+                      "type": "string"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "revisores": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+                }
+              }
+            }
+          }
+        },
+        "aprovações": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "aprovador", "papel", "status", "comentários"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "aprovador": {
+                "type": "string",
+                "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+              },
+              "papel": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["aprovado", "rejeitado", "pendente_ajustes"]
+              },
+              "comentários": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["data", "texto", "tipo"],
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "texto": {
+                      "type": "string"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["geral", "técnico", "editorial", "crítico"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "distribuição": {
+          "type": "object",
+          "required": ["lista", "controleAcesso", "notificações"],
+          "properties": {
+            "lista": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["destinatário", "papel", "formato", "versão", "dataEnvio", "confirmação"],
+                "properties": {
+                  "destinatário": {
+                    "type": "string",
+                    "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+                  },
+                  "papel": {
+                    "type": "string"
+                  },
+                  "formato": {
+                    "type": "string",
+                    "enum": ["digital", "impresso", "ambos"]
+                  },
+                  "versão": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  },
+                  "dataEnvio": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "confirmação": {
+                    "type": "object",
+                    "required": ["status", "data"],
+                    "properties": {
+                      "status": {
+                        "type": "string",
+                        "enum": ["pendente", "recebido", "lido", "não_entregue"]
+                      },
+                      "data": {
+                        "type": "string",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "controleAcesso": {
+              "type": "object",
+              "required": ["níveis", "grupos", "restrições"],
+              "properties": {
+                "níveis": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nível", "descrição", "permissões"],
+                    "properties": {
+                      "nível": {
+                        "type": "string"
+                      },
+                      "descrição": {
+                        "type": "string"
+                      },
+                      "permissões": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["leitura", "edição", "aprovação", "distribuição"]
+                        }
+                      }
+                    }
+                  }
+                },
+                "grupos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "membros", "nível"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "membros": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+                        }
+                      },
+                      "nível": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "restrições": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "descrição", "aplicação"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "enum": ["temporal", "geográfica", "organizacional"]
+                      },
+                      "descrição": {
+                        "type": "string"
+                      },
+                      "aplicação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "notificações": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "destinatários", "gatilho", "mensagem", "status"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["atualização", "revisão", "aprovação", "expiração"]
+                  },
+                  "destinatários": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+                    }
+                  },
+                  "gatilho": {
+                    "type": "string"
+                  },
+                  "mensagem": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["agendada", "enviada", "falha"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "referências": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "título", "autor", "data", "localização"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REF-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["documento", "artigo", "livro", "website", "norma"]
+              },
+              "título": {
+                "type": "string"
+              },
+              "autor": {
+                "type": "string"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "localização": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "glossário": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["termo", "definição", "contexto", "fonte"],
+            "properties": {
+              "termo": {
+                "type": "string"
+              },
+              "definição": {
+                "type": "string"
+              },
+              "contexto": {
+                "type": "string"
+              },
+              "fonte": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,816 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Standards Schema",
+  "description": "Schema para o módulo de padrões do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["standards"],
+  "properties": {
+    "standards": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "arquitetura", "desenvolvimento", "qualidade", "segurança", "documentação", "processos", "governança"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "arquitetura": {
+          "type": "object",
+          "required": ["estilos", "padrões", "decisões", "referências"],
+          "properties": {
+            "estilos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "aplicação", "benefícios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "aplicação": {
+                    "type": "string"
+                  },
+                  "benefícios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "padrões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "categoria", "descrição", "implementação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "categoria": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "decisões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "título", "contexto", "decisão"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^ADR-\\d+$"
+                  },
+                  "título": {
+                    "type": "string"
+                  },
+                  "contexto": {
+                    "type": "string"
+                  },
+                  "decisão": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "referências": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["título", "autor", "link", "relevância"],
+                "properties": {
+                  "título": {
+                    "type": "string"
+                  },
+                  "autor": {
+                    "type": "string"
+                  },
+                  "link": {
+                    "type": "string"
+                  },
+                  "relevância": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "desenvolvimento": {
+          "type": "object",
+          "required": ["código", "testes", "versionamento", "build"],
+          "properties": {
+            "código": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["linguagem", "convenções", "práticas", "ferramentas"],
+                "properties": {
+                  "linguagem": {
+                    "type": "string"
+                  },
+                  "convenções": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "práticas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ferramentas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "testes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "framework", "cobertura", "organização"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "framework": {
+                    "type": "string"
+                  },
+                  "cobertura": {
+                    "type": "string"
+                  },
+                  "organização": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "versionamento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ferramenta", "fluxo", "convenções", "políticas"],
+                "properties": {
+                  "ferramenta": {
+                    "type": "string"
+                  },
+                  "fluxo": {
+                    "type": "string"
+                  },
+                  "convenções": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "políticas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "build": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ferramenta", "etapas", "artefatos", "scripts"],
+                "properties": {
+                  "ferramenta": {
+                    "type": "string"
+                  },
+                  "etapas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "artefatos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "scripts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["métricas", "revisões", "testes", "automação"],
+          "properties": {
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["categoria", "nome", "descrição", "limites"],
+                "properties": {
+                  "categoria": {
+                    "type": "string"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "limites": {
+                    "type": "object",
+                    "required": ["mínimo", "alvo", "máximo"],
+                    "properties": {
+                      "mínimo": {
+                        "type": "string"
+                      },
+                      "alvo": {
+                        "type": "string"
+                      },
+                      "máximo": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "revisões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "participantes", "critérios", "processo"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "participantes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "processo": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "testes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "escopo", "ferramentas", "critérios"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "ferramentas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "automação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ferramenta", "configuração", "regras", "relatórios"],
+                "properties": {
+                  "ferramenta": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "relatórios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "segurança": {
+          "type": "object",
+          "required": ["autenticação", "autorização", "criptografia", "auditoria"],
+          "properties": {
+            "autenticação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["método", "requisitos", "implementação", "validação"],
+                "properties": {
+                  "método": {
+                    "type": "string"
+                  },
+                  "requisitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "validação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "autorização": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["modelo", "papéis", "permissões", "políticas"],
+                "properties": {
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "papéis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "permissões": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "políticas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "criptografia": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["algoritmo", "chaves", "certificados", "processos"],
+                "properties": {
+                  "algoritmo": {
+                    "type": "string"
+                  },
+                  "chaves": {
+                    "type": "object"
+                  },
+                  "certificados": {
+                    "type": "object"
+                  },
+                  "processos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "auditoria": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["eventos", "armazenamento", "retenção", "análise"],
+                "properties": {
+                  "eventos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "armazenamento": {
+                    "type": "string"
+                  },
+                  "retenção": {
+                    "type": "string"
+                  },
+                  "análise": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "documentação": {
+          "type": "object",
+          "required": ["arquitetura", "código", "apis", "processos"],
+          "properties": {
+            "arquitetura": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "template", "conteúdo", "ferramentas"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "template": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ferramentas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "código": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["escopo", "formato", "exemplos", "geração"],
+                "properties": {
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "formato": {
+                    "type": "string"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "geração": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "apis": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "formato", "conteúdo", "ferramentas"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "formato": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ferramentas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "processos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "formato", "audiência", "manutenção"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "formato": {
+                    "type": "string"
+                  },
+                  "audiência": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "manutenção": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "processos": {
+          "type": "object",
+          "required": ["desenvolvimento", "implantação", "manutenção", "suporte"],
+          "properties": {
+            "desenvolvimento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fase", "atividades", "papéis", "artefatos"],
+                "properties": {
+                  "fase": {
+                    "type": "string"
+                  },
+                  "atividades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "papéis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "artefatos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "implantação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ambiente", "etapas", "verificação", "rollback"],
+                "properties": {
+                  "ambiente": {
+                    "type": "string"
+                  },
+                  "etapas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "verificação": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "rollback": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "manutenção": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "priorização", "fluxo", "comunicação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "priorização": {
+                    "type": "string"
+                  },
+                  "fluxo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "comunicação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "suporte": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nível", "escopo", "sla", "procedimentos"],
+                "properties": {
+                  "nível": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "sla": {
+                    "type": "string"
+                  },
+                  "procedimentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "governança": {
+          "type": "object",
+          "required": ["papéis", "comitês", "políticas", "métricas"],
+          "properties": {
+            "papéis": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["título", "responsabilidades", "autoridade", "qualificações"],
+                "properties": {
+                  "título": {
+                    "type": "string"
+                  },
+                  "responsabilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "autoridade": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "qualificações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "comitês": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "membros", "responsabilidades", "reuniões"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "membros": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "responsabilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "reuniões": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "políticas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "escopo", "diretrizes", "conformidade"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "diretrizes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "conformidade": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["categoria", "indicador", "meta", "medição"],
+                "properties": {
+                  "categoria": {
+                    "type": "string"
+                  },
+                  "indicador": {
+                    "type": "string"
+                  },
+                  "meta": {
+                    "type": "string"
+                  },
+                  "medição": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

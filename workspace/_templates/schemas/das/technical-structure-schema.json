@@ -1,0 +1,585 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Technical Structure Schema",
+  "description": "Schema para estrutura técnica da arquitetura do sistema",
+  "type": "object",
+  "required": ["technicalStructure"],
+  "properties": {
+    "technicalStructure": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "camadas", "componentes", "interfaces", "dados", "implantação"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "camadas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["nome", "descrição", "responsabilidades", "componentes", "dependências"],
+            "properties": {
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "responsabilidades": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "componentes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "dependências": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "componentes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo", "descrição", "responsabilidades", "interfaces", "dependências", "tecnologias"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^COMP-\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["módulo", "serviço", "biblioteca", "framework", "banco-dados", "middleware"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "responsabilidades": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "interfaces": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "tipo", "descrição", "operações"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["api", "evento", "arquivo", "ui"]
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "operações": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["nome", "descrição", "parâmetros", "retorno"],
+                        "properties": {
+                          "nome": {
+                            "type": "string"
+                          },
+                          "descrição": {
+                            "type": "string"
+                          },
+                          "parâmetros": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": ["nome", "tipo", "descrição"],
+                              "properties": {
+                                "nome": {
+                                  "type": "string"
+                                },
+                                "tipo": {
+                                  "type": "string"
+                                },
+                                "descrição": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "retorno": {
+                            "type": "object",
+                            "required": ["tipo", "descrição"],
+                            "properties": {
+                              "tipo": {
+                                "type": "string"
+                              },
+                              "descrição": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "dependências": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["componenteId", "tipo", "descrição"],
+                  "properties": {
+                    "componenteId": {
+                      "type": "string",
+                      "pattern": "^COMP-\\d+$"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["usa", "estende", "implementa", "comunica"]
+                    },
+                    "descrição": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "tecnologias": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "versão", "propósito"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "versão": {
+                      "type": "string"
+                    },
+                    "propósito": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "interfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo", "descrição", "contratos"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^IF-\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["api", "evento", "arquivo", "ui"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "contratos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["versão", "formato", "operações", "exemplos"],
+                  "properties": {
+                    "versão": {
+                      "type": "string"
+                    },
+                    "formato": {
+                      "type": "string",
+                      "enum": ["json", "xml", "binário", "texto"]
+                    },
+                    "operações": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["nome", "método", "entrada", "saída", "erros"],
+                        "properties": {
+                          "nome": {
+                            "type": "string"
+                          },
+                          "método": {
+                            "type": "string"
+                          },
+                          "entrada": {
+                            "type": "object"
+                          },
+                          "saída": {
+                            "type": "object"
+                          },
+                          "erros": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "required": ["código", "descrição", "ação"],
+                              "properties": {
+                                "código": {
+                                  "type": "string"
+                                },
+                                "descrição": {
+                                  "type": "string"
+                                },
+                                "ação": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "exemplos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["descrição", "request", "response"],
+                        "properties": {
+                          "descrição": {
+                            "type": "string"
+                          },
+                          "request": {
+                            "type": "object"
+                          },
+                          "response": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dados": {
+          "type": "object",
+          "required": ["modelos", "persistência", "integrações"],
+          "properties": {
+            "modelos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "atributos", "relacionamentos"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "atributos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "tipo", "descrição", "restrições"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        },
+                        "restrições": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "relacionamentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "destino", "cardinalidade", "descrição"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "enum": ["um-para-um", "um-para-muitos", "muitos-para-muitos"]
+                        },
+                        "destino": {
+                          "type": "string"
+                        },
+                        "cardinalidade": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "persistência": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "tecnologia", "configuração", "modelos"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["relacional", "documento", "chave-valor", "grafo"]
+                  },
+                  "tecnologia": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  },
+                  "modelos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "integrações": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["origem", "destino", "tipo", "formato", "frequência"],
+                "properties": {
+                  "origem": {
+                    "type": "string"
+                  },
+                  "destino": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["sincrona", "assincrona", "batch"]
+                  },
+                  "formato": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "implantação": {
+          "type": "object",
+          "required": ["ambientes", "componentes", "infraestrutura", "processos"],
+          "properties": {
+            "ambientes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "propósito", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "componentes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "ambiente", "recursos", "configuração"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^COMP-\\d+$"
+                  },
+                  "ambiente": {
+                    "type": "string"
+                  },
+                  "recursos": {
+                    "type": "object",
+                    "required": ["cpu", "memória", "disco"],
+                    "properties": {
+                      "cpu": {
+                        "type": "string"
+                      },
+                      "memória": {
+                        "type": "string"
+                      },
+                      "disco": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "configuração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "infraestrutura": {
+              "type": "object",
+              "required": ["rede", "segurança", "monitoramento"],
+              "properties": {
+                "rede": {
+                  "type": "object",
+                  "required": ["topologia", "endereços", "protocolos"],
+                  "properties": {
+                    "topologia": {
+                      "type": "string"
+                    },
+                    "endereços": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "protocolos": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "segurança": {
+                  "type": "object",
+                  "required": ["acessos", "certificados", "firewalls"],
+                  "properties": {
+                    "acessos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "certificados": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "firewalls": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                },
+                "monitoramento": {
+                  "type": "object",
+                  "required": ["métricas", "logs", "alertas"],
+                  "properties": {
+                    "métricas": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "logs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    },
+                    "alertas": {
+                      "type": "array",
+                      "items": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "processos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "passos", "responsáveis"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "passos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "responsáveis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

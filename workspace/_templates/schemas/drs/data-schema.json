@@ -1,0 +1,397 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Data Requirements Schema",
+  "description": "Schema para documentação de requisitos de dados seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["dataRequirements"],
+  "properties": {
+    "dataRequirements": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visãoGeral", "estruturas", "fluxos", "persistência", "qualidade"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "visãoGeral": {
+          "type": "object",
+          "required": ["description", "diagram"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Visão geral dos requisitos de dados"
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"],
+                  "description": "Tipo do diagrama"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Conteúdo do diagrama em formato Mermaid"
+                },
+                "viewpoint": {
+                  "type": "string",
+                  "description": "Ponto de vista do diagrama"
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Justificativa do diagrama"
+                }
+              }
+            }
+          }
+        },
+        "estruturas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "atributos", "relacionamentos", "restrições"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^DATA-\\d+$",
+                "description": "Identificador único da estrutura de dados"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da estrutura de dados"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição detalhada da estrutura"
+              },
+              "atributos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "tipo", "descrição", "obrigatório"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do atributo"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo de dado do atributo"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do atributo"
+                    },
+                    "obrigatório": {
+                      "type": "boolean",
+                      "description": "Indica se o atributo é obrigatório"
+                    },
+                    "validações": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Regras de validação do atributo"
+                    }
+                  }
+                }
+              },
+              "relacionamentos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "destino", "cardinalidade", "descrição"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["oneToOne", "oneToMany", "manyToOne", "manyToMany"],
+                      "description": "Tipo do relacionamento"
+                    },
+                    "destino": {
+                      "type": "string",
+                      "pattern": "^DATA-\\d+$",
+                      "description": "ID da estrutura de destino"
+                    },
+                    "cardinalidade": {
+                      "type": "string",
+                      "description": "Cardinalidade do relacionamento"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do relacionamento"
+                    }
+                  }
+                }
+              },
+              "restrições": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição", "regra"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["integridade", "domínio", "negócio"],
+                      "description": "Tipo da restrição"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da restrição"
+                    },
+                    "regra": {
+                      "type": "string",
+                      "description": "Regra de validação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fluxos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "origem", "destino", "operações"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^FLOW-\\d+$",
+                "description": "Identificador único do fluxo"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome do fluxo de dados"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do fluxo"
+              },
+              "origem": {
+                "type": "string",
+                "pattern": "^(DATA|COMP)-\\d+$",
+                "description": "ID da origem dos dados"
+              },
+              "destino": {
+                "type": "string",
+                "pattern": "^(DATA|COMP)-\\d+$",
+                "description": "ID do destino dos dados"
+              },
+              "operações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição", "dados"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["create", "read", "update", "delete"],
+                      "description": "Tipo da operação"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da operação"
+                    },
+                    "dados": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "^DATA-\\d+$"
+                      },
+                      "description": "IDs das estruturas de dados envolvidas"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "persistência": {
+          "type": "object",
+          "required": ["estratégias", "armazenamento", "backup", "retenção"],
+          "properties": {
+            "estratégias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "estruturas"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["relacional", "documental", "cache", "arquivo"],
+                    "description": "Tipo de persistência"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição da estratégia"
+                  },
+                  "estruturas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^DATA-\\d+$"
+                    },
+                    "description": "IDs das estruturas que usam esta estratégia"
+                  }
+                }
+              }
+            },
+            "armazenamento": {
+              "type": "object",
+              "required": ["tipo", "configurações"],
+              "properties": {
+                "tipo": {
+                  "type": "string",
+                  "description": "Tipo de armazenamento"
+                },
+                "configurações": {
+                  "type": "object",
+                  "description": "Configurações específicas do armazenamento"
+                }
+              }
+            },
+            "backup": {
+              "type": "object",
+              "required": ["frequência", "retenção", "tipo"],
+              "properties": {
+                "frequência": {
+                  "type": "string",
+                  "description": "Frequência dos backups"
+                },
+                "retenção": {
+                  "type": "string",
+                  "description": "Período de retenção"
+                },
+                "tipo": {
+                  "type": "string",
+                  "enum": ["completo", "incremental", "diferencial"],
+                  "description": "Tipo de backup"
+                }
+              }
+            },
+            "retenção": {
+              "type": "object",
+              "required": ["políticas", "períodos"],
+              "properties": {
+                "políticas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Políticas de retenção"
+                },
+                "períodos": {
+                  "type": "object",
+                  "description": "Períodos de retenção por tipo de dado"
+                }
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["integridade", "disponibilidade", "confiabilidade"],
+          "properties": {
+            "integridade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "medidas"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "description": "Tipo de medida de integridade"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição da medida"
+                  },
+                  "medidas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Medidas de integridade"
+                  }
+                }
+              }
+            },
+            "disponibilidade": {
+              "type": "object",
+              "required": ["sla", "métricas"],
+              "properties": {
+                "sla": {
+                  "type": "string",
+                  "description": "SLA de disponibilidade"
+                },
+                "métricas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Métricas de disponibilidade"
+                }
+              }
+            },
+            "confiabilidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["aspecto", "critérios"],
+                "properties": {
+                  "aspecto": {
+                    "type": "string",
+                    "description": "Aspecto de confiabilidade"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Critérios de confiabilidade"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

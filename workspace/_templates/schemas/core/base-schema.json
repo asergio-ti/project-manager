@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Base Schema for Software Documentation",
+  "description": "Schema base que define a estrutura fundamental para todos os documentos de software seguindo ISO/IEC",
+  "type": "object",
+  "required": ["version", "lastUpdate", "metadata", "content"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Versão do documento seguindo SemVer"
+    },
+    "lastUpdate": {
+      "type": "string",
+      "format": "date",
+      "description": "Data da última atualização"
+    },
+    "metadata": {
+      "type": "object",
+      "required": ["description", "autor", "revisores", "status"],
+      "properties": {
+        "description": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Descrição do documento"
+        },
+        "autor": {
+          "type": "string",
+          "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+          "description": "Autor no formato 'Nome <email>'"
+        },
+        "revisores": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1,
+          "description": "Lista de revisores"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "review", "approved"],
+          "description": "Status do documento"
+        },
+        "standards": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "version"],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Nome do padrão ISO/IEC"
+              },
+              "version": {
+                "type": "string",
+                "description": "Versão do padrão"
+              }
+            }
+          }
+        }
+      }
+    },
+    "content": {
+      "type": "object",
+      "description": "Conteúdo específico do documento",
+      "minProperties": 1
+    },
+    "diagrams": {
+      "type": "object",
+      "patternProperties": {
+        "^.*$": {
+          "type": "object",
+          "required": ["type", "content", "viewpoint", "rationale"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["mermaid"],
+              "description": "Tipo do diagrama"
+            },
+            "content": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Conteúdo do diagrama"
+            },
+            "viewpoint": {
+              "type": "string",
+              "description": "Ponto de vista do diagrama"
+            },
+            "rationale": {
+              "type": "string",
+              "description": "Justificativa do diagrama"
+            }
+          }
+        }
+      }
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["documentId", "type"],
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "description": "ID do documento referenciado"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["depends", "references", "implements", "extends"],
+            "description": "Tipo de referência"
+          },
+          "description": {
+            "type": "string",
+            "description": "Descrição da referência"
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "severity"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Z]+-\\d+$",
+                "description": "ID da regra"
+              },
+              "description": {
+                "type": "string",
+                "description": "Descrição da regra"
+              },
+              "severity": {
+                "type": "string",
+                "enum": ["error", "warning", "info"],
+                "description": "Severidade da regra"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

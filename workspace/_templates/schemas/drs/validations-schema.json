@@ -1,0 +1,430 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Validations Schema",
+  "description": "Schema para documentação de validações seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["validations"],
+  "properties": {
+    "validations": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "requisitos", "testes", "revisões", "métricas"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "requisitos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "critérios", "resultados"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REQ-\\d+$",
+                "description": "Identificador único do requisito"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["funcional", "nãoFuncional", "negócio", "técnico"],
+                "description": "Tipo do requisito"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "aceitação"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^CRIT-\\d+$",
+                      "description": "ID do critério"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do critério"
+                    },
+                    "aceitação": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Critérios de aceitação"
+                    }
+                  }
+                }
+              },
+              "resultados": {
+                "type": "object",
+                "required": ["status", "observações", "evidências"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["aprovado", "reprovado", "pendente"],
+                    "description": "Status da validação"
+                  },
+                  "observações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Observações sobre os resultados"
+                  },
+                  "evidências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Evidências dos resultados"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "testes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "cenários", "resultados"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TEST-\\d+$",
+                "description": "Identificador único do teste"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["unitário", "integração", "sistema", "aceitação"],
+                "description": "Tipo do teste"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do teste"
+              },
+              "cenários": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "préCondições", "passos", "resultadoEsperado"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^SCEN-\\d+$",
+                      "description": "ID do cenário"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do cenário"
+                    },
+                    "préCondições": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Pré-condições necessárias"
+                    },
+                    "passos": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Passos do teste"
+                    },
+                    "resultadoEsperado": {
+                      "type": "string",
+                      "description": "Resultado esperado"
+                    }
+                  }
+                }
+              },
+              "resultados": {
+                "type": "object",
+                "required": ["status", "data", "executor", "observações"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["passou", "falhou", "bloqueado", "pendente"],
+                    "description": "Status do teste"
+                  },
+                  "data": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da execução"
+                  },
+                  "executor": {
+                    "type": "string",
+                    "description": "Responsável pela execução"
+                  },
+                  "observações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Observações sobre a execução"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "revisões": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "data", "participantes", "itens", "resultados"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REV-\\d+$",
+                "description": "Identificador único da revisão"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["técnica", "gerencial", "qualidade", "segurança"],
+                "description": "Tipo da revisão"
+              },
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data da revisão"
+              },
+              "participantes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "papel"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do participante"
+                    },
+                    "papel": {
+                      "type": "string",
+                      "description": "Papel na revisão"
+                    }
+                  }
+                }
+              },
+              "itens": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "status", "comentários"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^ITEM-\\d+$",
+                      "description": "ID do item"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do item"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["aprovado", "reprovado", "pendente"],
+                      "description": "Status do item"
+                    },
+                    "comentários": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Comentários sobre o item"
+                    }
+                  }
+                }
+              },
+              "resultados": {
+                "type": "object",
+                "required": ["conclusão", "recomendações", "próximosPassos"],
+                "properties": {
+                  "conclusão": {
+                    "type": "string",
+                    "description": "Conclusão da revisão"
+                  },
+                  "recomendações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Recomendações"
+                  },
+                  "próximosPassos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Próximos passos"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "métricas": {
+          "type": "object",
+          "required": ["cobertura", "qualidade", "desempenho"],
+          "properties": {
+            "cobertura": {
+              "type": "object",
+              "required": ["requisitos", "testes", "código"],
+              "properties": {
+                "requisitos": {
+                  "type": "object",
+                  "required": ["total", "validados", "percentual"],
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total de requisitos"
+                    },
+                    "validados": {
+                      "type": "integer",
+                      "description": "Requisitos validados"
+                    },
+                    "percentual": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "Percentual de cobertura"
+                    }
+                  }
+                },
+                "testes": {
+                  "type": "object",
+                  "required": ["total", "executados", "percentual"],
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total de testes"
+                    },
+                    "executados": {
+                      "type": "integer",
+                      "description": "Testes executados"
+                    },
+                    "percentual": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "Percentual de execução"
+                    }
+                  }
+                },
+                "código": {
+                  "type": "object",
+                  "required": ["total", "coberto", "percentual"],
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total de linhas de código"
+                    },
+                    "coberto": {
+                      "type": "integer",
+                      "description": "Linhas cobertas por testes"
+                    },
+                    "percentual": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100,
+                      "description": "Percentual de cobertura"
+                    }
+                  }
+                }
+              }
+            },
+            "qualidade": {
+              "type": "object",
+              "required": ["defeitos", "complexidade", "manutenibilidade"],
+              "properties": {
+                "defeitos": {
+                  "type": "object",
+                  "required": ["total", "corrigidos", "abertos"],
+                  "properties": {
+                    "total": {
+                      "type": "integer",
+                      "description": "Total de defeitos"
+                    },
+                    "corrigidos": {
+                      "type": "integer",
+                      "description": "Defeitos corrigidos"
+                    },
+                    "abertos": {
+                      "type": "integer",
+                      "description": "Defeitos em aberto"
+                    }
+                  }
+                },
+                "complexidade": {
+                  "type": "object",
+                  "description": "Métricas de complexidade"
+                },
+                "manutenibilidade": {
+                  "type": "object",
+                  "description": "Métricas de manutenibilidade"
+                }
+              }
+            },
+            "desempenho": {
+              "type": "object",
+              "required": ["tempoMédio", "recursos", "escalabilidade"],
+              "properties": {
+                "tempoMédio": {
+                  "type": "object",
+                  "description": "Métricas de tempo de resposta"
+                },
+                "recursos": {
+                  "type": "object",
+                  "description": "Métricas de uso de recursos"
+                },
+                "escalabilidade": {
+                  "type": "object",
+                  "description": "Métricas de escalabilidade"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

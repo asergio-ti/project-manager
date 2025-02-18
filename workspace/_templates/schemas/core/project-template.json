@@ -1,0 +1,207 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Project Template Schema",
+  "description": "Schema para definição de template de projeto",
+  "type": "object",
+  "required": ["template", "variables", "structure"],
+  "properties": {
+    "template": {
+      "type": "object",
+      "required": ["name", "version", "description", "author"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nome do template"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do template"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição do template"
+        },
+        "author": {
+          "type": "string",
+          "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+          "description": "Autor do template"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["web", "mobile", "desktop", "library", "service"],
+          "description": "Categoria do projeto"
+        }
+      }
+    },
+    "variables": {
+      "type": "object",
+      "required": ["project", "documentation"],
+      "properties": {
+        "project": {
+          "type": "object",
+          "required": ["name", "description"],
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Nome do projeto"
+            },
+            "description": {
+              "type": "string",
+              "description": "Descrição do projeto"
+            },
+            "version": {
+              "type": "string",
+              "default": "1.0.0",
+              "description": "Versão inicial do projeto"
+            }
+          }
+        },
+        "documentation": {
+          "type": "object",
+          "required": ["author", "reviewers"],
+          "properties": {
+            "author": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor da documentação"
+            },
+            "reviewers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            }
+          }
+        }
+      }
+    },
+    "structure": {
+      "type": "object",
+      "required": ["directories", "documents"],
+      "properties": {
+        "directories": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "description"],
+            "properties": {
+              "path": {
+                "type": "string",
+                "description": "Caminho do diretório"
+              },
+              "description": {
+                "type": "string",
+                "description": "Descrição do diretório"
+              }
+            }
+          },
+          "minItems": 1
+        },
+        "documents": {
+          "type": "object",
+          "required": ["DVP", "DRS", "DAS", "DADI"],
+          "properties": {
+            "DVP": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["template", "variables"],
+                "properties": {
+                  "template": {
+                    "type": "string",
+                    "description": "Caminho do template do documento"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "description": "Variáveis específicas do documento"
+                  }
+                }
+              }
+            },
+            "DRS": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["template", "variables"],
+                "properties": {
+                  "template": {
+                    "type": "string",
+                    "description": "Caminho do template do documento"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "description": "Variáveis específicas do documento"
+                  }
+                }
+              }
+            },
+            "DAS": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["template", "variables"],
+                "properties": {
+                  "template": {
+                    "type": "string",
+                    "description": "Caminho do template do documento"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "description": "Variáveis específicas do documento"
+                  }
+                }
+              }
+            },
+            "DADI": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["template", "variables"],
+                "properties": {
+                  "template": {
+                    "type": "string",
+                    "description": "Caminho do template do documento"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "description": "Variáveis específicas do documento"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["type", "condition", "message"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["required", "dependency", "format"],
+                "description": "Tipo da regra de validação"
+              },
+              "condition": {
+                "type": "string",
+                "description": "Condição a ser validada"
+              },
+              "message": {
+                "type": "string",
+                "description": "Mensagem de erro"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

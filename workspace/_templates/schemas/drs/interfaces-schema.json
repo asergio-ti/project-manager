@@ -1,0 +1,658 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Interfaces Schema",
+  "description": "Schema para documentação de interfaces seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["interfaces"],
+  "properties": {
+    "interfaces": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "usuário", "sistema", "hardware", "comunicação"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "usuário": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "nome", "descrição", "elementos", "comportamentos", "validações", "acessibilidade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^UI-\\d+$",
+                "description": "ID da interface"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["web", "mobile", "desktop", "cli"],
+                "description": "Tipo da interface"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da interface"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da interface"
+              },
+              "elementos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "tipo", "nome", "propriedades", "estilo"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^ELEM-\\d+$",
+                      "description": "ID do elemento"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo do elemento"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do elemento"
+                    },
+                    "propriedades": {
+                      "type": "object",
+                      "description": "Propriedades do elemento"
+                    },
+                    "estilo": {
+                      "type": "object",
+                      "description": "Estilo do elemento"
+                    }
+                  }
+                }
+              },
+              "comportamentos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["evento", "ação", "condições", "feedback"],
+                  "properties": {
+                    "evento": {
+                      "type": "string",
+                      "description": "Evento que dispara o comportamento"
+                    },
+                    "ação": {
+                      "type": "string",
+                      "description": "Ação a ser executada"
+                    },
+                    "condições": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Condições para execução"
+                    },
+                    "feedback": {
+                      "type": "object",
+                      "required": ["tipo", "mensagem"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "enum": ["sucesso", "erro", "alerta", "informação"],
+                          "description": "Tipo de feedback"
+                        },
+                        "mensagem": {
+                          "type": "string",
+                          "description": "Mensagem de feedback"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "validações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["campo", "tipo", "regras", "mensagens"],
+                  "properties": {
+                    "campo": {
+                      "type": "string",
+                      "description": "Campo a ser validado"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo de validação"
+                    },
+                    "regras": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Regras de validação"
+                    },
+                    "mensagens": {
+                      "type": "object",
+                      "description": "Mensagens de erro por regra"
+                    }
+                  }
+                }
+              },
+              "acessibilidade": {
+                "type": "object",
+                "required": ["conformidade", "recursos", "testes"],
+                "properties": {
+                  "conformidade": {
+                    "type": "object",
+                    "required": ["wcag", "nível"],
+                    "properties": {
+                      "wcag": {
+                        "type": "string",
+                        "description": "Versão WCAG"
+                      },
+                      "nível": {
+                        "type": "string",
+                        "enum": ["A", "AA", "AAA"],
+                        "description": "Nível de conformidade"
+                      }
+                    }
+                  },
+                  "recursos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "descrição", "implementação"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "description": "Tipo do recurso"
+                        },
+                        "descrição": {
+                          "type": "string",
+                          "description": "Descrição do recurso"
+                        },
+                        "implementação": {
+                          "type": "string",
+                          "description": "Detalhes de implementação"
+                        }
+                      }
+                    }
+                  },
+                  "testes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "ferramenta", "critérios"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "description": "Tipo de teste"
+                        },
+                        "ferramenta": {
+                          "type": "string",
+                          "description": "Ferramenta utilizada"
+                        },
+                        "critérios": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Critérios de teste"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "sistema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "nome", "descrição", "especificação", "segurança", "documentação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^API-\\d+$",
+                "description": "ID da interface"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["rest", "soap", "graphql", "grpc"],
+                "description": "Tipo da interface"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da interface"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da interface"
+              },
+              "especificação": {
+                "type": "object",
+                "required": ["versão", "formato", "endpoints"],
+                "properties": {
+                  "versão": {
+                    "type": "string",
+                    "description": "Versão da especificação"
+                  },
+                  "formato": {
+                    "type": "string",
+                    "enum": ["openapi", "swagger", "wsdl", "protobuf"],
+                    "description": "Formato da especificação"
+                  },
+                  "endpoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["path", "método", "parâmetros", "respostas"],
+                      "properties": {
+                        "path": {
+                          "type": "string",
+                          "description": "Caminho do endpoint"
+                        },
+                        "método": {
+                          "type": "string",
+                          "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"],
+                          "description": "Método HTTP"
+                        },
+                        "parâmetros": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["nome", "tipo", "local", "obrigatório"],
+                            "properties": {
+                              "nome": {
+                                "type": "string",
+                                "description": "Nome do parâmetro"
+                              },
+                              "tipo": {
+                                "type": "string",
+                                "description": "Tipo do parâmetro"
+                              },
+                              "local": {
+                                "type": "string",
+                                "enum": ["query", "path", "header", "body"],
+                                "description": "Localização do parâmetro"
+                              },
+                              "obrigatório": {
+                                "type": "boolean",
+                                "description": "Se o parâmetro é obrigatório"
+                              }
+                            }
+                          }
+                        },
+                        "respostas": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["código", "descrição", "schema"],
+                            "properties": {
+                              "código": {
+                                "type": "integer",
+                                "description": "Código HTTP"
+                              },
+                              "descrição": {
+                                "type": "string",
+                                "description": "Descrição da resposta"
+                              },
+                              "schema": {
+                                "type": "object",
+                                "description": "Schema da resposta"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "segurança": {
+                "type": "object",
+                "required": ["autenticação", "autorização", "proteção"],
+                "properties": {
+                  "autenticação": {
+                    "type": "object",
+                    "required": ["tipo", "configuração"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "enum": ["basic", "jwt", "oauth2", "apiKey"],
+                        "description": "Tipo de autenticação"
+                      },
+                      "configuração": {
+                        "type": "object",
+                        "description": "Configurações de autenticação"
+                      }
+                    }
+                  },
+                  "autorização": {
+                    "type": "object",
+                    "required": ["tipo", "regras"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "description": "Tipo de autorização"
+                      },
+                      "regras": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "description": "Regras de autorização"
+                        }
+                      }
+                    }
+                  },
+                  "proteção": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "configuração"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "enum": ["rate-limiting", "cors", "encryption"],
+                          "description": "Tipo de proteção"
+                        },
+                        "configuração": {
+                          "type": "object",
+                          "description": "Configurações de proteção"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "documentação": {
+                "type": "object",
+                "required": ["formato", "conteúdo", "exemplos"],
+                "properties": {
+                  "formato": {
+                    "type": "string",
+                    "enum": ["markdown", "html", "pdf"],
+                    "description": "Formato da documentação"
+                  },
+                  "conteúdo": {
+                    "type": "string",
+                    "description": "Conteúdo da documentação"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["descrição", "requisição", "resposta"],
+                      "properties": {
+                        "descrição": {
+                          "type": "string",
+                          "description": "Descrição do exemplo"
+                        },
+                        "requisição": {
+                          "type": "object",
+                          "description": "Exemplo de requisição"
+                        },
+                        "resposta": {
+                          "type": "object",
+                          "description": "Exemplo de resposta"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "hardware": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "nome", "descrição", "especificações", "protocolos", "drivers"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^HW-\\d+$",
+                "description": "ID da interface"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["usb", "serial", "network", "bluetooth"],
+                "description": "Tipo da interface"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da interface"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da interface"
+              },
+              "especificações": {
+                "type": "object",
+                "required": ["versão", "configurações", "requisitos"],
+                "properties": {
+                  "versão": {
+                    "type": "string",
+                    "description": "Versão da especificação"
+                  },
+                  "configurações": {
+                    "type": "object",
+                    "description": "Configurações da interface"
+                  },
+                  "requisitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Requisitos de hardware"
+                  }
+                }
+              },
+              "protocolos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "versão", "configuração"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do protocolo"
+                    },
+                    "versão": {
+                      "type": "string",
+                      "description": "Versão do protocolo"
+                    },
+                    "configuração": {
+                      "type": "object",
+                      "description": "Configurações do protocolo"
+                    }
+                  }
+                }
+              },
+              "drivers": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "versão", "sistema", "instalação"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do driver"
+                    },
+                    "versão": {
+                      "type": "string",
+                      "description": "Versão do driver"
+                    },
+                    "sistema": {
+                      "type": "string",
+                      "description": "Sistema operacional"
+                    },
+                    "instalação": {
+                      "type": "string",
+                      "description": "Instruções de instalação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "comunicação": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "origem", "destino", "protocolo", "formato", "segurança"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^COMM-\\d+$",
+                "description": "ID da comunicação"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["síncrona", "assíncrona", "streaming", "batch"],
+                "description": "Tipo de comunicação"
+              },
+              "origem": {
+                "type": "string",
+                "pattern": "^(UI|API|HW)-\\d+$",
+                "description": "ID da interface de origem"
+              },
+              "destino": {
+                "type": "string",
+                "pattern": "^(UI|API|HW)-\\d+$",
+                "description": "ID da interface de destino"
+              },
+              "protocolo": {
+                "type": "object",
+                "required": ["nome", "versão", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "description": "Nome do protocolo"
+                  },
+                  "versão": {
+                    "type": "string",
+                    "description": "Versão do protocolo"
+                  },
+                  "configuração": {
+                    "type": "object",
+                    "description": "Configurações do protocolo"
+                  }
+                }
+              },
+              "formato": {
+                "type": "object",
+                "required": ["tipo", "schema", "exemplos"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["json", "xml", "binary", "text"],
+                    "description": "Tipo do formato"
+                  },
+                  "schema": {
+                    "type": "object",
+                    "description": "Schema do formato"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "description": "Exemplos de mensagens"
+                    }
+                  }
+                }
+              },
+              "segurança": {
+                "type": "object",
+                "required": ["criptografia", "autenticação", "integridade"],
+                "properties": {
+                  "criptografia": {
+                    "type": "object",
+                    "required": ["algoritmo", "chave", "modo"],
+                    "properties": {
+                      "algoritmo": {
+                        "type": "string",
+                        "description": "Algoritmo de criptografia"
+                      },
+                      "chave": {
+                        "type": "object",
+                        "description": "Configurações de chave"
+                      },
+                      "modo": {
+                        "type": "string",
+                        "description": "Modo de operação"
+                      }
+                    }
+                  },
+                  "autenticação": {
+                    "type": "object",
+                    "required": ["método", "credenciais"],
+                    "properties": {
+                      "método": {
+                        "type": "string",
+                        "description": "Método de autenticação"
+                      },
+                      "credenciais": {
+                        "type": "object",
+                        "description": "Configurações de credenciais"
+                      }
+                    }
+                  },
+                  "integridade": {
+                    "type": "object",
+                    "required": ["algoritmo", "verificação"],
+                    "properties": {
+                      "algoritmo": {
+                        "type": "string",
+                        "description": "Algoritmo de verificação"
+                      },
+                      "verificação": {
+                        "type": "object",
+                        "description": "Configurações de verificação"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

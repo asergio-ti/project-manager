@@ -1,0 +1,256 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Security Schema",
+  "description": "Schema para o módulo de segurança do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["security"],
+  "properties": {
+    "security": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "architecture", "controls", "compliance"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "architecture": {
+          "type": "object",
+          "required": ["description", "diagram"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["required", "type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "required": {
+                  "type": "boolean"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "controls": {
+          "type": "object",
+          "required": ["access", "execution", "data"],
+          "properties": {
+            "access": {
+              "type": "object",
+              "required": ["filesystem"],
+              "properties": {
+                "filesystem": {
+                  "type": "object",
+                  "required": ["permissions", "restrictions"],
+                  "properties": {
+                    "permissions": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["path", "access", "purpose"],
+                        "properties": {
+                          "path": {
+                            "type": "string"
+                          },
+                          "access": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": ["read", "write", "execute"]
+                            }
+                          },
+                          "purpose": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "restrictions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "execution": {
+              "type": "object",
+              "required": ["sandbox", "validation"],
+              "properties": {
+                "sandbox": {
+                  "type": "object",
+                  "required": ["type", "restrictions"],
+                  "properties": {
+                    "type": {
+                      "type": "string"
+                    },
+                    "restrictions": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "validation": {
+                  "type": "object",
+                  "required": ["input", "output"],
+                  "properties": {
+                    "input": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "output": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "data": {
+              "type": "object",
+              "required": ["sensitive", "protection"],
+              "properties": {
+                "sensitive": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["type", "storage", "access"],
+                    "properties": {
+                      "type": {
+                        "type": "string"
+                      },
+                      "storage": {
+                        "type": "string"
+                      },
+                      "access": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "protection": {
+                  "type": "object",
+                  "required": ["storage", "memory"],
+                  "properties": {
+                    "storage": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "compliance": {
+          "type": "object",
+          "required": ["standards", "auditing"],
+          "properties": {
+            "standards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "requirements"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "requirements": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "auditing": {
+              "type": "object",
+              "required": ["events", "logs"],
+              "properties": {
+                "events": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "logs": {
+                  "type": "object",
+                  "required": ["retention", "encryption", "access"],
+                  "properties": {
+                    "retention": {
+                      "type": "string"
+                    },
+                    "encryption": {
+                      "type": "boolean"
+                    },
+                    "access": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

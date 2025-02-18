@@ -1,0 +1,352 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Traceability Schema",
+  "description": "Schema para documentação de rastreabilidade seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["traceability"],
+  "properties": {
+    "traceability": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "matriz", "relacionamentos", "impacto", "cobertura"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "matriz": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "origem", "destino", "relacionamento"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TRACE-\\d+$",
+                "description": "Identificador único do item de rastreabilidade"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["requisito-requisito", "requisito-caso", "requisito-teste", "requisito-código"],
+                "description": "Tipo de rastreabilidade"
+              },
+              "origem": {
+                "type": "object",
+                "required": ["id", "tipo", "descrição"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "ID do item de origem"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "description": "Tipo do item de origem"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do item de origem"
+                  }
+                }
+              },
+              "destino": {
+                "type": "object",
+                "required": ["id", "tipo", "descrição"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "ID do item de destino"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "description": "Tipo do item de destino"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do item de destino"
+                  }
+                }
+              },
+              "relacionamento": {
+                "type": "object",
+                "required": ["tipo", "descrição", "status"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["satisfaz", "depende", "refina", "implementa", "verifica"],
+                    "description": "Tipo de relacionamento"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do relacionamento"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["ativo", "obsoleto", "pendente"],
+                    "description": "Status do relacionamento"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "relacionamentos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tipo", "itens", "propriedades"],
+            "properties": {
+              "tipo": {
+                "type": "string",
+                "enum": ["hierárquico", "dependência", "implementação", "verificação"],
+                "description": "Tipo de relacionamento"
+              },
+              "itens": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "papel"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "ID do item relacionado"
+                    },
+                    "papel": {
+                      "type": "string",
+                      "enum": ["pai", "filho", "dependente", "dependência", "implementador", "verificador"],
+                      "description": "Papel no relacionamento"
+                    }
+                  }
+                }
+              },
+              "propriedades": {
+                "type": "object",
+                "required": ["bidirecional", "peso", "status"],
+                "properties": {
+                  "bidirecional": {
+                    "type": "boolean",
+                    "description": "Se o relacionamento é bidirecional"
+                  },
+                  "peso": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "description": "Peso do relacionamento"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["ativo", "obsoleto", "pendente"],
+                    "description": "Status do relacionamento"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "impacto": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "mudança", "análise"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^IMP-\\d+$",
+                "description": "Identificador único da análise de impacto"
+              },
+              "mudança": {
+                "type": "object",
+                "required": ["tipo", "descrição", "origem"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["requisito", "arquitetura", "código", "teste"],
+                    "description": "Tipo de mudança"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição da mudança"
+                  },
+                  "origem": {
+                    "type": "object",
+                    "required": ["id", "tipo"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "ID do item de origem"
+                      },
+                      "tipo": {
+                        "type": "string",
+                        "description": "Tipo do item de origem"
+                      }
+                    }
+                  }
+                }
+              },
+              "análise": {
+                "type": "object",
+                "required": ["itensAfetados", "severidade", "recomendações"],
+                "properties": {
+                  "itensAfetados": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "tipo", "impacto"],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID do item afetado"
+                        },
+                        "tipo": {
+                          "type": "string",
+                          "description": "Tipo do item afetado"
+                        },
+                        "impacto": {
+                          "type": "string",
+                          "enum": ["direto", "indireto", "potencial"],
+                          "description": "Tipo de impacto"
+                        }
+                      }
+                    }
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"],
+                    "description": "Severidade do impacto"
+                  },
+                  "recomendações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Recomendações para tratamento"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "cobertura": {
+          "type": "object",
+          "required": ["requisitos", "testes", "implementação"],
+          "properties": {
+            "requisitos": {
+              "type": "object",
+              "required": ["total", "rastreados", "percentual", "gaps"],
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "Total de requisitos"
+                },
+                "rastreados": {
+                  "type": "integer",
+                  "description": "Requisitos rastreados"
+                },
+                "percentual": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Percentual de cobertura"
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Gaps identificados"
+                }
+              }
+            },
+            "testes": {
+              "type": "object",
+              "required": ["total", "rastreados", "percentual", "gaps"],
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "Total de testes"
+                },
+                "rastreados": {
+                  "type": "integer",
+                  "description": "Testes rastreados"
+                },
+                "percentual": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Percentual de cobertura"
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Gaps identificados"
+                }
+              }
+            },
+            "implementação": {
+              "type": "object",
+              "required": ["total", "rastreados", "percentual", "gaps"],
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "description": "Total de itens implementados"
+                },
+                "rastreados": {
+                  "type": "integer",
+                  "description": "Itens rastreados"
+                },
+                "percentual": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Percentual de cobertura"
+                },
+                "gaps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Gaps identificados"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

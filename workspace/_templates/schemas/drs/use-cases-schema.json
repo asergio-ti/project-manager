@@ -1,0 +1,436 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Use Cases Schema",
+  "description": "Schema para documentação de casos de uso seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["useCases"],
+  "properties": {
+    "useCases": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "atores", "casos", "fluxos", "requisitos"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "atores": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo", "descrição", "responsabilidades", "relacionamentos"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^ATOR-\\d+$",
+                "description": "ID do ator"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome do ator"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["primário", "secundário", "sistema"],
+                "description": "Tipo do ator"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do ator"
+              },
+              "responsabilidades": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Responsabilidades do ator"
+              },
+              "relacionamentos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "atorId"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["generalização", "associação", "dependência"],
+                      "description": "Tipo de relacionamento"
+                    },
+                    "atorId": {
+                      "type": "string",
+                      "pattern": "^ATOR-\\d+$",
+                      "description": "ID do ator relacionado"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "casos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "atores", "préCondições", "pósCondições", "fluxoPrincipal", "fluxosAlternativos", "exceções", "requisitos"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^UC-\\d+$",
+                "description": "ID do caso de uso"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome do caso de uso"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do caso de uso"
+              },
+              "atores": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["atorId", "papel"],
+                  "properties": {
+                    "atorId": {
+                      "type": "string",
+                      "pattern": "^ATOR-\\d+$",
+                      "description": "ID do ator"
+                    },
+                    "papel": {
+                      "type": "string",
+                      "description": "Papel do ator no caso de uso"
+                    }
+                  }
+                }
+              },
+              "préCondições": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "tipo"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^PRE-\\d+$",
+                      "description": "ID da pré-condição"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da pré-condição"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["estado", "dados", "permissão", "sistema"],
+                      "description": "Tipo da pré-condição"
+                    }
+                  }
+                }
+              },
+              "pósCondições": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "tipo"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^POS-\\d+$",
+                      "description": "ID da pós-condição"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da pós-condição"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["estado", "dados", "notificação", "sistema"],
+                      "description": "Tipo da pós-condição"
+                    }
+                  }
+                }
+              },
+              "fluxoPrincipal": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["passo", "ator", "ação", "dados"],
+                  "properties": {
+                    "passo": {
+                      "type": "integer",
+                      "description": "Número do passo"
+                    },
+                    "ator": {
+                      "type": "string",
+                      "pattern": "^ATOR-\\d+$",
+                      "description": "ID do ator responsável"
+                    },
+                    "ação": {
+                      "type": "string",
+                      "description": "Descrição da ação"
+                    },
+                    "dados": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["nome", "tipo", "obrigatório"],
+                        "properties": {
+                          "nome": {
+                            "type": "string",
+                            "description": "Nome do dado"
+                          },
+                          "tipo": {
+                            "type": "string",
+                            "description": "Tipo do dado"
+                          },
+                          "obrigatório": {
+                            "type": "boolean",
+                            "description": "Se o dado é obrigatório"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "fluxosAlternativos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "nome", "condição", "passos"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^FA-\\d+$",
+                      "description": "ID do fluxo alternativo"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do fluxo alternativo"
+                    },
+                    "condição": {
+                      "type": "string",
+                      "description": "Condição para o fluxo alternativo"
+                    },
+                    "passos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["passo", "ator", "ação"],
+                        "properties": {
+                          "passo": {
+                            "type": "integer",
+                            "description": "Número do passo"
+                          },
+                          "ator": {
+                            "type": "string",
+                            "pattern": "^ATOR-\\d+$",
+                            "description": "ID do ator responsável"
+                          },
+                          "ação": {
+                            "type": "string",
+                            "description": "Descrição da ação"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "exceções": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "condição", "ação", "tratamento"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^EXC-\\d+$",
+                      "description": "ID da exceção"
+                    },
+                    "condição": {
+                      "type": "string",
+                      "description": "Condição para a exceção"
+                    },
+                    "ação": {
+                      "type": "string",
+                      "description": "Ação que gera a exceção"
+                    },
+                    "tratamento": {
+                      "type": "string",
+                      "description": "Tratamento da exceção"
+                    }
+                  }
+                }
+              },
+              "requisitos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "id"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["funcional", "nãoFuncional"],
+                      "description": "Tipo do requisito"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^(RF|RNF)-\\d+$",
+                      "description": "ID do requisito"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fluxos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "origem", "destino", "descrição"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^FLOW-\\d+$",
+                "description": "ID do fluxo"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["inclusão", "extensão", "generalização"],
+                "description": "Tipo do fluxo"
+              },
+              "origem": {
+                "type": "string",
+                "pattern": "^UC-\\d+$",
+                "description": "ID do caso de uso de origem"
+              },
+              "destino": {
+                "type": "string",
+                "pattern": "^UC-\\d+$",
+                "description": "ID do caso de uso de destino"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do fluxo"
+              }
+            }
+          }
+        },
+        "requisitos": {
+          "type": "object",
+          "required": ["funcionais", "nãoFuncionais"],
+          "properties": {
+            "funcionais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "descrição", "prioridade", "complexidade"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^RF-\\d+$",
+                    "description": "ID do requisito funcional"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do requisito"
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"],
+                    "description": "Prioridade do requisito"
+                  },
+                  "complexidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"],
+                    "description": "Complexidade do requisito"
+                  }
+                }
+              }
+            },
+            "nãoFuncionais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "categoria", "descrição", "critérios"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^RNF-\\d+$",
+                    "description": "ID do requisito não funcional"
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "enum": ["desempenho", "segurança", "usabilidade", "disponibilidade", "manutenibilidade"],
+                    "description": "Categoria do requisito"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do requisito"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["descrição", "métrica", "valor"],
+                      "properties": {
+                        "descrição": {
+                          "type": "string",
+                          "description": "Descrição do critério"
+                        },
+                        "métrica": {
+                          "type": "string",
+                          "description": "Métrica de avaliação"
+                        },
+                        "valor": {
+                          "type": "string",
+                          "description": "Valor alvo"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

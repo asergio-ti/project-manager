@@ -1,0 +1,19 @@
+{
+    "workspace":  {
+                      "schemasPath":  "workspace/_templates/schemas",
+                      "templatesPath":  "workspace/_templates",
+                      "projectsPath":  "workspace/projects"
+                  },
+    "templates":  {
+                      "drs":  "workspace/_templates/docs/drs",
+                      "dvp":  "workspace/_templates/docs/dvp",
+                      "das":  "workspace/_templates/docs/das"
+                  },
+    "phases":  [
+                   "DVP",
+                   "DRS",
+                   "DAS"
+               ],
+    "name":  "project-manager",
+    "version":  "0.1.0"
+}

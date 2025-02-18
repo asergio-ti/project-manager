@@ -1,0 +1,700 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Reliability Schema",
+  "description": "Schema para o módulo de confiabilidade do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["reliability"],
+  "properties": {
+    "reliability": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "requisitos", "falhas", "disponibilidade", "recuperação", "tolerância", "monitoramento", "manutenção"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "requisitos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "métricas", "prioridade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REL-R\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["Disponibilidade", "Tolerância", "Recuperação", "Manutenção"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["Alta", "Média", "Baixa"]
+              }
+            }
+          }
+        },
+        "falhas": {
+          "type": "object",
+          "required": ["categorias", "impactos", "mitigações", "prevenções"],
+          "properties": {
+            "categorias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "exemplos", "frequência"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "frequência": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "impactos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "severidade", "duração", "afetados"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["Baixa", "Média", "Alta", "Crítica"]
+                  },
+                  "duração": {
+                    "type": "string"
+                  },
+                  "afetados": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "mitigações": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "efetividade", "custo"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "efetividade": {
+                    "type": "string",
+                    "enum": ["Baixa", "Média", "Alta"]
+                  },
+                  "custo": {
+                    "type": "string",
+                    "enum": ["Baixo", "Médio", "Alto"]
+                  }
+                }
+              }
+            },
+            "prevenções": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "implementação", "verificação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "verificação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "disponibilidade": {
+          "type": "object",
+          "required": ["metas", "métricas", "componentes", "redundância"],
+          "properties": {
+            "metas": {
+              "type": "object",
+              "required": ["geral", "crítico", "normal", "degradado"],
+              "properties": {
+                "geral": {
+                  "type": "string"
+                },
+                "crítico": {
+                  "type": "string"
+                },
+                "normal": {
+                  "type": "string"
+                },
+                "degradado": {
+                  "type": "string"
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "cálculo", "limites"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "cálculo": {
+                    "type": "string"
+                  },
+                  "limites": {
+                    "type": "object",
+                    "required": ["mínimo", "alvo", "máximo"],
+                    "properties": {
+                      "mínimo": {
+                        "type": "string"
+                      },
+                      "alvo": {
+                        "type": "string"
+                      },
+                      "máximo": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "componentes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "criticidade", "disponibilidade", "dependências"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "criticidade": {
+                    "type": "string",
+                    "enum": ["Baixa", "Média", "Alta", "Crítica"]
+                  },
+                  "disponibilidade": {
+                    "type": "string"
+                  },
+                  "dependências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "redundância": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "componentes", "estratégia", "sincronização"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "componentes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  },
+                  "sincronização": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "recuperação": {
+          "type": "object",
+          "required": ["objetivos", "procedimentos", "backups", "testes"],
+          "properties": {
+            "objetivos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "rto", "rpo", "prioridade"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "rto": {
+                    "type": "string"
+                  },
+                  "rpo": {
+                    "type": "string"
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["Alta", "Média", "Baixa"]
+                  }
+                }
+              }
+            },
+            "procedimentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "passos", "responsáveis"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "passos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "responsáveis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "backups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "frequência", "retenção", "verificação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "retenção": {
+                    "type": "string"
+                  },
+                  "verificação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "testes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "frequência", "escopo", "critérios"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tolerância": {
+          "type": "object",
+          "required": ["estratégias", "mecanismos", "degradação", "isolamento"],
+          "properties": {
+            "estratégias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "aplicação", "efetividade"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "aplicação": {
+                    "type": "string"
+                  },
+                  "efetividade": {
+                    "type": "string",
+                    "enum": ["Baixa", "Média", "Alta"]
+                  }
+                }
+              }
+            },
+            "mecanismos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "implementação", "cobertura", "limitações"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "cobertura": {
+                    "type": "string"
+                  },
+                  "limitações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "degradação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nível", "condições", "serviços", "recuperação"],
+                "properties": {
+                  "nível": {
+                    "type": "string"
+                  },
+                  "condições": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "serviços": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "recuperação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "isolamento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["componente", "método", "impacto", "verificação"],
+                "properties": {
+                  "componente": {
+                    "type": "string"
+                  },
+                  "método": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  },
+                  "verificação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "monitoramento": {
+          "type": "object",
+          "required": ["métricas", "alertas", "logs", "relatórios"],
+          "properties": {
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "coleta", "limites"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "coleta": {
+                    "type": "string"
+                  },
+                  "limites": {
+                    "type": "object",
+                    "required": ["normal", "atenção", "crítico"],
+                    "properties": {
+                      "normal": {
+                        "type": "string"
+                      },
+                      "atenção": {
+                        "type": "string"
+                      },
+                      "crítico": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "alertas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["condição", "severidade", "ação", "notificação"],
+                "properties": {
+                  "condição": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["Info", "Warning", "Error", "Critical"]
+                  },
+                  "ação": {
+                    "type": "string"
+                  },
+                  "notificação": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "logs": {
+              "type": "object",
+              "required": ["tipos", "formato", "retenção", "análise"],
+              "properties": {
+                "tipos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "formato": {
+                  "type": "string"
+                },
+                "retenção": {
+                  "type": "string"
+                },
+                "análise": {
+                  "type": "string"
+                }
+              }
+            },
+            "relatórios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "frequência", "conteúdo", "distribuição"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "distribuição": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "manutenção": {
+          "type": "object",
+          "required": ["preventiva", "corretiva", "adaptativa", "janelas"],
+          "properties": {
+            "preventiva": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "frequência", "procedimentos", "impacto"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "procedimentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "corretiva": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "prioridade", "procedimentos", "tempo"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["Baixa", "Média", "Alta", "Crítica"]
+                  },
+                  "procedimentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tempo": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "adaptativa": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "gatilho", "procedimentos", "validação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "gatilho": {
+                    "type": "string"
+                  },
+                  "procedimentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "validação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "janelas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "periodicidade", "duração", "impacto"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "periodicidade": {
+                    "type": "string"
+                  },
+                  "duração": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

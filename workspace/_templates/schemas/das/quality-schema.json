@@ -1,0 +1,439 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Quality Schema",
+  "description": "Schema para o módulo de qualidade do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["quality"],
+  "properties": {
+    "quality": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "atributos", "métricas", "testes", "monitoramento"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "atributos": {
+          "type": "object",
+          "required": ["funcionais", "nãoFuncionais"],
+          "properties": {
+            "funcionais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "descrição", "critérios", "prioridade"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^QA-F\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["Alta", "Média", "Baixa"]
+                  }
+                }
+              }
+            },
+            "nãoFuncionais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "descrição", "critérios", "prioridade", "categoria"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^QA-NF\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["Alta", "Média", "Baixa"]
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "enum": [
+                      "Performance",
+                      "Segurança",
+                      "Usabilidade",
+                      "Disponibilidade",
+                      "Manutenibilidade",
+                      "Portabilidade",
+                      "Escalabilidade",
+                      "Interoperabilidade"
+                    ]
+                  }
+                }
+              }
+            },
+            "performance": {
+              "type": "object",
+              "required": ["responseTime", "availability"],
+              "properties": {
+                "responseTime": {
+                  "type": "string",
+                  "description": "Tempo máximo aceitável para resposta do sistema"
+                },
+                "availability": {
+                  "type": "boolean",
+                  "description": "Indica se o sistema precisa funcionar offline"
+                }
+              }
+            }
+          }
+        },
+        "métricas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "fórmula", "unidade", "frequência", "fonte", "limites"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^MET-\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "fórmula": {
+                "type": "string"
+              },
+              "unidade": {
+                "type": "string"
+              },
+              "frequência": {
+                "type": "string"
+              },
+              "fonte": {
+                "type": "string"
+              },
+              "limites": {
+                "type": "object",
+                "required": ["mínimo", "máximo", "alerta", "crítico"],
+                "properties": {
+                  "mínimo": {
+                    "type": "string"
+                  },
+                  "máximo": {
+                    "type": "string"
+                  },
+                  "alerta": {
+                    "type": "string"
+                  },
+                  "crítico": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "testes": {
+          "type": "object",
+          "required": ["unitários", "integração", "sistema", "performance", "segurança"],
+          "properties": {
+            "unitários": {
+              "type": "object",
+              "required": ["framework", "cobertura", "padrões"],
+              "properties": {
+                "framework": {
+                  "type": "string"
+                },
+                "cobertura": {
+                  "type": "object",
+                  "required": ["mínima", "desejada"],
+                  "properties": {
+                    "mínima": {
+                      "type": "string"
+                    },
+                    "desejada": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "padrões": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "integração": {
+              "type": "object",
+              "required": ["escopo", "estratégia", "ambientes"],
+              "properties": {
+                "escopo": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "estratégia": {
+                  "type": "string"
+                },
+                "ambientes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "sistema": {
+              "type": "object",
+              "required": ["cenários", "critérios", "ambientes"],
+              "properties": {
+                "cenários": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "critérios": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "ambientes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "performance": {
+              "type": "object",
+              "required": ["tipos", "ferramentas", "cenários"],
+              "properties": {
+                "tipos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Carga", "Stress", "Escalabilidade", "Resistência"]
+                  }
+                },
+                "ferramentas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "cenários": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "descrição", "carga", "duração", "critérios"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "descrição": {
+                        "type": "string"
+                      },
+                      "carga": {
+                        "type": "string"
+                      },
+                      "duração": {
+                        "type": "string"
+                      },
+                      "critérios": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "segurança": {
+              "type": "object",
+              "required": ["tipos", "ferramentas", "periodicidade"],
+              "properties": {
+                "tipos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["Vulnerabilidade", "Penetração", "Conformidade"]
+                  }
+                },
+                "ferramentas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "periodicidade": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "monitoramento": {
+          "type": "object",
+          "required": ["ferramentas", "dashboards", "alertas", "relatórios"],
+          "properties": {
+            "ferramentas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "propósito", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  }
+                }
+              }
+            },
+            "dashboards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "métricas", "atualização"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "atualização": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "alertas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["condição", "severidade", "ação", "notificação"],
+                "properties": {
+                  "condição": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["Info", "Warning", "Error", "Critical"]
+                  },
+                  "ação": {
+                    "type": "string"
+                  },
+                  "notificação": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "relatórios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "periodicidade", "conteúdo", "distribuição"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "periodicidade": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "distribuição": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

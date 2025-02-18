@@ -1,0 +1,413 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 15026 Systems and Software Assurance Schema",
+  "description": "Schema para garantia de sistemas e software seguindo ISO/IEC 15026",
+  "type": "object",
+  "required": ["assurance"],
+  "properties": {
+    "assurance": {
+      "type": "object",
+      "required": ["integrityLevels", "requirements", "verification", "evidence"],
+      "properties": {
+        "integrityLevels": {
+          "type": "object",
+          "required": ["system", "components", "justification"],
+          "properties": {
+            "system": {
+              "type": "object",
+              "required": ["level", "criteria", "rationale"],
+              "properties": {
+                "level": {
+                  "type": "string",
+                  "enum": ["critical", "high", "moderate", "low"],
+                  "description": "Nível de integridade do sistema"
+                },
+                "criteria": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Critérios para determinação do nível"
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Justificativa para o nível escolhido"
+                }
+              }
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "level", "dependencies"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do componente"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome do componente"
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": ["critical", "high", "moderate", "low"],
+                    "description": "Nível de integridade do componente"
+                  },
+                  "dependencies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Dependências do componente"
+                  }
+                }
+              }
+            },
+            "justification": {
+              "type": "object",
+              "required": ["methodology", "analysis", "assumptions"],
+              "properties": {
+                "methodology": {
+                  "type": "string",
+                  "description": "Metodologia usada para determinar níveis"
+                },
+                "analysis": {
+                  "type": "string",
+                  "description": "Análise que suporta as decisões"
+                },
+                "assumptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Premissas consideradas"
+                }
+              }
+            }
+          }
+        },
+        "requirements": {
+          "type": "object",
+          "required": ["functional", "assurance", "constraints"],
+          "properties": {
+            "functional": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "integrityLevel", "verification"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do requisito"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do requisito"
+                  },
+                  "integrityLevel": {
+                    "type": "string",
+                    "enum": ["critical", "high", "moderate", "low"],
+                    "description": "Nível de integridade requerido"
+                  },
+                  "verification": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Métodos de verificação"
+                  }
+                }
+              }
+            },
+            "assurance": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "criteria", "evidence"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do requisito"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do requisito"
+                  },
+                  "criteria": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Critérios de aceitação"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Evidências necessárias"
+                  }
+                }
+              }
+            },
+            "constraints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "type", "impact"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador da restrição"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da restrição"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["technical", "regulatory", "organizational", "environmental"],
+                    "description": "Tipo de restrição"
+                  },
+                  "impact": {
+                    "type": "string",
+                    "enum": ["high", "medium", "low"],
+                    "description": "Impacto da restrição"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "verification": {
+          "type": "object",
+          "required": ["methods", "activities", "validation"],
+          "properties": {
+            "methods": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "description", "applicability"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do método"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome do método"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do método"
+                  },
+                  "applicability": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["critical", "high", "moderate", "low"],
+                      "description": "Níveis de integridade aplicáveis"
+                    }
+                  }
+                }
+              }
+            },
+            "activities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "method", "description", "inputs", "outputs", "criteria"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador da atividade"
+                  },
+                  "method": {
+                    "type": "string",
+                    "description": "Método de verificação usado"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da atividade"
+                  },
+                  "inputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Entradas necessárias"
+                  },
+                  "outputs": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Saídas esperadas"
+                  },
+                  "criteria": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Critérios de aceitação"
+                  }
+                }
+              }
+            },
+            "validation": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "activity", "result", "evidence"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador da validação"
+                  },
+                  "activity": {
+                    "type": "string",
+                    "description": "Atividade validada"
+                  },
+                  "result": {
+                    "type": "string",
+                    "enum": ["passed", "failed", "inconclusive"],
+                    "description": "Resultado da validação"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Evidências coletadas"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "evidence": {
+          "type": "object",
+          "required": ["artifacts", "reviews", "certification"],
+          "properties": {
+            "artifacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "type", "description", "location", "verification"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do artefato"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["document", "code", "test_result", "analysis", "review"],
+                    "description": "Tipo do artefato"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do artefato"
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "Localização do artefato"
+                  },
+                  "verification": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Verificações aplicadas"
+                  }
+                }
+              }
+            },
+            "reviews": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "type", "date", "participants", "findings"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador da revisão"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["technical", "peer", "formal", "security"],
+                    "description": "Tipo de revisão"
+                  },
+                  "date": {
+                    "type": "string",
+                    "format": "date",
+                    "description": "Data da revisão"
+                  },
+                  "participants": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Participantes da revisão"
+                  },
+                  "findings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "description", "severity", "resolution"],
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "ID do achado"
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Descrição do achado"
+                        },
+                        "severity": {
+                          "type": "string",
+                          "enum": ["critical", "major", "minor"],
+                          "description": "Severidade do achado"
+                        },
+                        "resolution": {
+                          "type": "string",
+                          "description": "Resolução do achado"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "certification": {
+              "type": "object",
+              "required": ["status", "authority", "scope", "conditions"],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["pending", "granted", "denied", "revoked"],
+                  "description": "Status da certificação"
+                },
+                "authority": {
+                  "type": "string",
+                  "description": "Autoridade certificadora"
+                },
+                "scope": {
+                  "type": "string",
+                  "description": "Escopo da certificação"
+                },
+                "conditions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Condições da certificação"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

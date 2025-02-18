@@ -1,0 +1,438 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Market Analysis Schema",
+  "description": "Schema para documento de análise de mercado",
+  "type": "object",
+  "required": ["marketAnalysis"],
+  "properties": {
+    "marketAnalysis": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visãoGeral", "análiseSetor", "análiseCompetitiva", "análiseDemanda", "tendências", "oportunidades"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "visãoGeral": {
+          "type": "object",
+          "required": ["descrição", "tamanhoMercado", "taxaCrescimento", "diagram"],
+          "properties": {
+            "descrição": {
+              "type": "string"
+            },
+            "tamanhoMercado": {
+              "type": "object",
+              "required": ["valor", "unidade", "ano"],
+              "properties": {
+                "valor": {
+                  "type": "number"
+                },
+                "unidade": {
+                  "type": "string"
+                },
+                "ano": {
+                  "type": "integer"
+                }
+              }
+            },
+            "taxaCrescimento": {
+              "type": "object",
+              "required": ["valor", "período"],
+              "properties": {
+                "valor": {
+                  "type": "number"
+                },
+                "período": {
+                  "type": "string"
+                }
+              }
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "análiseSetor": {
+          "type": "object",
+          "required": ["forçasPorter", "barreirasEntrada", "fatoresChave"],
+          "properties": {
+            "forçasPorter": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["força", "intensidade", "fatores"],
+                "properties": {
+                  "força": {
+                    "type": "string",
+                    "enum": ["rivalidade", "poderCompradores", "poderFornecedores", "ameaçaSubstitutos", "barreiraEntrada"]
+                  },
+                  "intensidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "fatores": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "barreirasEntrada": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["barreira", "impacto", "estratégia"],
+                "properties": {
+                  "barreira": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto"]
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "fatoresChave": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fator", "relevância", "situaçãoAtual"],
+                "properties": {
+                  "fator": {
+                    "type": "string"
+                  },
+                  "relevância": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "situaçãoAtual": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "análiseCompetitiva": {
+          "type": "object",
+          "required": ["concorrentes", "matrizCompetitiva", "vantagens"],
+          "properties": {
+            "concorrentes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tipo", "participaçãoMercado", "pontosFortesEFracos", "estratégia"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["direto", "indireto", "potencial"]
+                  },
+                  "participaçãoMercado": {
+                    "type": "number"
+                  },
+                  "pontosFortesEFracos": {
+                    "type": "object",
+                    "required": ["fortes", "fracos"],
+                    "properties": {
+                      "fortes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "fracos": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "matrizCompetitiva": {
+              "type": "object",
+              "required": ["critérios", "avaliações"],
+              "properties": {
+                "critérios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "peso"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "peso": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1
+                      }
+                    }
+                  }
+                },
+                "avaliações": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["concorrente", "notas"],
+                    "properties": {
+                      "concorrente": {
+                        "type": "string"
+                      },
+                      "notas": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 10
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "vantagens": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["vantagem", "tipo", "sustentabilidade"],
+                "properties": {
+                  "vantagem": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["custo", "diferenciação", "foco"]
+                  },
+                  "sustentabilidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "análiseDemanda": {
+          "type": "object",
+          "required": ["segmentos", "comportamentoCompra", "necessidades"],
+          "properties": {
+            "segmentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tamanho", "características", "potencial"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tamanho": {
+                    "type": "number"
+                  },
+                  "características": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "potencial": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto"]
+                  }
+                }
+              }
+            },
+            "comportamentoCompra": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["aspecto", "descrição", "implicações"],
+                "properties": {
+                  "aspecto": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implicações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "necessidades": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["necessidade", "importância", "soluçãoAtual"],
+                "properties": {
+                  "necessidade": {
+                    "type": "string"
+                  },
+                  "importância": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "soluçãoAtual": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tendências": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["categoria", "descrição", "impacto", "probabilidade", "horizonte", "ações"],
+            "properties": {
+              "categoria": {
+                "type": "string",
+                "enum": ["tecnológica", "social", "econômica", "regulatória", "ambiental"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "string",
+                "enum": ["baixo", "médio", "alto"]
+              },
+              "probabilidade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta"]
+              },
+              "horizonte": {
+                "type": "string"
+              },
+              "ações": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "oportunidades": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["descrição", "potencial", "viabilidade", "riscos", "recomendações"],
+            "properties": {
+              "descrição": {
+                "type": "string"
+              },
+              "potencial": {
+                "type": "object",
+                "required": ["mercado", "receita", "crescimento"],
+                "properties": {
+                  "mercado": {
+                    "type": "string"
+                  },
+                  "receita": {
+                    "type": "string"
+                  },
+                  "crescimento": {
+                    "type": "string"
+                  }
+                }
+              },
+              "viabilidade": {
+                "type": "object",
+                "required": ["técnica", "financeira", "operacional"],
+                "properties": {
+                  "técnica": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "financeira": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "operacional": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  }
+                }
+              },
+              "riscos": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "recomendações": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

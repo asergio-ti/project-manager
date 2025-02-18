@@ -1,0 +1,244 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Introduction Schema",
+  "description": "Schema para o módulo de introdução do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["introduction"],
+  "properties": {
+    "introduction": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visãoGeral", "escopo", "restrições", "princípios", "referências"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "visãoGeral": {
+          "type": "object",
+          "required": ["description", "diagram"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Visão geral da arquitetura do sistema"
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["required", "type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "required": {
+                  "type": "boolean"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "escopo": {
+          "type": "object",
+          "required": ["objetivos", "contexto"],
+          "properties": {
+            "objetivos": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "contexto": {
+              "type": "object",
+              "required": ["problema", "solução", "stakeholders"],
+              "properties": {
+                "problema": {
+                  "type": "string"
+                },
+                "solução": {
+                  "type": "string"
+                },
+                "stakeholders": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restrições": {
+          "type": "object",
+          "required": ["técnicas", "negócio"],
+          "properties": {
+            "técnicas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "justificativa"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "justificativa": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "negócio": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "justificativa"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "justificativa": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "princípios": {
+          "type": "object",
+          "required": ["arquiteturais", "design"],
+          "properties": {
+            "arquiteturais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "benefícios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "benefícios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "design": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "aplicação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "aplicação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "referências": {
+          "type": "object",
+          "required": ["padrões", "tecnologias"],
+          "properties": {
+            "padrões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "aplicação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "aplicação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "tecnologias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "versão", "propósito"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

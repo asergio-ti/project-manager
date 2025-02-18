@@ -1,0 +1,206 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Patterns Schema",
+  "description": "Schema para o módulo de padrões do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["patterns"],
+  "properties": {
+    "patterns": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "arquiteturais", "design", "implementação"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "arquiteturais": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "categoria", "descrição", "motivação", "estrutura", "consequências", "implementação", "exemplos"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^PAT-\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["Estrutural", "Comportamental", "Criacional"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "motivação": {
+                "type": "string"
+              },
+              "estrutura": {
+                "type": "object",
+                "required": ["diagram", "componentes", "relações"],
+                "properties": {
+                  "diagram": {
+                    "type": "object",
+                    "required": ["required", "type", "content", "viewpoint", "rationale"],
+                    "properties": {
+                      "required": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["mermaid"]
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "viewpoint": {
+                        "type": "string"
+                      },
+                      "rationale": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "componentes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "responsabilidade"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "responsabilidade": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "relações": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["origem", "destino", "tipo"],
+                      "properties": {
+                        "origem": {
+                          "type": "string"
+                        },
+                        "destino": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "consequências": {
+                "type": "object",
+                "required": ["benefícios", "limitações"],
+                "properties": {
+                  "benefícios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "limitações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "implementação": {
+                "type": "object",
+                "required": ["passos", "considerações"],
+                "properties": {
+                  "passos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "considerações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "exemplos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "código", "descrição"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "código": {
+                      "type": "string"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "design": {
+          "type": "array",
+          "items": {
+            "$ref": "#/properties/patterns/properties/arquiteturais/items"
+          }
+        },
+        "implementação": {
+          "type": "array",
+          "items": {
+            "$ref": "#/properties/patterns/properties/arquiteturais/items"
+          }
+        }
+      }
+    }
+  }
+} 

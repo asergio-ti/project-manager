@@ -1,0 +1,723 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Scalability Schema",
+  "description": "Schema para o módulo de escalabilidade do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["scalability"],
+  "properties": {
+    "scalability": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "requisitos", "estratégias", "dimensões", "testes", "monitoramento", "limites", "custos"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "requisitos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "métricas", "prioridade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SCAL-R\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["Carga", "Performance", "Disponibilidade", "Elasticidade"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["Alta", "Média", "Baixa"]
+              }
+            }
+          }
+        },
+        "estratégias": {
+          "type": "object",
+          "required": ["horizontal", "vertical", "dados", "cache"],
+          "properties": {
+            "horizontal": {
+              "type": "object",
+              "required": ["descrição", "gatilhos", "limites", "implementação"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "gatilhos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["métrica", "condição", "ação"],
+                    "properties": {
+                      "métrica": {
+                        "type": "string"
+                      },
+                      "condição": {
+                        "type": "string"
+                      },
+                      "ação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "limites": {
+                  "type": "object",
+                  "required": ["mínimo", "máximo", "incremento"],
+                  "properties": {
+                    "mínimo": {
+                      "type": "string"
+                    },
+                    "máximo": {
+                      "type": "string"
+                    },
+                    "incremento": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "implementação": {
+                  "type": "string"
+                }
+              }
+            },
+            "vertical": {
+              "type": "object",
+              "required": ["descrição", "gatilhos", "limites", "implementação"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "gatilhos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["métrica", "condição", "ação"],
+                    "properties": {
+                      "métrica": {
+                        "type": "string"
+                      },
+                      "condição": {
+                        "type": "string"
+                      },
+                      "ação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "limites": {
+                  "type": "object",
+                  "required": ["mínimo", "máximo", "incremento"],
+                  "properties": {
+                    "mínimo": {
+                      "type": "string"
+                    },
+                    "máximo": {
+                      "type": "string"
+                    },
+                    "incremento": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "implementação": {
+                  "type": "string"
+                }
+              }
+            },
+            "dados": {
+              "type": "object",
+              "required": ["particionamento", "replicação", "sharding"],
+              "properties": {
+                "particionamento": {
+                  "type": "object",
+                  "required": ["estratégia", "chaves", "distribuição"],
+                  "properties": {
+                    "estratégia": {
+                      "type": "string"
+                    },
+                    "chaves": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "distribuição": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "replicação": {
+                  "type": "object",
+                  "required": ["tipo", "sincronização", "consistência"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "sincronização": {
+                      "type": "string"
+                    },
+                    "consistência": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "sharding": {
+                  "type": "object",
+                  "required": ["estratégia", "distribuição", "balanceamento"],
+                  "properties": {
+                    "estratégia": {
+                      "type": "string"
+                    },
+                    "distribuição": {
+                      "type": "string"
+                    },
+                    "balanceamento": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "cache": {
+              "type": "object",
+              "required": ["níveis", "políticas", "invalidação"],
+              "properties": {
+                "níveis": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "tipo", "tamanho", "ttl"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "tamanho": {
+                        "type": "string"
+                      },
+                      "ttl": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "políticas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "invalidação": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dimensões": {
+          "type": "object",
+          "required": ["carga", "dados", "geográfica", "administrativa"],
+          "properties": {
+            "carga": {
+              "type": "object",
+              "required": ["atual", "projetada", "pico", "distribuição"],
+              "properties": {
+                "atual": {
+                  "type": "string"
+                },
+                "projetada": {
+                  "type": "string"
+                },
+                "pico": {
+                  "type": "string"
+                },
+                "distribuição": {
+                  "type": "string"
+                }
+              }
+            },
+            "dados": {
+              "type": "object",
+              "required": ["volume", "crescimento", "distribuição", "acesso"],
+              "properties": {
+                "volume": {
+                  "type": "string"
+                },
+                "crescimento": {
+                  "type": "string"
+                },
+                "distribuição": {
+                  "type": "string"
+                },
+                "acesso": {
+                  "type": "string"
+                }
+              }
+            },
+            "geográfica": {
+              "type": "object",
+              "required": ["regiões", "latência", "replicação", "regulamentação"],
+              "properties": {
+                "regiões": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "latência": {
+                  "type": "string"
+                },
+                "replicação": {
+                  "type": "string"
+                },
+                "regulamentação": {
+                  "type": "string"
+                }
+              }
+            },
+            "administrativa": {
+              "type": "object",
+              "required": ["organizações", "usuários", "permissões", "isolamento"],
+              "properties": {
+                "organizações": {
+                  "type": "string"
+                },
+                "usuários": {
+                  "type": "string"
+                },
+                "permissões": {
+                  "type": "string"
+                },
+                "isolamento": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "testes": {
+          "type": "object",
+          "required": ["carga", "performance", "elasticidade", "resiliência"],
+          "properties": {
+            "carga": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "configuração", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "performance": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "configuração", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "elasticidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "cenários", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "cenários": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "resiliência": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "falhas", "critérios"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "falhas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "monitoramento": {
+          "type": "object",
+          "required": ["métricas", "alertas", "dashboards", "relatórios"],
+          "properties": {
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "fonte", "coleta", "agregação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "coleta": {
+                    "type": "string"
+                  },
+                  "agregação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "alertas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "condição", "severidade", "ação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "condição": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["Info", "Warning", "Error", "Critical"]
+                  },
+                  "ação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "dashboards": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "métricas", "visualizações"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "visualizações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "relatórios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "periodicidade", "conteúdo", "distribuição"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "periodicidade": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "distribuição": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "limites": {
+          "type": "object",
+          "required": ["técnicos", "negócio", "regulatórios", "custos"],
+          "properties": {
+            "técnicos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["recurso", "limite", "impacto"],
+                "properties": {
+                  "recurso": {
+                    "type": "string"
+                  },
+                  "limite": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "negócio": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["aspecto", "limite", "impacto"],
+                "properties": {
+                  "aspecto": {
+                    "type": "string"
+                  },
+                  "limite": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "regulatórios": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["regulamento", "requisito", "impacto"],
+                "properties": {
+                  "regulamento": {
+                    "type": "string"
+                  },
+                  "requisito": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "custos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "limite", "impacto"],
+                "properties": {
+                  "item": {
+                    "type": "string"
+                  },
+                  "limite": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "custos": {
+          "type": "object",
+          "required": ["infraestrutura", "licenças", "operação", "projeções"],
+          "properties": {
+            "infraestrutura": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["recurso", "custo", "escala"],
+                "properties": {
+                  "recurso": {
+                    "type": "string"
+                  },
+                  "custo": {
+                    "type": "string"
+                  },
+                  "escala": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "licenças": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["software", "modelo", "custo"],
+                "properties": {
+                  "software": {
+                    "type": "string"
+                  },
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "custo": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "operação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "custo", "frequência"],
+                "properties": {
+                  "item": {
+                    "type": "string"
+                  },
+                  "custo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "projeções": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["período", "cenário", "custo"],
+                "properties": {
+                  "período": {
+                    "type": "string"
+                  },
+                  "cenário": {
+                    "type": "string"
+                  },
+                  "custo": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

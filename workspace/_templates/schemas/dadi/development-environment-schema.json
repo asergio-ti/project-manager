@@ -1,0 +1,395 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Development Environment Schema",
+  "description": "Schema para o módulo de ambiente de desenvolvimento do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["developmentEnvironment"],
+  "properties": {
+    "developmentEnvironment": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "architecture", "requirements", "setup", "workflow"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "architecture": {
+          "type": "object",
+          "required": ["description", "diagram"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["required", "type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "required": {
+                  "type": "boolean"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "requirements": {
+          "type": "object",
+          "required": ["hardware", "software", "network"],
+          "properties": {
+            "hardware": {
+              "type": "object",
+              "required": ["minimum", "recommended"],
+              "properties": {
+                "minimum": {
+                  "type": "object",
+                  "required": ["cpu", "memory", "storage"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    },
+                    "storage": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "recommended": {
+                  "type": "object",
+                  "required": ["cpu", "memory", "storage"],
+                  "properties": {
+                    "cpu": {
+                      "type": "string"
+                    },
+                    "memory": {
+                      "type": "string"
+                    },
+                    "storage": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "software": {
+              "type": "object",
+              "required": ["runtime", "containerization", "ide"],
+              "properties": {
+                "runtime": {
+                  "type": "object",
+                  "required": ["node"],
+                  "properties": {
+                    "node": {
+                      "type": "object",
+                      "required": ["version", "manager", "packages"],
+                      "properties": {
+                        "version": {
+                          "type": "string"
+                        },
+                        "manager": {
+                          "type": "string"
+                        },
+                        "packages": {
+                          "type": "object",
+                          "required": ["global"],
+                          "properties": {
+                            "global": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "containerization": {
+                  "type": "object",
+                  "required": ["docker"],
+                  "properties": {
+                    "docker": {
+                      "type": "object",
+                      "required": ["version", "compose"],
+                      "properties": {
+                        "version": {
+                          "type": "string"
+                        },
+                        "compose": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "ide": {
+                  "type": "object",
+                  "required": ["vscode"],
+                  "properties": {
+                    "vscode": {
+                      "type": "object",
+                      "required": ["version", "extensions", "settings"],
+                      "properties": {
+                        "version": {
+                          "type": "string"
+                        },
+                        "extensions": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["id", "purpose"],
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "purpose": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "settings": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "network": {
+              "type": "object",
+              "required": ["ports", "access"],
+              "properties": {
+                "ports": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["number", "purpose"],
+                    "properties": {
+                      "number": {
+                        "type": "integer"
+                      },
+                      "purpose": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "access": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["resource", "ports", "protocol"],
+                    "properties": {
+                      "resource": {
+                        "type": "string"
+                      },
+                      "ports": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "protocol": {
+                        "oneOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "setup": {
+          "type": "object",
+          "required": ["steps", "verification"],
+          "properties": {
+            "steps": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["order", "name", "command", "validation"],
+                "properties": {
+                  "order": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "command": {
+                    "type": "string"
+                  },
+                  "validation": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "verification": {
+              "type": "object",
+              "required": ["commands"],
+              "properties": {
+                "commands": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["description", "command", "expected"],
+                    "properties": {
+                      "description": {
+                        "type": "string"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "expected": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "workflow": {
+          "type": "object",
+          "required": ["development", "debugging"],
+          "properties": {
+            "development": {
+              "type": "object",
+              "required": ["commands", "practices"],
+              "properties": {
+                "commands": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "command", "description"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "command": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "practices": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "debugging": {
+              "type": "object",
+              "required": ["tools", "logging"],
+              "properties": {
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "configuration", "purpose"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "configuration": {
+                        "type": "string"
+                      },
+                      "port": {
+                        "type": "integer"
+                      },
+                      "purpose": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "logging": {
+                  "type": "object",
+                  "required": ["levels", "location"],
+                  "properties": {
+                    "levels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "location": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

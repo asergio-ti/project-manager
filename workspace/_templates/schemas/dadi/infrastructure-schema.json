@@ -1,0 +1,425 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Infrastructure Schema",
+  "description": "Schema para o módulo de infraestrutura do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["infrastructure"],
+  "properties": {
+    "infrastructure": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "architecture", "componentes", "requisitos", "manutenção"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "architecture": {
+          "type": "object",
+          "required": ["description", "diagram"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["required", "type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "required": {
+                  "type": "boolean"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "componentes": {
+          "type": "object",
+          "required": ["armazenamento", "runtime"],
+          "properties": {
+            "armazenamento": {
+              "type": "object",
+              "required": ["sistema_arquivos"],
+              "properties": {
+                "sistema_arquivos": {
+                  "type": "object",
+                  "required": ["estrutura", "requisitos"],
+                  "properties": {
+                    "estrutura": {
+                      "type": "object",
+                      "patternProperties": {
+                        "^.*/$": {
+                          "type": "object",
+                          "required": ["descrição", "permissões", "backup"],
+                          "properties": {
+                            "descrição": {
+                              "type": "string"
+                            },
+                            "permissões": {
+                              "type": "string",
+                              "pattern": "^[0-7]{3}$"
+                            },
+                            "backup": {
+                              "type": "boolean"
+                            },
+                            "subdiretórios": {
+                              "type": "object",
+                              "patternProperties": {
+                                "^.*/$": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "requisitos": {
+                      "type": "object",
+                      "required": ["espaço", "permissões"],
+                      "properties": {
+                        "espaço": {
+                          "type": "object",
+                          "required": ["mínimo", "recomendado"],
+                          "properties": {
+                            "mínimo": {
+                              "type": "string"
+                            },
+                            "recomendado": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "permissões": {
+                          "type": "object",
+                          "required": ["usuário", "grupo", "outros"],
+                          "properties": {
+                            "usuário": {
+                              "type": "string"
+                            },
+                            "grupo": {
+                              "type": "string"
+                            },
+                            "outros": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "runtime": {
+              "type": "object",
+              "required": ["node", "docker"],
+              "properties": {
+                "node": {
+                  "type": "object",
+                  "required": ["versão", "configurações"],
+                  "properties": {
+                    "versão": {
+                      "type": "string"
+                    },
+                    "configurações": {
+                      "type": "object",
+                      "required": ["max_old_space_size", "gc"],
+                      "properties": {
+                        "max_old_space_size": {
+                          "type": "string"
+                        },
+                        "gc": {
+                          "type": "object",
+                          "required": ["tipo", "intervalo"],
+                          "properties": {
+                            "tipo": {
+                              "type": "string"
+                            },
+                            "intervalo": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "docker": {
+                  "type": "object",
+                  "required": ["versão", "recursos"],
+                  "properties": {
+                    "versão": {
+                      "type": "string"
+                    },
+                    "recursos": {
+                      "type": "object",
+                      "required": ["cpu", "memória", "storage"],
+                      "properties": {
+                        "cpu": {
+                          "type": "string"
+                        },
+                        "memória": {
+                          "type": "string"
+                        },
+                        "storage": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requisitos": {
+          "type": "object",
+          "required": ["sistema", "rede"],
+          "properties": {
+            "sistema": {
+              "type": "object",
+              "required": ["os", "hardware"],
+              "properties": {
+                "os": {
+                  "type": "object",
+                  "required": ["suportados", "versões"],
+                  "properties": {
+                    "suportados": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "versões": {
+                      "type": "object",
+                      "required": ["Linux", "macOS", "Windows"],
+                      "properties": {
+                        "Linux": {
+                          "type": "string"
+                        },
+                        "macOS": {
+                          "type": "string"
+                        },
+                        "Windows": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "hardware": {
+                  "type": "object",
+                  "required": ["mínimo", "recomendado"],
+                  "properties": {
+                    "mínimo": {
+                      "type": "object",
+                      "required": ["cpu", "memória", "disco"],
+                      "properties": {
+                        "cpu": {
+                          "type": "string"
+                        },
+                        "memória": {
+                          "type": "string"
+                        },
+                        "disco": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "recomendado": {
+                      "type": "object",
+                      "required": ["cpu", "memória", "disco"],
+                      "properties": {
+                        "cpu": {
+                          "type": "string"
+                        },
+                        "memória": {
+                          "type": "string"
+                        },
+                        "disco": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "rede": {
+              "type": "object",
+              "required": ["portas", "firewall"],
+              "properties": {
+                "portas": {
+                  "type": "object",
+                  "required": ["desenvolvimento"],
+                  "properties": {
+                    "desenvolvimento": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["número", "protocolo", "propósito"],
+                        "properties": {
+                          "número": {
+                            "type": "integer"
+                          },
+                          "protocolo": {
+                            "type": "string"
+                          },
+                          "propósito": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "firewall": {
+                  "type": "object",
+                  "required": ["regras"],
+                  "properties": {
+                    "regras": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["direção", "destino", "porta", "protocolo"],
+                        "properties": {
+                          "direção": {
+                            "type": "string"
+                          },
+                          "destino": {
+                            "type": "string"
+                          },
+                          "porta": {
+                            "type": "integer"
+                          },
+                          "protocolo": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "manutenção": {
+          "type": "object",
+          "required": ["rotinas", "monitoramento"],
+          "properties": {
+            "rotinas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "frequência", "comando", "retenção"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "comando": {
+                    "type": "string"
+                  },
+                  "retenção": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "monitoramento": {
+              "type": "object",
+              "required": ["métricas", "alertas"],
+              "properties": {
+                "métricas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "tipo", "limite"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "limite": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "alertas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["condição", "severidade", "ação"],
+                    "properties": {
+                      "condição": {
+                        "type": "string"
+                      },
+                      "severidade": {
+                        "type": "string"
+                      },
+                      "ação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

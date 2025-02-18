@@ -1,0 +1,294 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Architectural Views Schema",
+  "description": "Schema para o módulo de visões arquiteturais do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["architecturalViews"],
+  "properties": {
+    "architecturalViews": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visões"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "visões": {
+          "type": "object",
+          "required": ["lógica", "processo", "desenvolvimento", "física"],
+          "properties": {
+            "lógica": {
+              "type": "object",
+              "required": ["description", "diagram", "componentes"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "diagram": {
+                  "type": "object",
+                  "required": ["required", "type", "content", "viewpoint", "rationale"],
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": ["mermaid"]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "viewpoint": {
+                      "type": "string"
+                    },
+                    "rationale": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "componentes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "responsabilidade", "interfaces"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "responsabilidade": {
+                        "type": "string"
+                      },
+                      "interfaces": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "processo": {
+              "type": "object",
+              "required": ["description", "diagram", "fluxos"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "diagram": {
+                  "type": "object",
+                  "required": ["required", "type", "content", "viewpoint", "rationale"],
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": ["mermaid"]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "viewpoint": {
+                      "type": "string"
+                    },
+                    "rationale": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "fluxos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "passos"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "passos": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "desenvolvimento": {
+              "type": "object",
+              "required": ["description", "diagram", "estrutura"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "diagram": {
+                  "type": "object",
+                  "required": ["required", "type", "content", "viewpoint", "rationale"],
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": ["mermaid"]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "viewpoint": {
+                      "type": "string"
+                    },
+                    "rationale": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "estrutura": {
+                  "type": "object",
+                  "patternProperties": {
+                    "^.*/$": {
+                      "type": "object",
+                      "required": ["descrição", "módulos"],
+                      "properties": {
+                        "descrição": {
+                          "type": "string"
+                        },
+                        "módulos": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "física": {
+              "type": "object",
+              "required": ["description", "diagram", "componentes"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "diagram": {
+                  "type": "object",
+                  "required": ["required", "type", "content", "viewpoint", "rationale"],
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": ["mermaid"]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "viewpoint": {
+                      "type": "string"
+                    },
+                    "rationale": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "componentes": {
+                  "type": "object",
+                  "properties": {
+                    "runtime": {
+                      "type": "object",
+                      "required": ["nome", "versão", "requisitos"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "versão": {
+                          "type": "string"
+                        },
+                        "requisitos": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "armazenamento": {
+                      "type": "object",
+                      "required": ["local"],
+                      "properties": {
+                        "local": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["path", "propósito", "permissões"],
+                            "properties": {
+                              "path": {
+                                "type": "string"
+                              },
+                              "propósito": {
+                                "type": "string"
+                              },
+                              "permissões": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "systemContext": {
+      "deploymentType": "// Baseado na resposta sobre acesso",
+      "securityRequirements": "// Baseado na resposta sobre dados sensíveis",
+      "scalabilityRequirements": "// Baseado no número de usuários"
+    }
+  }
+} 

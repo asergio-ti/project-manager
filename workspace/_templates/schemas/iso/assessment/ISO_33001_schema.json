@@ -1,0 +1,429 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 33001 Process Assessment Schema",
+  "description": "Schema para avaliação de processos seguindo ISO/IEC 33001",
+  "type": "object",
+  "required": ["processAssessment"],
+  "properties": {
+    "processAssessment": {
+      "type": "object",
+      "required": ["identification", "scope", "approach", "assessment", "results"],
+      "properties": {
+        "identification": {
+          "type": "object",
+          "required": ["id", "date", "sponsor", "team", "organization"],
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Identificador único da avaliação"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "Data da avaliação"
+            },
+            "sponsor": {
+              "type": "object",
+              "required": ["name", "role", "contact"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome do patrocinador"
+                },
+                "role": {
+                  "type": "string",
+                  "description": "Papel na organização"
+                },
+                "contact": {
+                  "type": "string",
+                  "description": "Informações de contato"
+                }
+              }
+            },
+            "team": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "role", "qualifications"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome do avaliador"
+                  },
+                  "role": {
+                    "type": "string",
+                    "description": "Papel na avaliação"
+                  },
+                  "qualifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Qualificações relevantes"
+                  }
+                }
+              }
+            },
+            "organization": {
+              "type": "object",
+              "required": ["name", "unit", "scope"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome da organização"
+                },
+                "unit": {
+                  "type": "string",
+                  "description": "Unidade organizacional"
+                },
+                "scope": {
+                  "type": "string",
+                  "description": "Escopo organizacional"
+                }
+              }
+            }
+          }
+        },
+        "scope": {
+          "type": "object",
+          "required": ["processes", "levels", "context"],
+          "properties": {
+            "processes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "name", "reference"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do processo"
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Nome do processo"
+                  },
+                  "reference": {
+                    "type": "string",
+                    "description": "Referência do modelo de processo"
+                  }
+                }
+              }
+            },
+            "levels": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["incomplete", "performed", "managed", "established", "predictable", "optimizing"],
+                "description": "Níveis de capacidade a serem avaliados"
+              }
+            },
+            "context": {
+              "type": "object",
+              "required": ["constraints", "factors"],
+              "properties": {
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Restrições da avaliação"
+                },
+                "factors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Fatores contextuais"
+                }
+              }
+            }
+          }
+        },
+        "approach": {
+          "type": "object",
+          "required": ["method", "tools", "schedule"],
+          "properties": {
+            "method": {
+              "type": "object",
+              "required": ["name", "version", "activities"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Nome do método"
+                },
+                "version": {
+                  "type": "string",
+                  "description": "Versão do método"
+                },
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "description", "inputs", "outputs"],
+                    "properties": {
+                      "name": {
+                        "type": "string",
+                        "description": "Nome da atividade"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Descrição da atividade"
+                      },
+                      "inputs": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Entradas necessárias"
+                      },
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Saídas esperadas"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "tools": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "version", "purpose"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da ferramenta"
+                  },
+                  "version": {
+                    "type": "string",
+                    "description": "Versão da ferramenta"
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "description": "Propósito da ferramenta"
+                  }
+                }
+              }
+            },
+            "schedule": {
+              "type": "object",
+              "required": ["startDate", "endDate", "milestones"],
+              "properties": {
+                "startDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Data de início"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "Data de término"
+                },
+                "milestones": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["date", "description"],
+                    "properties": {
+                      "date": {
+                        "type": "string",
+                        "format": "date",
+                        "description": "Data do marco"
+                      },
+                      "description": {
+                        "type": "string",
+                        "description": "Descrição do marco"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "assessment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["processId", "attributes", "evidence", "rating"],
+            "properties": {
+              "processId": {
+                "type": "string",
+                "description": "ID do processo avaliado"
+              },
+              "attributes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "name", "indicators"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "ID do atributo"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Nome do atributo"
+                    },
+                    "indicators": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["description", "findings"],
+                        "properties": {
+                          "description": {
+                            "type": "string",
+                            "description": "Descrição do indicador"
+                          },
+                          "findings": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Descobertas relacionadas"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["type", "reference", "description"],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["document", "interview", "observation", "demonstration"],
+                      "description": "Tipo de evidência"
+                    },
+                    "reference": {
+                      "type": "string",
+                      "description": "Referência da evidência"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Descrição da evidência"
+                    }
+                  }
+                }
+              },
+              "rating": {
+                "type": "object",
+                "required": ["level", "confidence", "justification"],
+                "properties": {
+                  "level": {
+                    "type": "string",
+                    "enum": ["not achieved", "partially achieved", "largely achieved", "fully achieved"],
+                    "description": "Nível de realização"
+                  },
+                  "confidence": {
+                    "type": "string",
+                    "enum": ["high", "medium", "low"],
+                    "description": "Nível de confiança"
+                  },
+                  "justification": {
+                    "type": "string",
+                    "description": "Justificativa da avaliação"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "results": {
+          "type": "object",
+          "required": ["summary", "findings", "recommendations"],
+          "properties": {
+            "summary": {
+              "type": "object",
+              "required": ["overview", "strengths", "weaknesses"],
+              "properties": {
+                "overview": {
+                  "type": "string",
+                  "description": "Visão geral dos resultados"
+                },
+                "strengths": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Pontos fortes identificados"
+                },
+                "weaknesses": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Pontos fracos identificados"
+                }
+              }
+            },
+            "findings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "impact", "priority"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "ID da descoberta"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da descoberta"
+                  },
+                  "impact": {
+                    "type": "string",
+                    "enum": ["high", "medium", "low"],
+                    "description": "Impacto da descoberta"
+                  },
+                  "priority": {
+                    "type": "string",
+                    "enum": ["high", "medium", "low"],
+                    "description": "Prioridade de ação"
+                  }
+                }
+              }
+            },
+            "recommendations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "timeframe", "resources"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "ID da recomendação"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da recomendação"
+                  },
+                  "timeframe": {
+                    "type": "string",
+                    "enum": ["short-term", "medium-term", "long-term"],
+                    "description": "Prazo para implementação"
+                  },
+                  "resources": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Recursos necessários"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

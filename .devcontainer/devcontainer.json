@@ -1,0 +1,62 @@
+{
+  "name": "Project Manager Development Environment",
+  "build": {
+    "dockerfile": "../docker/Dockerfile.dev",
+    "context": "..",
+    "args": {
+      "NODE_ENV": "development"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-vscode.vscode-typescript-next",
+        "github.copilot",
+        "github.vscode-github-actions",
+        "ms-azuretools.vscode-docker",
+        "ms-vsliveshare.vsliveshare",
+        "eamodio.gitlens"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": true
+        },
+        "files.eol": "\n",
+        "files.watcherExclude": {
+          "**/node_modules/**": true
+        }
+      }
+    }
+  },
+  "forwardPorts": [3000, 22],
+  "postCreateCommand": "npm install && npm run build",
+  "remoteUser": "node",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true,
+      "dockerDashComposeVersion": "v2"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "18.19.1"
+    }
+  },
+  "workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/${localWorkspaceFolderBasename},type=bind,consistency=cached",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+  "mounts": [
+    "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "CHOKIDAR_USEPOLLING": "true",
+    "WATCHPACK_POLLING": "true"
+  },
+  "runArgs": ["--init"],
+  "overrideCommand": false,
+  "shutdownAction": "stopContainer"
+} 

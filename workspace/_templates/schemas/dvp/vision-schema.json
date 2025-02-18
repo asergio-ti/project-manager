@@ -1,0 +1,308 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Vision Document Schema",
+  "description": "Schema para documento de visão do projeto",
+  "type": "object",
+  "required": ["vision"],
+  "properties": {
+    "vision": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "ideiaInicial", "análiseAssistida", "planejamentoInicial", "aspectosNegócio"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "ideiaInicial": {
+          "type": "object",
+          "required": ["problema", "solução", "públicoAlvo"],
+          "properties": {
+            "problema": {
+              "type": "object",
+              "required": ["descrição", "impactoAtual", "pessoasAfetadas"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "impactoAtual": {
+                  "type": "string"
+                },
+                "pessoasAfetadas": {
+                  "type": "string"
+                }
+              }
+            },
+            "solução": {
+              "type": "object",
+              "required": ["descrição", "benefíciosPrincipais", "diferenciais"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "benefíciosPrincipais": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "diferenciais": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "públicoAlvo": {
+              "type": "object",
+              "required": ["perfis", "necessidades", "expectativas"],
+              "properties": {
+                "perfis": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "necessidades": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "expectativas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "análiseAssistida": {
+          "type": "object",
+          "required": ["tipoSolução", "complexidade", "requisitosChave"],
+          "properties": {
+            "tipoSolução": {
+              "type": "object",
+              "required": ["recomendação", "justificativa", "tecnologiasBase"],
+              "properties": {
+                "recomendação": {
+                  "type": "string"
+                },
+                "justificativa": {
+                  "type": "string"
+                },
+                "tecnologiasBase": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "complexidade": {
+              "type": "object",
+              "required": ["nível", "explicação", "fasesRecomendadas"],
+              "properties": {
+                "nível": {
+                  "type": "string",
+                  "enum": ["baixa", "média", "alta"]
+                },
+                "explicação": {
+                  "type": "string"
+                },
+                "fasesRecomendadas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "requisitosChave": {
+              "type": "object",
+              "required": ["funcionais", "técnicos", "segurança"],
+              "properties": {
+                "funcionais": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "técnicos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "segurança": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "planejamentoInicial": {
+          "type": "object",
+          "required": ["fasesImplementação", "estratégiaValidação"],
+          "properties": {
+            "fasesImplementação": {
+              "type": "object",
+              "required": ["mvp", "evolução"],
+              "properties": {
+                "mvp": {
+                  "type": "object",
+                  "required": ["escopo", "tempoPrevisto", "resultadosEsperados"],
+                  "properties": {
+                    "escopo": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "tempoPrevisto": {
+                      "type": "string"
+                    },
+                    "resultadosEsperados": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "evolução": {
+                  "type": "object",
+                  "required": ["próximosPassos", "recursosNecessários", "indicadoresProgresso"],
+                  "properties": {
+                    "próximosPassos": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "recursosNecessários": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "indicadoresProgresso": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "estratégiaValidação": {
+              "type": "object",
+              "required": ["métodos", "métricas", "feedbackLoop"],
+              "properties": {
+                "métodos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "métricas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "feedbackLoop": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "aspectosNegócio": {
+          "type": "object",
+          "required": ["modeloMonetização", "indicadoresChave"],
+          "properties": {
+            "modeloMonetização": {
+              "type": "object",
+              "required": ["estratégia", "previsãoCustos", "previsãoReceitas"],
+              "properties": {
+                "estratégia": {
+                  "type": "string"
+                },
+                "previsãoCustos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "previsãoReceitas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "indicadoresChave": {
+              "type": "object",
+              "required": ["sucesso", "crescimento", "qualidade"],
+              "properties": {
+                "sucesso": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "crescimento": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "qualidade": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,43 @@
+# Usar uma imagem base leve do Node.js
+FROM mcr.microsoft.com/devcontainers/javascript-node:18-bullseye
+
+# Definir variáveis de ambiente para otimização
+ENV NODE_ENV=development \
+    NPM_CONFIG_LOGLEVEL=warn \
+    CHOKIDAR_USEPOLLING=true \
+    WATCHPACK_POLLING=true \
+    FAST_REFRESH=true \
+    NPM_CONFIG_FETCH_TIMEOUT=300000 \
+    NPM_CONFIG_FETCH_RETRIES=5 \
+    COMPOSE_HTTP_TIMEOUT=120 \
+    DOCKER_CLIENT_TIMEOUT=120
+
+# Configurar diretório de trabalho
+WORKDIR /workspaces/${PROJECT_NAME:-app}
+
+# Instalar dependências adicionais do sistema
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    netcat \
+    openssh-server \
+    && rm -rf /var/lib/apt/lists/*
+
+# Configurar SSH para Cursor IDE
+RUN mkdir -p /var/run/sshd && \
+    echo "PermitUserEnvironment yes" >> /etc/ssh/sshd_config && \
+    echo "AllowTcpForwarding yes" >> /etc/ssh/sshd_config && \
+    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+
+# Configurar usuário não-root (já existe na imagem base do devcontainer)
+RUN mkdir -p /home/node/.ssh && \
+    chown -R node:node /home/node/.ssh
+
+# Copiar scripts de inicialização
+COPY docker/init.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/init.sh
+
+# Expor portas
+EXPOSE 3000 22
+
+# Comando para desenvolvimento com hot reload e SSH
+CMD ["/usr/local/bin/init.sh"] 

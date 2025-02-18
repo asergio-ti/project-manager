@@ -1,0 +1,294 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Stakeholder Analysis Schema",
+  "description": "Schema para documento de análise de stakeholders",
+  "type": "object",
+  "required": ["stakeholderAnalysis"],
+  "properties": {
+    "stakeholderAnalysis": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "stakeholders", "análiseImpacto", "matrizInfluência", "estratégiasEngajamento", "planosComunicação"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo", "papel", "interesses", "expectativas", "influência"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^STK-\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["interno", "externo"]
+              },
+              "papel": {
+                "type": "string"
+              },
+              "interesses": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "expectativas": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "influência": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta"]
+              }
+            }
+          }
+        },
+        "análiseImpacto": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["stakeholderId", "impactos", "riscos", "oportunidades"],
+            "properties": {
+              "stakeholderId": {
+                "type": "string",
+                "pattern": "^STK-\\d+$"
+              },
+              "impactos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "nível", "área"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "nível": {
+                      "type": "string",
+                      "enum": ["baixo", "médio", "alto"]
+                    },
+                    "área": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "riscos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "probabilidade", "severidade", "mitigação"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "probabilidade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta"]
+                    },
+                    "severidade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta"]
+                    },
+                    "mitigação": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "oportunidades": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "benefício", "viabilidade"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "benefício": {
+                      "type": "string"
+                    },
+                    "viabilidade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "matrizInfluência": {
+          "type": "object",
+          "required": ["diagram", "análise"],
+          "properties": {
+            "diagram": {
+              "type": "object",
+              "required": ["type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            },
+            "análise": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["quadrante", "stakeholders", "estratégia"],
+                "properties": {
+                  "quadrante": {
+                    "type": "string",
+                    "enum": ["alto_poder_alto_interesse", "alto_poder_baixo_interesse", "baixo_poder_alto_interesse", "baixo_poder_baixo_interesse"]
+                  },
+                  "stakeholders": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^STK-\\d+$"
+                    }
+                  },
+                  "estratégia": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "estratégiasEngajamento": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["stakeholderId", "nível", "abordagem", "ações", "recursos", "responsável"],
+            "properties": {
+              "stakeholderId": {
+                "type": "string",
+                "pattern": "^STK-\\d+$"
+              },
+              "nível": {
+                "type": "string",
+                "enum": ["informar", "consultar", "envolver", "colaborar", "empoderar"]
+              },
+              "abordagem": {
+                "type": "string"
+              },
+              "ações": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "recursos": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "responsável": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "planosComunicação": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["stakeholderId", "frequência", "canais", "conteúdo", "objetivos", "feedback"],
+            "properties": {
+              "stakeholderId": {
+                "type": "string",
+                "pattern": "^STK-\\d+$"
+              },
+              "frequência": {
+                "type": "string"
+              },
+              "canais": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "conteúdo": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "objetivos": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "feedback": {
+                "type": "object",
+                "required": ["mecanismos", "métricas"],
+                "properties": {
+                  "mecanismos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

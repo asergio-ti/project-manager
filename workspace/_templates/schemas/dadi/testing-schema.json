@@ -1,0 +1,442 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Testing Schema",
+  "description": "Schema para o módulo de testes do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["testing"],
+  "properties": {
+    "testing": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "strategy", "frameworks", "configuration", "execution"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "strategy": {
+          "type": "object",
+          "required": ["types", "coverage", "quality"],
+          "properties": {
+            "types": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "description", "scope"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "enum": ["unit", "integration", "e2e", "performance", "security"]
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "scope": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "coverage": {
+              "type": "object",
+              "required": ["minimum", "target", "exclusions"],
+              "properties": {
+                "minimum": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "target": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "exclusions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "quality": {
+              "type": "object",
+              "required": ["metrics", "thresholds"],
+              "properties": {
+                "metrics": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "description", "threshold"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "threshold": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "thresholds": {
+                  "type": "object",
+                  "required": ["complexity", "duplication", "maintainability"],
+                  "properties": {
+                    "complexity": {
+                      "type": "number"
+                    },
+                    "duplication": {
+                      "type": "number"
+                    },
+                    "maintainability": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "frameworks": {
+          "type": "object",
+          "required": ["unit", "integration", "e2e", "performance", "security"],
+          "properties": {
+            "unit": {
+              "type": "object",
+              "required": ["name", "version", "configuration"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "configuration": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
+            "integration": {
+              "type": "object",
+              "required": ["name", "version", "configuration"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "configuration": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
+            "e2e": {
+              "type": "object",
+              "required": ["name", "version", "configuration"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "configuration": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
+            "performance": {
+              "type": "object",
+              "required": ["name", "version", "configuration"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "configuration": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
+            "security": {
+              "type": "object",
+              "required": ["name", "version", "configuration"],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                },
+                "configuration": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "required": ["environments", "data", "mocks"],
+          "properties": {
+            "environments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "variables", "setup"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "variables": {
+                    "type": "object",
+                    "additionalProperties": true
+                  },
+                  "setup": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "data": {
+              "type": "object",
+              "required": ["fixtures", "seeds"],
+              "properties": {
+                "fixtures": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "path", "type"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "seeds": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "path", "environment"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "environment": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "mocks": {
+              "type": "object",
+              "required": ["services", "data"],
+              "properties": {
+                "services": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "port", "responses"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "port": {
+                        "type": "integer"
+                      },
+                      "responses": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["path", "method", "status", "body"],
+                          "properties": {
+                            "path": {
+                              "type": "string"
+                            },
+                            "method": {
+                              "type": "string",
+                              "enum": ["GET", "POST", "PUT", "DELETE", "PATCH"]
+                            },
+                            "status": {
+                              "type": "integer"
+                            },
+                            "body": {
+                              "type": "object",
+                              "additionalProperties": true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "data": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "type", "content"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "content": {
+                        "type": "object",
+                        "additionalProperties": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "execution": {
+          "type": "object",
+          "required": ["commands", "reports", "ci"],
+          "properties": {
+            "commands": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "command", "environment", "description"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "command": {
+                    "type": "string"
+                  },
+                  "environment": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "reports": {
+              "type": "object",
+              "required": ["formats", "location"],
+              "properties": {
+                "formats": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "location": {
+                  "type": "string"
+                }
+              }
+            },
+            "ci": {
+              "type": "object",
+              "required": ["platform", "triggers", "stages"],
+              "properties": {
+                "platform": {
+                  "type": "string"
+                },
+                "triggers": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "stages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "commands", "conditions"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "commands": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "conditions": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

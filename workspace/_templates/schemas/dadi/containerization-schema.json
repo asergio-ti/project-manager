@@ -1,0 +1,268 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Containerization Schema",
+  "description": "Schema para o módulo de containerização do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["containerization"],
+  "properties": {
+    "containerization": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "architecture", "configuration", "security", "build", "deployment"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "architecture": {
+          "type": "object",
+          "required": ["description", "diagram"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "diagram": {
+              "type": "object",
+              "required": ["required", "type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "required": {
+                  "type": "boolean"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "viewpoint": {
+                  "type": "string"
+                },
+                "rationale": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "required": ["base", "volumes", "networking"],
+          "properties": {
+            "base": {
+              "type": "object",
+              "required": ["image", "workdir", "user", "environment"],
+              "properties": {
+                "image": {
+                  "type": "string"
+                },
+                "workdir": {
+                  "type": "string"
+                },
+                "user": {
+                  "type": "string"
+                },
+                "environment": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "volumes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["source", "target", "mode"],
+                "properties": {
+                  "source": {
+                    "type": "string"
+                  },
+                  "target": {
+                    "type": "string"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": ["ro", "rw"]
+                  }
+                }
+              }
+            },
+            "networking": {
+              "type": "object",
+              "required": ["required", "description"],
+              "properties": {
+                "required": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": {
+          "type": "object",
+          "required": ["principles", "scanning"],
+          "properties": {
+            "principles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "implementation"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "implementation": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "scanning": {
+              "type": "object",
+              "required": ["tools", "frequency"],
+              "properties": {
+                "tools": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "purpose"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "purpose": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "frequency": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "build": {
+          "type": "object",
+          "required": ["stages", "optimization"],
+          "properties": {
+            "stages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "purpose", "base", "steps"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "purpose": {
+                    "type": "string"
+                  },
+                  "base": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "optimization": {
+              "type": "object",
+              "required": ["techniques"],
+              "properties": {
+                "techniques": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "deployment": {
+          "type": "object",
+          "required": ["local", "ci"],
+          "properties": {
+            "local": {
+              "type": "object",
+              "required": ["command", "environment"],
+              "properties": {
+                "command": {
+                  "type": "string"
+                },
+                "environment": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "ci": {
+              "type": "object",
+              "required": ["registry", "tags"],
+              "properties": {
+                "registry": {
+                  "type": "string"
+                },
+                "tags": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

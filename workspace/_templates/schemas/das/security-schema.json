@@ -1,0 +1,631 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Security Schema",
+  "description": "Schema para o módulo de segurança do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["security"],
+  "properties": {
+    "security": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "princípios", "controles", "ameaças", "conformidade", "gestãoAcessos", "criptografia", "auditoria"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "princípios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "justificativa", "implicações"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SEC-P\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "justificativa": {
+                "type": "string"
+              },
+              "implicações": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "controles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo", "descrição", "implementação", "verificação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SEC-C\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["Preventivo", "Detectivo", "Corretivo", "Compensatório"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "implementação": {
+                "type": "string"
+              },
+              "verificação": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "ameaças": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "impacto", "probabilidade", "mitigação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SEC-T\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "string",
+                "enum": ["Baixo", "Médio", "Alto", "Crítico"]
+              },
+              "probabilidade": {
+                "type": "string",
+                "enum": ["Baixa", "Média", "Alta"]
+              },
+              "mitigação": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "conformidade": {
+          "type": "object",
+          "required": ["regulamentos", "padrões", "certificações", "auditorias"],
+          "properties": {
+            "regulamentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "requisitos", "status"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "requisitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Conforme", "Parcial", "Não Conforme", "Não Aplicável"]
+                  }
+                }
+              }
+            },
+            "padrões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "versão", "escopo", "conformidade"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "conformidade": {
+                    "type": "string",
+                    "enum": ["Total", "Parcial", "Não Conforme"]
+                  }
+                }
+              }
+            },
+            "certificações": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "emissor", "validade", "escopo"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "emissor": {
+                    "type": "string"
+                  },
+                  "validade": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "auditorias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "periodicidade", "escopo", "responsável"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "periodicidade": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "responsável": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "gestãoAcessos": {
+          "type": "object",
+          "required": ["autenticação", "autorização", "identidades", "sessões"],
+          "properties": {
+            "autenticação": {
+              "type": "object",
+              "required": ["métodos", "políticas", "fatores"],
+              "properties": {
+                "métodos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "políticas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "fatores": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "autorização": {
+              "type": "object",
+              "required": ["modelo", "papéis", "permissões", "políticas"],
+              "properties": {
+                "modelo": {
+                  "type": "string",
+                  "enum": ["RBAC", "ABAC", "ACL", "DAC", "MAC"]
+                },
+                "papéis": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "descrição", "permissões"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "descrição": {
+                        "type": "string"
+                      },
+                      "permissões": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "permissões": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["recurso", "ações", "condições"],
+                    "properties": {
+                      "recurso": {
+                        "type": "string"
+                      },
+                      "ações": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "condições": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "políticas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "identidades": {
+              "type": "object",
+              "required": ["provedor", "federação", "políticas"],
+              "properties": {
+                "provedor": {
+                  "type": "string"
+                },
+                "federação": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "políticas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "sessões": {
+              "type": "object",
+              "required": ["timeout", "concorrência", "renovação"],
+              "properties": {
+                "timeout": {
+                  "type": "string"
+                },
+                "concorrência": {
+                  "type": "string"
+                },
+                "renovação": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "criptografia": {
+          "type": "object",
+          "required": ["algoritmos", "chaves", "certificados", "protocolos"],
+          "properties": {
+            "algoritmos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tipo", "tamanho", "uso"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["Simétrico", "Assimétrico", "Hash"]
+                  },
+                  "tamanho": {
+                    "type": "string"
+                  },
+                  "uso": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "chaves": {
+              "type": "object",
+              "required": ["geração", "armazenamento", "distribuição", "rotação"],
+              "properties": {
+                "geração": {
+                  "type": "string"
+                },
+                "armazenamento": {
+                  "type": "string"
+                },
+                "distribuição": {
+                  "type": "string"
+                },
+                "rotação": {
+                  "type": "string"
+                }
+              }
+            },
+            "certificados": {
+              "type": "object",
+              "required": ["autoridade", "validação", "revogação"],
+              "properties": {
+                "autoridade": {
+                  "type": "string"
+                },
+                "validação": {
+                  "type": "string"
+                },
+                "revogação": {
+                  "type": "string"
+                }
+              }
+            },
+            "protocolos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "versão", "uso", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string"
+                  },
+                  "uso": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "auditoria": {
+          "type": "object",
+          "required": ["eventos", "logs", "monitoramento", "resposta"],
+          "properties": {
+            "eventos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "nível", "dados", "retenção"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "nível": {
+                    "type": "string",
+                    "enum": ["Info", "Warning", "Error", "Critical"]
+                  },
+                  "dados": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "retenção": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "logs": {
+              "type": "object",
+              "required": ["formato", "armazenamento", "proteção", "retenção"],
+              "properties": {
+                "formato": {
+                  "type": "string"
+                },
+                "armazenamento": {
+                  "type": "string"
+                },
+                "proteção": {
+                  "type": "string"
+                },
+                "retenção": {
+                  "type": "string"
+                }
+              }
+            },
+            "monitoramento": {
+              "type": "object",
+              "required": ["ferramentas", "alertas", "relatórios"],
+              "properties": {
+                "ferramentas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "alertas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["condição", "severidade", "ação"],
+                    "properties": {
+                      "condição": {
+                        "type": "string"
+                      },
+                      "severidade": {
+                        "type": "string",
+                        "enum": ["Info", "Warning", "Error", "Critical"]
+                      },
+                      "ação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "relatórios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "periodicidade", "destinatários"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "periodicidade": {
+                        "type": "string"
+                      },
+                      "destinatários": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "resposta": {
+              "type": "object",
+              "required": ["planos", "equipe", "comunicação"],
+              "properties": {
+                "planos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "ações", "responsáveis"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "ações": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "responsáveis": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "equipe": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["papel", "responsabilidades", "contato"],
+                    "properties": {
+                      "papel": {
+                        "type": "string"
+                      },
+                      "responsabilidades": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "contato": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "comunicação": {
+                  "type": "object",
+                  "required": ["canais", "templates", "stakeholders"],
+                  "properties": {
+                    "canais": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "templates": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "stakeholders": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securityRequirements": {
+      "authentication": "// Baseado na resposta sobre autenticação",
+      "dataProtection": {
+        "sensitiveData": ["// Lista de dados sensíveis"],
+        "complianceRequirements": ["// Requisitos mencionados"]
+      }
+    }
+  }
+} 

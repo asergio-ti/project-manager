@@ -1,0 +1,313 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 29110 Software Engineering for VSEs Schema",
+  "description": "Schema para engenharia de software em organizações muito pequenas seguindo ISO/IEC 29110",
+  "type": "object",
+  "required": ["project_management", "software_implementation"],
+  "properties": {
+    "project_management": {
+      "type": "object",
+      "required": ["planning", "execution", "control", "closure"],
+      "properties": {
+        "planning": {
+          "type": "object",
+          "required": ["project_plan", "statement_of_work"],
+          "properties": {
+            "project_plan": {
+              "$ref": "#/definitions/project_plan"
+            },
+            "statement_of_work": {
+              "$ref": "#/definitions/statement_of_work"
+            }
+          }
+        },
+        "execution": {
+          "type": "object",
+          "required": ["tasks", "meetings", "progress"],
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/task"
+              }
+            },
+            "meetings": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/meeting"
+              }
+            },
+            "progress": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/progress_status"
+              }
+            }
+          }
+        },
+        "control": {
+          "type": "object",
+          "required": ["tracking", "corrections"],
+          "properties": {
+            "tracking": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tracking_record"
+              }
+            },
+            "corrections": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/correction"
+              }
+            }
+          }
+        },
+        "closure": {
+          "type": "object",
+          "required": ["acceptance", "documentation"],
+          "properties": {
+            "acceptance": {
+              "$ref": "#/definitions/acceptance_record"
+            },
+            "documentation": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/document"
+              }
+            }
+          }
+        }
+      }
+    },
+    "software_implementation": {
+      "type": "object",
+      "required": ["initiation", "analysis", "design", "construction", "tests", "delivery"],
+      "properties": {
+        "initiation": {
+          "type": "object",
+          "required": ["requirements", "environment"],
+          "properties": {
+            "requirements": {
+              "$ref": "#/definitions/requirements"
+            },
+            "environment": {
+              "$ref": "#/definitions/environment"
+            }
+          }
+        },
+        "analysis": {
+          "type": "object",
+          "required": ["specifications", "verification"],
+          "properties": {
+            "specifications": {
+              "$ref": "#/definitions/specifications"
+            },
+            "verification": {
+              "$ref": "#/definitions/verification"
+            }
+          }
+        },
+        "design": {
+          "type": "object",
+          "required": ["architecture", "components", "interfaces"],
+          "properties": {
+            "architecture": {
+              "$ref": "#/definitions/architecture"
+            },
+            "components": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/component"
+              }
+            },
+            "interfaces": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/interface"
+              }
+            }
+          }
+        },
+        "construction": {
+          "type": "object",
+          "required": ["code", "unit_tests"],
+          "properties": {
+            "code": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/code_unit"
+              }
+            },
+            "unit_tests": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/test"
+              }
+            }
+          }
+        },
+        "tests": {
+          "type": "object",
+          "required": ["integration", "system"],
+          "properties": {
+            "integration": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/test"
+              }
+            },
+            "system": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/test"
+              }
+            }
+          }
+        },
+        "delivery": {
+          "type": "object",
+          "required": ["product", "documentation"],
+          "properties": {
+            "product": {
+              "$ref": "#/definitions/product"
+            },
+            "documentation": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/document"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "project_plan": {
+      "type": "object",
+      "required": ["id", "description", "tasks", "resources", "schedule"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/task"
+          }
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/resource"
+          }
+        },
+        "schedule": {
+          "type": "object",
+          "required": ["start_date", "end_date", "milestones"],
+          "properties": {
+            "start_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "end_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "milestones": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/milestone"
+              }
+            }
+          }
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "name", "description", "status", "effort", "dependencies"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["not_started", "in_progress", "completed", "blocked"]
+        },
+        "effort": {
+          "type": "object",
+          "required": ["estimated", "actual"],
+          "properties": {
+            "estimated": {
+              "type": "number"
+            },
+            "actual": {
+              "type": "number"
+            }
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "object",
+      "required": ["functional", "non_functional", "constraints"],
+      "properties": {
+        "functional": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/requirement"
+          }
+        },
+        "non_functional": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/requirement"
+          }
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/constraint"
+          }
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["id", "description", "priority", "status"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "status": {
+          "type": "string",
+          "enum": ["proposed", "approved", "implemented", "verified", "delivered"]
+        }
+      }
+    }
+  }
+} 

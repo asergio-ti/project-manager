@@ -1,0 +1,343 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Revision History Schema",
+  "description": "Schema para documento de histórico de revisões",
+  "type": "object",
+  "required": ["revisionHistory"],
+  "properties": {
+    "revisionHistory": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "revisões", "controleVersão", "aprovações", "rastreabilidade"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "revisões": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "versão", "data", "autor", "tipo", "descrição", "mudanças", "impacto"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REV-\\d+$"
+              },
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "autor": {
+                "type": "string",
+                "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["major", "minor", "patch"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "mudanças": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["arquivo", "seção", "descrição", "justificativa"],
+                  "properties": {
+                    "arquivo": {
+                      "type": "string"
+                    },
+                    "seção": {
+                      "type": "string"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "justificativa": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["escopo", "complexidade", "áreas"],
+                "properties": {
+                  "escopo": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto"]
+                  },
+                  "complexidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "áreas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "controleVersão": {
+          "type": "object",
+          "required": ["repositório", "branches", "tags", "workflow"],
+          "properties": {
+            "repositório": {
+              "type": "object",
+              "required": ["url", "tipo"],
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                },
+                "tipo": {
+                  "type": "string",
+                  "enum": ["git", "svn"]
+                }
+              }
+            },
+            "branches": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "propósito", "status"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["ativo", "mesclado", "arquivado"]
+                  }
+                }
+              }
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "versão", "data", "descrição"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  },
+                  "data": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "workflow": {
+              "type": "object",
+              "required": ["processo", "regras", "automações"],
+              "properties": {
+                "processo": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["etapa", "descrição", "responsáveis"],
+                    "properties": {
+                      "etapa": {
+                        "type": "string"
+                      },
+                      "descrição": {
+                        "type": "string"
+                      },
+                      "responsáveis": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "regras": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["descrição", "condições", "ações"],
+                    "properties": {
+                      "descrição": {
+                        "type": "string"
+                      },
+                      "condições": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "ações": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "automações": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "trigger", "ações", "status"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "trigger": {
+                        "type": "string"
+                      },
+                      "ações": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["ativa", "inativa"]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "aprovações": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "aprovador", "papel", "comentários", "status"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "aprovador": {
+                "type": "string",
+                "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+              },
+              "papel": {
+                "type": "string"
+              },
+              "comentários": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "status": {
+                "type": "string",
+                "enum": ["aprovado", "rejeitado", "pendente_ajustes"]
+              }
+            }
+          }
+        },
+        "rastreabilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "origem", "destino", "descrição"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TRACE-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["dependência", "impacto", "derivação"]
+              },
+              "origem": {
+                "type": "object",
+                "required": ["documento", "versão", "elemento"],
+                "properties": {
+                  "documento": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  },
+                  "elemento": {
+                    "type": "string"
+                  }
+                }
+              },
+              "destino": {
+                "type": "object",
+                "required": ["documento", "versão", "elemento"],
+                "properties": {
+                  "documento": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string",
+                    "pattern": "^\\d+\\.\\d+\\.\\d+$"
+                  },
+                  "elemento": {
+                    "type": "string"
+                  }
+                }
+              },
+              "descrição": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

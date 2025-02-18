@@ -1,0 +1,236 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Architectural Decisions Schema",
+  "description": "Schema para o módulo de decisões arquiteturais do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["architecturalDecisions"],
+  "properties": {
+    "architecturalDecisions": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "decisões"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "decisões": {
+          "type": "object",
+          "required": ["tecnologias", "arquitetura", "padrões"],
+          "properties": {
+            "tecnologias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "título", "contexto", "decisão", "status", "consequências", "alternativas"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^ADR-\\d+$"
+                  },
+                  "título": {
+                    "type": "string"
+                  },
+                  "contexto": {
+                    "type": "string"
+                  },
+                  "decisão": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Proposto", "Aceito", "Depreciado", "Substituído"]
+                  },
+                  "consequências": {
+                    "type": "object",
+                    "required": ["positivas", "negativas"],
+                    "properties": {
+                      "positivas": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "negativas": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "alternativas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["opção", "motivo_rejeição"],
+                      "properties": {
+                        "opção": {
+                          "type": "string"
+                        },
+                        "motivo_rejeição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "arquitetura": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "título", "contexto", "decisão", "status", "consequências", "alternativas"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^ADR-\\d+$"
+                  },
+                  "título": {
+                    "type": "string"
+                  },
+                  "contexto": {
+                    "type": "string"
+                  },
+                  "decisão": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Proposto", "Aceito", "Depreciado", "Substituído"]
+                  },
+                  "consequências": {
+                    "type": "object",
+                    "required": ["positivas", "negativas"],
+                    "properties": {
+                      "positivas": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "negativas": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "alternativas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["opção", "motivo_rejeição"],
+                      "properties": {
+                        "opção": {
+                          "type": "string"
+                        },
+                        "motivo_rejeição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "padrões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "título", "contexto", "decisão", "status", "consequências", "alternativas"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^ADR-\\d+$"
+                  },
+                  "título": {
+                    "type": "string"
+                  },
+                  "contexto": {
+                    "type": "string"
+                  },
+                  "decisão": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Proposto", "Aceito", "Depreciado", "Substituído"]
+                  },
+                  "consequências": {
+                    "type": "object",
+                    "required": ["positivas", "negativas"],
+                    "properties": {
+                      "positivas": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "negativas": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "alternativas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["opção", "motivo_rejeição"],
+                      "properties": {
+                        "opção": {
+                          "type": "string"
+                        },
+                        "motivo_rejeição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

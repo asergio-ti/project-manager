@@ -1,0 +1,17 @@
+[33mcommit 4e1488b16150fe7bfa978f23ae5f06ccd946d2b5[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: asergio-ti <asergio.ti@gmail.com>
+Date:   Tue Feb 18 08:58:48 2025 -0300
+
+    docs: atualização da documentação para GitHub Codespaces e VSCode
+
+[33mcommit 3aafc1b6c281e5806b960bdf10c3cb7de8446b9b[m
+Author: asergio-ti <asergio.ti@gmail.com>
+Date:   Tue Feb 18 08:53:41 2025 -0300
+
+    fix: correções e melhorias no devcontainer.json para GitHub Codespaces
+
+[33mcommit b69254958614fe899ff9a8aeffccbf54d8e5e617[m
+Author: asergio-ti <asergio.ti@gmail.com>
+Date:   Tue Feb 18 08:49:12 2025 -0300
+
+    refactor: migração do Gitpod para GitHub Codespaces - Removidas configurações específicas do Gitpod, atualizado ambiente para Codespaces

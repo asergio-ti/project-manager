@@ -1,0 +1,288 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Key Metrics Schema",
+  "description": "Schema para documento de métricas-chave",
+  "type": "object",
+  "required": ["keyMetrics"],
+  "properties": {
+    "keyMetrics": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "métricas", "monitoramento", "metas", "análise"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "métricas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "tipo", "unidade", "frequência", "fonte", "responsável"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^MTR-\\d+$"
+              },
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["financeira", "operacional", "cliente", "processo", "inovação"]
+              },
+              "unidade": {
+                "type": "string"
+              },
+              "frequência": {
+                "type": "string",
+                "enum": ["diária", "semanal", "mensal", "trimestral", "anual"]
+              },
+              "fonte": {
+                "type": "string"
+              },
+              "responsável": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "monitoramento": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["métricaId", "valores", "tendência", "alertas"],
+            "properties": {
+              "métricaId": {
+                "type": "string",
+                "pattern": "^MTR-\\d+$"
+              },
+              "valores": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["data", "valor", "status"],
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "valor": {
+                      "type": "number"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["abaixo", "dentro", "acima"]
+                    }
+                  }
+                }
+              },
+              "tendência": {
+                "type": "object",
+                "required": ["direção", "variação"],
+                "properties": {
+                  "direção": {
+                    "type": "string",
+                    "enum": ["crescente", "estável", "decrescente"]
+                  },
+                  "variação": {
+                    "type": "number"
+                  }
+                }
+              },
+              "alertas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "condição", "ação"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["crítico", "atenção", "informativo"]
+                    },
+                    "condição": {
+                      "type": "string"
+                    },
+                    "ação": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "metas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["métricaId", "período", "valorAlvo", "tolerância", "prioridade", "responsável", "ações"],
+            "properties": {
+              "métricaId": {
+                "type": "string",
+                "pattern": "^MTR-\\d+$"
+              },
+              "período": {
+                "type": "object",
+                "required": ["início", "fim"],
+                "properties": {
+                  "início": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "fim": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              },
+              "valorAlvo": {
+                "type": "number"
+              },
+              "tolerância": {
+                "type": "object",
+                "required": ["mínimo", "máximo"],
+                "properties": {
+                  "mínimo": {
+                    "type": "number"
+                  },
+                  "máximo": {
+                    "type": "number"
+                  }
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta"]
+              },
+              "responsável": {
+                "type": "string"
+              },
+              "ações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "prazo", "status"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "prazo": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["pendente", "em_andamento", "concluída"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "análise": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["métricaId", "período", "insights", "recomendações"],
+            "properties": {
+              "métricaId": {
+                "type": "string",
+                "pattern": "^MTR-\\d+$"
+              },
+              "período": {
+                "type": "object",
+                "required": ["início", "fim"],
+                "properties": {
+                  "início": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "fim": {
+                    "type": "string",
+                    "format": "date"
+                  }
+                }
+              },
+              "insights": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "impacto", "evidências"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "impacto": {
+                      "type": "string",
+                      "enum": ["baixo", "médio", "alto"]
+                    },
+                    "evidências": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "recomendações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["ação", "benefício", "esforço", "prioridade"],
+                  "properties": {
+                    "ação": {
+                      "type": "string"
+                    },
+                    "benefício": {
+                      "type": "string"
+                    },
+                    "esforço": {
+                      "type": "string",
+                      "enum": ["baixo", "médio", "alto"]
+                    },
+                    "prioridade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

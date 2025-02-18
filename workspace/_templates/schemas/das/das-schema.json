@@ -1,0 +1,754 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Software Architecture Document Schema",
+  "description": "Schema para documentação de arquitetura de software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["das"],
+  "properties": {
+    "das": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "introduction", "architecturalViews", "architecturalDecisions"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "introduction": {
+          "type": "object",
+          "required": ["visãoGeral", "escopo", "restrições", "princípios", "referências"],
+          "properties": {
+            "visãoGeral": {
+              "type": "object",
+              "required": ["description", "diagram"],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "Visão geral da arquitetura do sistema"
+                },
+                "diagram": {
+                  "type": "object",
+                  "required": ["type", "content", "viewpoint", "rationale"],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": ["mermaid"],
+                      "description": "Tipo do diagrama"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Conteúdo do diagrama em formato Mermaid"
+                    },
+                    "viewpoint": {
+                      "type": "string",
+                      "description": "Ponto de vista do diagrama"
+                    },
+                    "rationale": {
+                      "type": "string",
+                      "description": "Justificativa do diagrama"
+                    }
+                  }
+                }
+              }
+            },
+            "escopo": {
+              "type": "object",
+              "required": ["objetivos", "contexto"],
+              "properties": {
+                "objetivos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Objetivos da arquitetura"
+                },
+                "contexto": {
+                  "type": "object",
+                  "required": ["problema", "solução", "stakeholders"],
+                  "properties": {
+                    "problema": {
+                      "type": "string",
+                      "description": "Descrição do problema"
+                    },
+                    "solução": {
+                      "type": "string",
+                      "description": "Descrição da solução"
+                    },
+                    "stakeholders": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Lista de stakeholders"
+                    }
+                  }
+                }
+              }
+            },
+            "restrições": {
+              "type": "object",
+              "required": ["técnicas", "negócio"],
+              "properties": {
+                "técnicas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "descrição", "justificativa"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "description": "Tipo da restrição"
+                      },
+                      "descrição": {
+                        "type": "string",
+                        "description": "Descrição da restrição"
+                      },
+                      "justificativa": {
+                        "type": "string",
+                        "description": "Justificativa da restrição"
+                      }
+                    }
+                  }
+                },
+                "negócio": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "descrição", "justificativa"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "description": "Tipo da restrição"
+                      },
+                      "descrição": {
+                        "type": "string",
+                        "description": "Descrição da restrição"
+                      },
+                      "justificativa": {
+                        "type": "string",
+                        "description": "Justificativa da restrição"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "princípios": {
+              "type": "object",
+              "required": ["arquiteturais", "design"],
+              "properties": {
+                "arquiteturais": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "descrição", "benefícios"],
+                    "properties": {
+                      "nome": {
+                        "type": "string",
+                        "description": "Nome do princípio"
+                      },
+                      "descrição": {
+                        "type": "string",
+                        "description": "Descrição do princípio"
+                      },
+                      "benefícios": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Benefícios do princípio"
+                      }
+                    }
+                  }
+                },
+                "design": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "descrição", "aplicação"],
+                    "properties": {
+                      "nome": {
+                        "type": "string",
+                        "description": "Nome do padrão"
+                      },
+                      "descrição": {
+                        "type": "string",
+                        "description": "Descrição do padrão"
+                      },
+                      "aplicação": {
+                        "type": "string",
+                        "description": "Onde o padrão é aplicado"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "referências": {
+              "type": "object",
+              "required": ["padrões", "tecnologias"],
+              "properties": {
+                "padrões": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "descrição", "aplicação"],
+                    "properties": {
+                      "nome": {
+                        "type": "string",
+                        "description": "Nome do padrão"
+                      },
+                      "descrição": {
+                        "type": "string",
+                        "description": "Descrição do padrão"
+                      },
+                      "aplicação": {
+                        "type": "string",
+                        "description": "Onde o padrão é aplicado"
+                      }
+                    }
+                  }
+                },
+                "tecnologias": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "versão", "propósito"],
+                    "properties": {
+                      "nome": {
+                        "type": "string",
+                        "description": "Nome da tecnologia"
+                      },
+                      "versão": {
+                        "type": "string",
+                        "description": "Versão da tecnologia"
+                      },
+                      "propósito": {
+                        "type": "string",
+                        "description": "Propósito da tecnologia"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "architecturalViews": {
+          "type": "object",
+          "required": ["visões"],
+          "properties": {
+            "visões": {
+              "type": "object",
+              "required": ["lógica", "processo", "desenvolvimento", "física"],
+              "properties": {
+                "lógica": {
+                  "type": "object",
+                  "required": ["description", "diagram", "componentes"],
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Descrição da visão lógica"
+                    },
+                    "diagram": {
+                      "type": "object",
+                      "required": ["type", "content", "viewpoint", "rationale"],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["mermaid"],
+                          "description": "Tipo do diagrama"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Conteúdo do diagrama em formato Mermaid"
+                        },
+                        "viewpoint": {
+                          "type": "string",
+                          "description": "Ponto de vista do diagrama"
+                        },
+                        "rationale": {
+                          "type": "string",
+                          "description": "Justificativa do diagrama"
+                        }
+                      }
+                    },
+                    "componentes": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["nome", "responsabilidade", "interfaces"],
+                        "properties": {
+                          "nome": {
+                            "type": "string",
+                            "description": "Nome do componente"
+                          },
+                          "responsabilidade": {
+                            "type": "string",
+                            "description": "Responsabilidade do componente"
+                          },
+                          "interfaces": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Interfaces do componente"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "processo": {
+                  "type": "object",
+                  "required": ["description", "diagram", "fluxos"],
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Descrição da visão de processo"
+                    },
+                    "diagram": {
+                      "type": "object",
+                      "required": ["type", "content", "viewpoint", "rationale"],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["mermaid"],
+                          "description": "Tipo do diagrama"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Conteúdo do diagrama em formato Mermaid"
+                        },
+                        "viewpoint": {
+                          "type": "string",
+                          "description": "Ponto de vista do diagrama"
+                        },
+                        "rationale": {
+                          "type": "string",
+                          "description": "Justificativa do diagrama"
+                        }
+                      }
+                    },
+                    "fluxos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["nome", "passos"],
+                        "properties": {
+                          "nome": {
+                            "type": "string",
+                            "description": "Nome do fluxo"
+                          },
+                          "passos": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Passos do fluxo"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "desenvolvimento": {
+                  "type": "object",
+                  "required": ["description", "diagram", "estrutura"],
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Descrição da visão de desenvolvimento"
+                    },
+                    "diagram": {
+                      "type": "object",
+                      "required": ["type", "content", "viewpoint", "rationale"],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["mermaid"],
+                          "description": "Tipo do diagrama"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Conteúdo do diagrama em formato Mermaid"
+                        },
+                        "viewpoint": {
+                          "type": "string",
+                          "description": "Ponto de vista do diagrama"
+                        },
+                        "rationale": {
+                          "type": "string",
+                          "description": "Justificativa do diagrama"
+                        }
+                      }
+                    },
+                    "estrutura": {
+                      "type": "object",
+                      "patternProperties": {
+                        "^.*/$": {
+                          "type": "object",
+                          "required": ["descrição", "módulos"],
+                          "properties": {
+                            "descrição": {
+                              "type": "string",
+                              "description": "Descrição do diretório"
+                            },
+                            "módulos": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "Módulos no diretório"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "física": {
+                  "type": "object",
+                  "required": ["description", "diagram", "componentes"],
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Descrição da visão física"
+                    },
+                    "diagram": {
+                      "type": "object",
+                      "required": ["type", "content", "viewpoint", "rationale"],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": ["mermaid"],
+                          "description": "Tipo do diagrama"
+                        },
+                        "content": {
+                          "type": "string",
+                          "description": "Conteúdo do diagrama em formato Mermaid"
+                        },
+                        "viewpoint": {
+                          "type": "string",
+                          "description": "Ponto de vista do diagrama"
+                        },
+                        "rationale": {
+                          "type": "string",
+                          "description": "Justificativa do diagrama"
+                        }
+                      }
+                    },
+                    "componentes": {
+                      "type": "object",
+                      "required": ["runtime", "armazenamento"],
+                      "properties": {
+                        "runtime": {
+                          "type": "object",
+                          "required": ["nome", "versão", "requisitos"],
+                          "properties": {
+                            "nome": {
+                              "type": "string",
+                              "description": "Nome do runtime"
+                            },
+                            "versão": {
+                              "type": "string",
+                              "description": "Versão do runtime"
+                            },
+                            "requisitos": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              },
+                              "description": "Requisitos do runtime"
+                            }
+                          }
+                        },
+                        "armazenamento": {
+                          "type": "object",
+                          "required": ["local"],
+                          "properties": {
+                            "local": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "required": ["path", "propósito", "permissões"],
+                                "properties": {
+                                  "path": {
+                                    "type": "string",
+                                    "description": "Caminho do armazenamento"
+                                  },
+                                  "propósito": {
+                                    "type": "string",
+                                    "description": "Propósito do armazenamento"
+                                  },
+                                  "permissões": {
+                                    "type": "string",
+                                    "description": "Permissões do armazenamento"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "architecturalDecisions": {
+          "type": "object",
+          "required": ["decisões"],
+          "properties": {
+            "decisões": {
+              "type": "object",
+              "required": ["tecnologias", "arquitetura", "padrões"],
+              "properties": {
+                "tecnologias": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "título", "contexto", "decisão", "status", "consequências", "alternativas"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^ADR-\\d+$",
+                        "description": "ID da decisão"
+                      },
+                      "título": {
+                        "type": "string",
+                        "description": "Título da decisão"
+                      },
+                      "contexto": {
+                        "type": "string",
+                        "description": "Contexto da decisão"
+                      },
+                      "decisão": {
+                        "type": "string",
+                        "description": "Decisão tomada"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["Proposto", "Aceito", "Depreciado", "Substituído"],
+                        "description": "Status da decisão"
+                      },
+                      "consequências": {
+                        "type": "object",
+                        "required": ["positivas", "negativas"],
+                        "properties": {
+                          "positivas": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Consequências positivas"
+                          },
+                          "negativas": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Consequências negativas"
+                          }
+                        }
+                      },
+                      "alternativas": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["opção", "motivo_rejeição"],
+                          "properties": {
+                            "opção": {
+                              "type": "string",
+                              "description": "Opção alternativa"
+                            },
+                            "motivo_rejeição": {
+                              "type": "string",
+                              "description": "Motivo da rejeição"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "arquitetura": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "título", "contexto", "decisão", "status", "consequências", "alternativas"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^ADR-\\d+$",
+                        "description": "ID da decisão"
+                      },
+                      "título": {
+                        "type": "string",
+                        "description": "Título da decisão"
+                      },
+                      "contexto": {
+                        "type": "string",
+                        "description": "Contexto da decisão"
+                      },
+                      "decisão": {
+                        "type": "string",
+                        "description": "Decisão tomada"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["Proposto", "Aceito", "Depreciado", "Substituído"],
+                        "description": "Status da decisão"
+                      },
+                      "consequências": {
+                        "type": "object",
+                        "required": ["positivas", "negativas"],
+                        "properties": {
+                          "positivas": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Consequências positivas"
+                          },
+                          "negativas": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Consequências negativas"
+                          }
+                        }
+                      },
+                      "alternativas": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["opção", "motivo_rejeição"],
+                          "properties": {
+                            "opção": {
+                              "type": "string",
+                              "description": "Opção alternativa"
+                            },
+                            "motivo_rejeição": {
+                              "type": "string",
+                              "description": "Motivo da rejeição"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "padrões": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["id", "título", "contexto", "decisão", "status", "consequências", "alternativas"],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^ADR-\\d+$",
+                        "description": "ID da decisão"
+                      },
+                      "título": {
+                        "type": "string",
+                        "description": "Título da decisão"
+                      },
+                      "contexto": {
+                        "type": "string",
+                        "description": "Contexto da decisão"
+                      },
+                      "decisão": {
+                        "type": "string",
+                        "description": "Decisão tomada"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": ["Proposto", "Aceito", "Depreciado", "Substituído"],
+                        "description": "Status da decisão"
+                      },
+                      "consequências": {
+                        "type": "object",
+                        "required": ["positivas", "negativas"],
+                        "properties": {
+                          "positivas": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Consequências positivas"
+                          },
+                          "negativas": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Consequências negativas"
+                          }
+                        }
+                      },
+                      "alternativas": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["opção", "motivo_rejeição"],
+                          "properties": {
+                            "opção": {
+                              "type": "string",
+                              "description": "Opção alternativa"
+                            },
+                            "motivo_rejeição": {
+                              "type": "string",
+                              "description": "Motivo da rejeição"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

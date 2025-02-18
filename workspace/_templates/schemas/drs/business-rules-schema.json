@@ -1,0 +1,390 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Business Rules Schema",
+  "description": "Schema para documentação de regras de negócio seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["businessRules"],
+  "properties": {
+    "businessRules": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "categorias", "regras", "dependências", "validações"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "categorias": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "escopo"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^CAT-\\d+$",
+                "description": "ID da categoria"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da categoria"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da categoria"
+              },
+              "escopo": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Escopo de aplicação da categoria"
+              }
+            }
+          }
+        },
+        "regras": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoriaId", "nome", "descrição", "tipo", "implementação", "validações"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^BR-\\d+$",
+                "description": "ID da regra"
+              },
+              "categoriaId": {
+                "type": "string",
+                "pattern": "^CAT-\\d+$",
+                "description": "ID da categoria"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da regra"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição detalhada da regra"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["cálculo", "validação", "processo", "restrição", "transformação"],
+                "description": "Tipo da regra"
+              },
+              "implementação": {
+                "type": "object",
+                "required": ["lógica", "parâmetros", "retorno"],
+                "properties": {
+                  "lógica": {
+                    "type": "string",
+                    "description": "Lógica de implementação"
+                  },
+                  "parâmetros": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "tipo", "descrição", "obrigatório"],
+                      "properties": {
+                        "nome": {
+                          "type": "string",
+                          "description": "Nome do parâmetro"
+                        },
+                        "tipo": {
+                          "type": "string",
+                          "description": "Tipo do parâmetro"
+                        },
+                        "descrição": {
+                          "type": "string",
+                          "description": "Descrição do parâmetro"
+                        },
+                        "obrigatório": {
+                          "type": "boolean",
+                          "description": "Se o parâmetro é obrigatório"
+                        }
+                      }
+                    }
+                  },
+                  "retorno": {
+                    "type": "object",
+                    "required": ["tipo", "descrição"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "description": "Tipo do retorno"
+                      },
+                      "descrição": {
+                        "type": "string",
+                        "description": "Descrição do retorno"
+                      }
+                    }
+                  }
+                }
+              },
+              "validações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "tipo", "critérios"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^VAL-\\d+$",
+                      "description": "ID da validação"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da validação"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["entrada", "processo", "saída"],
+                      "description": "Tipo de validação"
+                    },
+                    "critérios": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["condição", "mensagem"],
+                        "properties": {
+                          "condição": {
+                            "type": "string",
+                            "description": "Condição de validação"
+                          },
+                          "mensagem": {
+                            "type": "string",
+                            "description": "Mensagem de erro"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dependências": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["regraId", "dependeDe", "tipo", "impacto"],
+            "properties": {
+              "regraId": {
+                "type": "string",
+                "pattern": "^BR-\\d+$",
+                "description": "ID da regra dependente"
+              },
+              "dependeDe": {
+                "type": "string",
+                "pattern": "^BR-\\d+$",
+                "description": "ID da regra da qual depende"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["precedência", "composição", "exclusão"],
+                "description": "Tipo de dependência"
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["severidade", "descrição", "mitigação"],
+                "properties": {
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"],
+                    "description": "Severidade do impacto"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do impacto"
+                  },
+                  "mitigação": {
+                    "type": "string",
+                    "description": "Estratégia de mitigação"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "validações": {
+          "type": "object",
+          "required": ["testes", "cenários", "resultados"],
+          "properties": {
+            "testes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "regraId", "descrição", "tipo", "dados"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^TEST-\\d+$",
+                    "description": "ID do teste"
+                  },
+                  "regraId": {
+                    "type": "string",
+                    "pattern": "^BR-\\d+$",
+                    "description": "ID da regra testada"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do teste"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["unitário", "integração", "sistema"],
+                    "description": "Tipo de teste"
+                  },
+                  "dados": {
+                    "type": "object",
+                    "required": ["entrada", "saídaEsperada"],
+                    "properties": {
+                      "entrada": {
+                        "type": "object",
+                        "description": "Dados de entrada"
+                      },
+                      "saídaEsperada": {
+                        "type": "object",
+                        "description": "Saída esperada"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "cenários": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "descrição", "préCondições", "passos", "pósCondições"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^CEN-\\d+$",
+                    "description": "ID do cenário"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do cenário"
+                  },
+                  "préCondições": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Pré-condições do cenário"
+                  },
+                  "passos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["ordem", "ação", "resultado"],
+                      "properties": {
+                        "ordem": {
+                          "type": "integer",
+                          "description": "Ordem do passo"
+                        },
+                        "ação": {
+                          "type": "string",
+                          "description": "Ação a ser executada"
+                        },
+                        "resultado": {
+                          "type": "string",
+                          "description": "Resultado esperado"
+                        }
+                      }
+                    }
+                  },
+                  "pósCondições": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Pós-condições do cenário"
+                  }
+                }
+              }
+            },
+            "resultados": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["testeId", "data", "status", "evidências"],
+                "properties": {
+                  "testeId": {
+                    "type": "string",
+                    "pattern": "^TEST-\\d+$",
+                    "description": "ID do teste"
+                  },
+                  "data": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Data e hora da execução"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["passou", "falhou", "bloqueado", "pendente"],
+                    "description": "Status do teste"
+                  },
+                  "evidências": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "conteúdo"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "enum": ["log", "screenshot", "dados"],
+                          "description": "Tipo de evidência"
+                        },
+                        "conteúdo": {
+                          "type": "string",
+                          "description": "Conteúdo da evidência"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

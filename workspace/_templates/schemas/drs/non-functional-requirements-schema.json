@@ -1,0 +1,732 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Non-Functional Requirements Schema",
+  "description": "Schema para documentação de requisitos não funcionais seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["nonFunctionalRequirements"],
+  "properties": {
+    "nonFunctionalRequirements": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "desempenho", "segurança", "usabilidade", "disponibilidade", "manutenibilidade", "portabilidade", "escalabilidade", "interoperabilidade"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "desempenho": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "descrição", "critérios", "métricas", "testes"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^PERF-\\d+$",
+                "description": "ID do requisito de desempenho"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "valor", "unidade"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["tempo_resposta", "throughput", "latência", "utilização_recursos"],
+                      "description": "Tipo do critério"
+                    },
+                    "valor": {
+                      "type": "number",
+                      "description": "Valor do critério"
+                    },
+                    "unidade": {
+                      "type": "string",
+                      "description": "Unidade de medida"
+                    }
+                  }
+                }
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "método", "ferramentas"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome da métrica"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da métrica"
+                    },
+                    "método": {
+                      "type": "string",
+                      "description": "Método de medição"
+                    },
+                    "ferramentas": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Ferramentas de medição"
+                    }
+                  }
+                }
+              },
+              "testes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição", "cenários", "resultadosEsperados"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["carga", "stress", "escalabilidade", "endurance"],
+                      "description": "Tipo de teste"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do teste"
+                    },
+                    "cenários": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Cenários de teste"
+                    },
+                    "resultadosEsperados": {
+                      "type": "object",
+                      "description": "Resultados esperados"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "segurança": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "controles", "conformidade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SEC-\\d+$",
+                "description": "ID do requisito de segurança"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["autenticação", "autorização", "confidencialidade", "integridade", "disponibilidade", "auditoria"],
+                "description": "Categoria do requisito"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "controles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição", "implementação"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo de controle"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do controle"
+                    },
+                    "implementação": {
+                      "type": "string",
+                      "description": "Detalhes de implementação"
+                    }
+                  }
+                }
+              },
+              "conformidade": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["norma", "requisitos", "evidências"],
+                  "properties": {
+                    "norma": {
+                      "type": "string",
+                      "description": "Norma de conformidade"
+                    },
+                    "requisitos": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Requisitos da norma"
+                    },
+                    "evidências": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Evidências de conformidade"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "usabilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "critérios", "avaliação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^USA-\\d+$",
+                "description": "ID do requisito de usabilidade"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["aprendizagem", "eficiência", "memorabilidade", "erros", "satisfação"],
+                "description": "Tipo do requisito"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "métrica", "alvo"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do critério"
+                    },
+                    "métrica": {
+                      "type": "string",
+                      "description": "Métrica de avaliação"
+                    },
+                    "alvo": {
+                      "type": "string",
+                      "description": "Valor alvo"
+                    }
+                  }
+                }
+              },
+              "avaliação": {
+                "type": "object",
+                "required": ["métodos", "participantes", "ferramentas"],
+                "properties": {
+                  "métodos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["teste_usabilidade", "avaliação_heurística", "pesquisa_usuário", "análise_tarefa"],
+                      "description": "Método de avaliação"
+                    }
+                  },
+                  "participantes": {
+                    "type": "object",
+                    "required": ["perfis", "quantidade"],
+                    "properties": {
+                      "perfis": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Perfis dos participantes"
+                      },
+                      "quantidade": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "description": "Quantidade de participantes"
+                      }
+                    }
+                  },
+                  "ferramentas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Ferramentas de avaliação"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "disponibilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "descrição", "nível", "métricas", "recuperação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^DISP-\\d+$",
+                "description": "ID do requisito de disponibilidade"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "nível": {
+                "type": "object",
+                "required": ["percentual", "período", "exceções"],
+                "properties": {
+                  "percentual": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100,
+                    "description": "Percentual de disponibilidade"
+                  },
+                  "período": {
+                    "type": "string",
+                    "description": "Período de medição"
+                  },
+                  "exceções": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Exceções acordadas"
+                  }
+                }
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "método", "frequência"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome da métrica"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da métrica"
+                    },
+                    "método": {
+                      "type": "string",
+                      "description": "Método de medição"
+                    },
+                    "frequência": {
+                      "type": "string",
+                      "description": "Frequência de medição"
+                    }
+                  }
+                }
+              },
+              "recuperação": {
+                "type": "object",
+                "required": ["rto", "rpo", "procedimentos"],
+                "properties": {
+                  "rto": {
+                    "type": "string",
+                    "description": "Recovery Time Objective"
+                  },
+                  "rpo": {
+                    "type": "string",
+                    "description": "Recovery Point Objective"
+                  },
+                  "procedimentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Procedimentos de recuperação"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "manutenibilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "aspecto", "descrição", "critérios", "práticas"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^MANT-\\d+$",
+                "description": "ID do requisito de manutenibilidade"
+              },
+              "aspecto": {
+                "type": "string",
+                "enum": ["modularidade", "reusabilidade", "analisabilidade", "modificabilidade", "testabilidade"],
+                "description": "Aspecto de manutenibilidade"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "métrica"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do critério"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do critério"
+                    },
+                    "métrica": {
+                      "type": "object",
+                      "required": ["tipo", "valor", "unidade"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string",
+                          "description": "Tipo de métrica"
+                        },
+                        "valor": {
+                          "type": "number",
+                          "description": "Valor alvo"
+                        },
+                        "unidade": {
+                          "type": "string",
+                          "description": "Unidade de medida"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "práticas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["categoria", "descrição", "guidelines"],
+                  "properties": {
+                    "categoria": {
+                      "type": "string",
+                      "enum": ["código", "documentação", "testes", "versionamento"],
+                      "description": "Categoria da prática"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da prática"
+                    },
+                    "guidelines": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Diretrizes de implementação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "portabilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "ambientes", "requisitos"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^PORT-\\d+$",
+                "description": "ID do requisito de portabilidade"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["adaptabilidade", "instalabilidade", "substituibilidade"],
+                "description": "Tipo de portabilidade"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "ambientes": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "especificações", "restrições"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["hardware", "software", "rede"],
+                      "description": "Tipo de ambiente"
+                    },
+                    "especificações": {
+                      "type": "object",
+                      "description": "Especificações técnicas"
+                    },
+                    "restrições": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Restrições do ambiente"
+                    }
+                  }
+                }
+              },
+              "requisitos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["categoria", "descrição", "critérios"],
+                  "properties": {
+                    "categoria": {
+                      "type": "string",
+                      "description": "Categoria do requisito"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do requisito"
+                    },
+                    "critérios": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Critérios de aceitação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "escalabilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "dimensões", "estratégias"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SCAL-\\d+$",
+                "description": "ID do requisito de escalabilidade"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["horizontal", "vertical", "dados", "funcional"],
+                "description": "Tipo de escalabilidade"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "dimensões": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "limites"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome da dimensão"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da dimensão"
+                    },
+                    "limites": {
+                      "type": "object",
+                      "required": ["mínimo", "máximo", "unidade"],
+                      "properties": {
+                        "mínimo": {
+                          "type": "number",
+                          "description": "Limite mínimo"
+                        },
+                        "máximo": {
+                          "type": "number",
+                          "description": "Limite máximo"
+                        },
+                        "unidade": {
+                          "type": "string",
+                          "description": "Unidade de medida"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "estratégias": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "gatilhos", "ações"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome da estratégia"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da estratégia"
+                    },
+                    "gatilhos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["condição", "ação"],
+                        "properties": {
+                          "condição": {
+                            "type": "string",
+                            "description": "Condição do gatilho"
+                          },
+                          "ação": {
+                            "type": "string",
+                            "description": "Ação a ser tomada"
+                          }
+                        }
+                      }
+                    },
+                    "ações": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Ações de escalabilidade"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "interoperabilidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "interfaces", "protocolos", "padrões"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^INTER-\\d+$",
+                "description": "ID do requisito de interoperabilidade"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["sintática", "semântica", "técnica", "organizacional"],
+                "description": "Tipo de interoperabilidade"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do requisito"
+              },
+              "interfaces": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "versão", "especificação"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome da interface"
+                    },
+                    "versão": {
+                      "type": "string",
+                      "description": "Versão da interface"
+                    },
+                    "especificação": {
+                      "type": "string",
+                      "description": "Especificação da interface"
+                    }
+                  }
+                }
+              },
+              "protocolos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "versão", "especificação"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do protocolo"
+                    },
+                    "versão": {
+                      "type": "string",
+                      "description": "Versão do protocolo"
+                    },
+                    "especificação": {
+                      "type": "string",
+                      "description": "Especificação do protocolo"
+                    }
+                  }
+                }
+              },
+              "padrões": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "versão", "escopo"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do padrão"
+                    },
+                    "versão": {
+                      "type": "string",
+                      "description": "Versão do padrão"
+                    },
+                    "escopo": {
+                      "type": "string",
+                      "description": "Escopo de aplicação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

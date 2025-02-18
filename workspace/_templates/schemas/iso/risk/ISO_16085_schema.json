@@ -1,0 +1,408 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 16085 Risk Management Schema",
+  "description": "Schema para gestão de riscos seguindo ISO/IEC 16085",
+  "type": "object",
+  "required": ["riskManagement"],
+  "properties": {
+    "riskManagement": {
+      "type": "object",
+      "required": ["context", "identification", "analysis", "treatment", "monitoring"],
+      "properties": {
+        "context": {
+          "type": "object",
+          "required": ["scope", "stakeholders", "criteria"],
+          "properties": {
+            "scope": {
+              "type": "object",
+              "required": ["objectives", "constraints", "assumptions"],
+              "properties": {
+                "objectives": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Objetivos do projeto"
+                },
+                "constraints": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Restrições do projeto"
+                },
+                "assumptions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Premissas consideradas"
+                }
+              }
+            },
+            "stakeholders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["role", "interests", "influence"],
+                "properties": {
+                  "role": {
+                    "type": "string",
+                    "description": "Papel do stakeholder"
+                  },
+                  "interests": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Interesses no projeto"
+                  },
+                  "influence": {
+                    "type": "string",
+                    "enum": ["high", "medium", "low"],
+                    "description": "Nível de influência"
+                  }
+                }
+              }
+            },
+            "criteria": {
+              "type": "object",
+              "required": ["probability", "impact", "acceptance"],
+              "properties": {
+                "probability": {
+                  "type": "object",
+                  "required": ["levels", "descriptions"],
+                  "properties": {
+                    "levels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": ["very_high", "high", "medium", "low", "very_low"]
+                      },
+                      "description": "Níveis de probabilidade"
+                    },
+                    "descriptions": {
+                      "type": "object",
+                      "required": ["very_high", "high", "medium", "low", "very_low"],
+                      "properties": {
+                        "very_high": {
+                          "type": "string",
+                          "description": "Descrição do nível muito alto"
+                        },
+                        "high": {
+                          "type": "string",
+                          "description": "Descrição do nível alto"
+                        },
+                        "medium": {
+                          "type": "string",
+                          "description": "Descrição do nível médio"
+                        },
+                        "low": {
+                          "type": "string",
+                          "description": "Descrição do nível baixo"
+                        },
+                        "very_low": {
+                          "type": "string",
+                          "description": "Descrição do nível muito baixo"
+                        }
+                      }
+                    }
+                  }
+                },
+                "impact": {
+                  "type": "object",
+                  "required": ["categories", "levels"],
+                  "properties": {
+                    "categories": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": ["schedule", "cost", "technical", "quality"]
+                      },
+                      "description": "Categorias de impacto"
+                    },
+                    "levels": {
+                      "type": "object",
+                      "required": ["critical", "significant", "moderate", "minor"],
+                      "properties": {
+                        "critical": {
+                          "type": "string",
+                          "description": "Descrição do impacto crítico"
+                        },
+                        "significant": {
+                          "type": "string",
+                          "description": "Descrição do impacto significativo"
+                        },
+                        "moderate": {
+                          "type": "string",
+                          "description": "Descrição do impacto moderado"
+                        },
+                        "minor": {
+                          "type": "string",
+                          "description": "Descrição do impacto menor"
+                        }
+                      }
+                    }
+                  }
+                },
+                "acceptance": {
+                  "type": "object",
+                  "required": ["thresholds", "rationale"],
+                  "properties": {
+                    "thresholds": {
+                      "type": "object",
+                      "required": ["acceptable", "unacceptable"],
+                      "properties": {
+                        "acceptable": {
+                          "type": "string",
+                          "description": "Critérios para riscos aceitáveis"
+                        },
+                        "unacceptable": {
+                          "type": "string",
+                          "description": "Critérios para riscos inaceitáveis"
+                        }
+                      }
+                    },
+                    "rationale": {
+                      "type": "string",
+                      "description": "Justificativa para os critérios de aceitação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "identification": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "description", "category", "source", "trigger"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único do risco"
+              },
+              "description": {
+                "type": "string",
+                "description": "Descrição detalhada do risco"
+              },
+              "category": {
+                "type": "string",
+                "enum": ["technical", "management", "organizational", "external"],
+                "description": "Categoria do risco"
+              },
+              "source": {
+                "type": "string",
+                "description": "Origem do risco"
+              },
+              "trigger": {
+                "type": "string",
+                "description": "Evento que pode desencadear o risco"
+              }
+            }
+          }
+        },
+        "analysis": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["risk_id", "probability", "impact", "exposure", "timeframe"],
+            "properties": {
+              "risk_id": {
+                "type": "string",
+                "description": "Referência ao risco identificado"
+              },
+              "probability": {
+                "type": "string",
+                "enum": ["very_high", "high", "medium", "low", "very_low"],
+                "description": "Probabilidade de ocorrência"
+              },
+              "impact": {
+                "type": "object",
+                "required": ["category", "level", "description"],
+                "properties": {
+                  "category": {
+                    "type": "string",
+                    "enum": ["schedule", "cost", "technical", "quality"],
+                    "description": "Categoria do impacto"
+                  },
+                  "level": {
+                    "type": "string",
+                    "enum": ["critical", "significant", "moderate", "minor"],
+                    "description": "Nível do impacto"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do impacto"
+                  }
+                }
+              },
+              "exposure": {
+                "type": "string",
+                "enum": ["very_high", "high", "medium", "low", "very_low"],
+                "description": "Exposição ao risco (combinação de probabilidade e impacto)"
+              },
+              "timeframe": {
+                "type": "string",
+                "enum": ["immediate", "near_term", "medium_term", "far_term"],
+                "description": "Horizonte temporal do risco"
+              }
+            }
+          }
+        },
+        "treatment": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["risk_id", "strategy", "actions", "contingency"],
+            "properties": {
+              "risk_id": {
+                "type": "string",
+                "description": "Referência ao risco identificado"
+              },
+              "strategy": {
+                "type": "string",
+                "enum": ["avoid", "transfer", "mitigate", "accept"],
+                "description": "Estratégia de tratamento"
+              },
+              "actions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["description", "responsible", "deadline", "resources"],
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Descrição da ação"
+                    },
+                    "responsible": {
+                      "type": "string",
+                      "description": "Responsável pela ação"
+                    },
+                    "deadline": {
+                      "type": "string",
+                      "format": "date",
+                      "description": "Prazo para execução"
+                    },
+                    "resources": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Recursos necessários"
+                    }
+                  }
+                }
+              },
+              "contingency": {
+                "type": "object",
+                "required": ["plan", "trigger"],
+                "properties": {
+                  "plan": {
+                    "type": "string",
+                    "description": "Plano de contingência"
+                  },
+                  "trigger": {
+                    "type": "string",
+                    "description": "Gatilho para ativação do plano"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "required": ["metrics", "reviews", "reporting"],
+          "properties": {
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "description", "frequency", "threshold"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da métrica"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da métrica"
+                  },
+                  "frequency": {
+                    "type": "string",
+                    "enum": ["daily", "weekly", "monthly", "quarterly"],
+                    "description": "Frequência de medição"
+                  },
+                  "threshold": {
+                    "type": "string",
+                    "description": "Limite para ação"
+                  }
+                }
+              }
+            },
+            "reviews": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type", "frequency", "participants", "agenda"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["status", "detailed", "management"],
+                    "description": "Tipo de revisão"
+                  },
+                  "frequency": {
+                    "type": "string",
+                    "enum": ["weekly", "monthly", "quarterly"],
+                    "description": "Frequência das revisões"
+                  },
+                  "participants": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Participantes da revisão"
+                  },
+                  "agenda": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Itens da agenda"
+                  }
+                }
+              }
+            },
+            "reporting": {
+              "type": "object",
+              "required": ["frequency", "audience", "content"],
+              "properties": {
+                "frequency": {
+                  "type": "string",
+                  "enum": ["weekly", "monthly", "quarterly"],
+                  "description": "Frequência dos relatórios"
+                },
+                "audience": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Público-alvo dos relatórios"
+                },
+                "content": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Conteúdo dos relatórios"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

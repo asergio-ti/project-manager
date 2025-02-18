@@ -1,0 +1,678 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Data Architecture Schema",
+  "description": "Schema para o módulo de arquitetura de dados do Documento de Ambiente de Desenvolvimento e Infraestrutura",
+  "type": "object",
+  "required": ["dataArchitecture"],
+  "properties": {
+    "dataArchitecture": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "modelo", "armazenamento", "processamento", "governança", "qualidade", "segurança"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "modelo": {
+          "type": "object",
+          "required": ["entidades", "relacionamentos", "dicionário"],
+          "properties": {
+            "entidades": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "atributos", "chaves"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "atributos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "tipo", "descrição", "obrigatório"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        },
+                        "obrigatório": {
+                          "type": "boolean"
+                        },
+                        "regras": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "chaves": {
+                    "type": "object",
+                    "required": ["primária", "estrangeiras"],
+                    "properties": {
+                      "primária": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "estrangeiras": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["nome", "referência"],
+                          "properties": {
+                            "nome": {
+                              "type": "string"
+                            },
+                            "referência": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "relacionamentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["origem", "destino", "tipo", "cardinalidade"],
+                "properties": {
+                  "origem": {
+                    "type": "string"
+                  },
+                  "destino": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["1:1", "1:N", "N:M"]
+                  },
+                  "cardinalidade": {
+                    "type": "object",
+                    "required": ["mínima", "máxima"],
+                    "properties": {
+                      "mínima": {
+                        "type": "integer"
+                      },
+                      "máxima": {
+                        "type": "integer"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dicionário": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["termo", "definição", "domínio"],
+                "properties": {
+                  "termo": {
+                    "type": "string"
+                  },
+                  "definição": {
+                    "type": "string"
+                  },
+                  "domínio": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "armazenamento": {
+          "type": "object",
+          "required": ["bancos", "distribuição", "backup"],
+          "properties": {
+            "bancos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tipo", "versão", "propósito", "configuração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["relacional", "documento", "chave-valor", "grafo"]
+                  },
+                  "versão": {
+                    "type": "string"
+                  },
+                  "propósito": {
+                    "type": "string"
+                  },
+                  "configuração": {
+                    "type": "object",
+                    "required": ["conexão", "pool", "otimização"],
+                    "properties": {
+                      "conexão": {
+                        "type": "object"
+                      },
+                      "pool": {
+                        "type": "object"
+                      },
+                      "otimização": {
+                        "type": "object"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "distribuição": {
+              "type": "object",
+              "required": ["estratégia", "particionamento", "replicação"],
+              "properties": {
+                "estratégia": {
+                  "type": "string",
+                  "enum": ["centralizado", "distribuído", "híbrido"]
+                },
+                "particionamento": {
+                  "type": "object",
+                  "required": ["tipo", "chave", "distribuição"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "chave": {
+                      "type": "string"
+                    },
+                    "distribuição": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "replicação": {
+                  "type": "object",
+                  "required": ["tipo", "sincronização"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["síncrona", "assíncrona"]
+                    },
+                    "sincronização": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "backup": {
+              "type": "object",
+              "required": ["estratégia", "frequência", "retenção"],
+              "properties": {
+                "estratégia": {
+                  "type": "string"
+                },
+                "frequência": {
+                  "type": "string"
+                },
+                "retenção": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "processamento": {
+          "type": "object",
+          "required": ["etl", "análise", "cache"],
+          "properties": {
+            "etl": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "fonte", "destino", "transformações"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "destino": {
+                    "type": "string"
+                  },
+                  "transformações": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "regras"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "regras": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "análise": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "tipo", "fonte", "métricas"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "cálculo"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "cálculo": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "cache": {
+              "type": "object",
+              "required": ["estratégia", "invalidação", "armazenamento"],
+              "properties": {
+                "estratégia": {
+                  "type": "string",
+                  "enum": ["write-through", "write-behind", "cache-aside"]
+                },
+                "invalidação": {
+                  "type": "string"
+                },
+                "armazenamento": {
+                  "type": "object",
+                  "required": ["tipo", "configuração"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "configuração": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "governança": {
+          "type": "object",
+          "required": ["políticas", "processos", "papéis"],
+          "properties": {
+            "políticas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "regras"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "processos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "etapas"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "etapas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "papéis": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "responsabilidades", "permissões"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "responsabilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "permissões": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["métricas", "validações", "monitoramento"],
+          "properties": {
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "fórmula", "limites"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "fórmula": {
+                    "type": "string"
+                  },
+                  "limites": {
+                    "type": "object",
+                    "required": ["mínimo", "máximo"],
+                    "properties": {
+                      "mínimo": {
+                        "type": "number"
+                      },
+                      "máximo": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "validações": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "regras", "ações"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "regras": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "ações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "monitoramento": {
+              "type": "object",
+              "required": ["indicadores", "alertas", "relatórios"],
+              "properties": {
+                "indicadores": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "fonte", "frequência"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "fonte": {
+                        "type": "string"
+                      },
+                      "frequência": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "alertas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["condição", "severidade", "ação"],
+                    "properties": {
+                      "condição": {
+                        "type": "string"
+                      },
+                      "severidade": {
+                        "type": "string",
+                        "enum": ["info", "warning", "critical"]
+                      },
+                      "ação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "relatórios": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "periodicidade", "conteúdo"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "periodicidade": {
+                        "type": "string"
+                      },
+                      "conteúdo": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "segurança": {
+          "type": "object",
+          "required": ["classificação", "controles", "auditoria"],
+          "properties": {
+            "classificação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nível", "critérios", "controles"],
+                "properties": {
+                  "nível": {
+                    "type": "string",
+                    "enum": ["público", "interno", "confidencial", "restrito"]
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "controles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "controles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "implementação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "auditoria": {
+              "type": "object",
+              "required": ["eventos", "registros", "revisão"],
+              "properties": {
+                "eventos": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "dados", "retenção"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "dados": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "retenção": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "registros": {
+                  "type": "object",
+                  "required": ["formato", "armazenamento", "proteção"],
+                  "properties": {
+                    "formato": {
+                      "type": "string"
+                    },
+                    "armazenamento": {
+                      "type": "string"
+                    },
+                    "proteção": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "revisão": {
+                  "type": "object",
+                  "required": ["frequência", "responsável", "ações"],
+                  "properties": {
+                    "frequência": {
+                      "type": "string"
+                    },
+                    "responsável": {
+                      "type": "string"
+                    },
+                    "ações": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

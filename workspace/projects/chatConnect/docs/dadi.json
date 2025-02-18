@@ -1,0 +1,758 @@
+{
+  "api": {
+    "version": "1.0.0",
+    "lastUpdate": "2024-02-15",
+    "metadata": {
+      "description": "Documento de APIs e Interfaces do ChatConnect",
+      "autor": "Project Manager <pm@chatconnect.com>",
+      "revisores": ["Equipe Técnica"],
+      "status": "draft"
+    },
+    "openapi": "3.0.0",
+    "info": {
+      "title": "ChatConnect API",
+      "description": "APIs para o sistema de comunicação empresarial ChatConnect",
+      "version": "1.0.0",
+      "contact": {
+        "name": "Suporte ChatConnect",
+        "email": "suporte@chatconnect.com"
+      }
+    },
+    "servers": [
+      {
+        "url": "https://api.chatconnect.com/v1",
+        "description": "Servidor de Produção"
+      },
+      {
+        "url": "https://staging-api.chatconnect.com/v1",
+        "description": "Servidor de Staging"
+      }
+    ],
+    "paths": {
+      "/auth": {
+        "post": {
+          "summary": "Autenticação de usuário",
+          "description": "Endpoint para autenticação de usuários",
+          "tags": ["Autenticação"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["email", "password"],
+                  "properties": {
+                    "email": {
+                      "type": "string",
+                      "format": "email"
+                    },
+                    "password": {
+                      "type": "string",
+                      "format": "password"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Autenticação bem-sucedida",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/messages": {
+        "get": {
+          "summary": "Listar mensagens",
+          "description": "Retorna mensagens de um chat ou grupo",
+          "tags": ["Mensagens"],
+          "parameters": [
+            {
+              "name": "chatId",
+              "in": "query",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "schema": {
+                "type": "integer",
+                "default": 50
+              }
+            },
+            {
+              "name": "before",
+              "in": "query",
+              "schema": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Lista de mensagens",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "content": {
+                          "type": "string"
+                        },
+                        "sender": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "timestamp": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "post": {
+          "summary": "Enviar mensagem",
+          "description": "Envia uma nova mensagem",
+          "tags": ["Mensagens"],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": ["chatId", "content"],
+                  "properties": {
+                    "chatId": {
+                      "type": "string"
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "attachments": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "201": {
+              "description": "Mensagem enviada com sucesso"
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string",
+              "format": "email"
+            },
+            "name": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string",
+              "enum": ["user", "admin", "super_admin"]
+            }
+          }
+        },
+        "Message": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "content": {
+              "type": "string"
+            },
+            "sender": {
+              "$ref": "#/components/schemas/User"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["sent", "delivered", "read"]
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    },
+    "security": [
+      {
+        "bearerAuth": []
+      }
+    ]
+  },
+  "websocket": {
+    "endpoints": [
+      {
+        "path": "/ws/chat",
+        "description": "Endpoint WebSocket para comunicação em tempo real",
+        "protocolos": ["wss"],
+        "eventos": {
+          "message": {
+            "descrição": "Nova mensagem recebida",
+            "payload": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["text", "file", "system"]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "chatId": {
+                  "type": "string"
+                },
+                "senderId": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "typing": {
+            "descrição": "Indicador de digitação",
+            "payload": {
+              "type": "object",
+              "properties": {
+                "chatId": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "isTyping": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "presence": {
+            "descrição": "Atualização de status online",
+            "payload": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["online", "away", "offline"]
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "sdk": {
+    "versão": "1.0.0",
+    "plataformas": ["JavaScript", "TypeScript"],
+    "componentes": {
+      "ChatComponent": {
+        "descrição": "Componente principal do chat",
+        "props": {
+          "apiKey": {
+            "tipo": "string",
+            "obrigatório": true,
+            "descrição": "Chave de API para autenticação"
+          },
+          "userId": {
+            "tipo": "string",
+            "obrigatório": true,
+            "descrição": "ID do usuário atual"
+          },
+          "theme": {
+            "tipo": "object",
+            "obrigatório": false,
+            "descrição": "Configurações de tema"
+          }
+        },
+        "métodos": {
+          "connect": {
+            "descrição": "Estabelece conexão com o servidor",
+            "parâmetros": [],
+            "retorno": "Promise<void>"
+          },
+          "sendMessage": {
+            "descrição": "Envia uma mensagem",
+            "parâmetros": [
+              {
+                "nome": "chatId",
+                "tipo": "string"
+              },
+              {
+                "nome": "content",
+                "tipo": "string"
+              }
+            ],
+            "retorno": "Promise<Message>"
+          }
+        }
+      }
+    },
+    "exemplos": [
+      {
+        "título": "Inicialização Básica",
+        "código": "const chat = new ChatConnect.ChatComponent({\n  apiKey: 'sua-api-key',\n  userId: 'user-id'\n});"
+      },
+      {
+        "título": "Envio de Mensagem",
+        "código": "await chat.sendMessage('chat-id', 'Olá, mundo!');"
+      }
+    ]
+  },
+  "interfaces": {
+    "ui": {
+      "versão": "1.0.0",
+      "designSystem": {
+        "cores": {
+          "primárias": {
+            "principal": "#2563EB",
+            "hover": "#1D4ED8",
+            "claro": "#DBEAFE",
+            "escuro": "#1E40AF"
+          },
+          "secundárias": {
+            "cinza": "#64748B",
+            "cinzaClaro": "#F1F5F9",
+            "cinzaEscuro": "#334155"
+          },
+          "feedback": {
+            "sucesso": "#10B981",
+            "erro": "#EF4444",
+            "alerta": "#F59E0B",
+            "info": "#3B82F6"
+          }
+        },
+        "tipografia": {
+          "fontePrincipal": "Inter",
+          "fonteSecundária": "SF Pro Display",
+          "tamanhos": {
+            "xs": "0.75rem",
+            "sm": "0.875rem",
+            "base": "1rem",
+            "lg": "1.125rem",
+            "xl": "1.25rem",
+            "2xl": "1.5rem"
+          },
+          "pesos": {
+            "regular": "400",
+            "medium": "500",
+            "semibold": "600",
+            "bold": "700"
+          }
+        },
+        "espaçamento": {
+          "xs": "0.25rem",
+          "sm": "0.5rem",
+          "md": "1rem",
+          "lg": "1.5rem",
+          "xl": "2rem"
+        },
+        "sombras": {
+          "sm": "0 1px 2px rgba(0, 0, 0, 0.05)",
+          "md": "0 4px 6px rgba(0, 0, 0, 0.1)",
+          "lg": "0 10px 15px rgba(0, 0, 0, 0.1)"
+        },
+        "bordas": {
+          "raio": {
+            "sm": "0.25rem",
+            "md": "0.375rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          }
+        }
+      },
+      "componentes": {
+        "ChatWindow": {
+          "descrição": "Janela principal do chat",
+          "subcomponentes": [
+            {
+              "nome": "Header",
+              "elementos": [
+                "Avatar do usuário/grupo",
+                "Nome",
+                "Status online",
+                "Menu de ações"
+              ]
+            },
+            {
+              "nome": "MessageList",
+              "elementos": [
+                "Bolhas de mensagem",
+                "Indicadores de status",
+                "Timestamps",
+                "Avatares"
+              ]
+            },
+            {
+              "nome": "InputArea",
+              "elementos": [
+                "Campo de texto",
+                "Botão de anexo",
+                "Botão de emoji",
+                "Botão de enviar"
+              ]
+            }
+          ],
+          "estados": [
+            "Carregando",
+            "Vazio",
+            "Com mensagens",
+            "Erro",
+            "Offline"
+          ],
+          "interações": [
+            "Scroll infinito",
+            "Digitação",
+            "Seleção de mensagens",
+            "Reações"
+          ]
+        },
+        "Sidebar": {
+          "descrição": "Barra lateral de navegação",
+          "subcomponentes": [
+            {
+              "nome": "ConversationList",
+              "elementos": [
+                "Lista de conversas",
+                "Indicadores de não lido",
+                "Última mensagem",
+                "Timestamp"
+              ]
+            },
+            {
+              "nome": "SearchBar",
+              "elementos": [
+                "Campo de busca",
+                "Filtros",
+                "Resultados"
+              ]
+            }
+          ]
+        },
+        "Modal": {
+          "descrição": "Componente de modal reutilizável",
+          "variantes": [
+            "Confirmação",
+            "Formulário",
+            "Visualização de mídia",
+            "Configurações"
+          ]
+        }
+      },
+      "temas": {
+        "claro": {
+          "background": "#FFFFFF",
+          "texto": "#1F2937",
+          "textoPrimário": "#2563EB",
+          "textoSecundário": "#64748B"
+        },
+        "escuro": {
+          "background": "#1F2937",
+          "texto": "#F9FAFB",
+          "textoPrimário": "#60A5FA",
+          "textoSecundário": "#9CA3AF"
+        },
+        "personalizado": {
+          "descrição": "Tema customizável via CSS variables"
+        }
+      },
+      "responsividade": {
+        "breakpoints": {
+          "sm": "640px",
+          "md": "768px",
+          "lg": "1024px",
+          "xl": "1280px"
+        },
+        "layouts": {
+          "mobile": {
+            "descrição": "Layout para dispositivos móveis",
+            "características": [
+              "Navegação simplificada",
+              "Interface em tela cheia",
+              "Gestos touch"
+            ]
+          },
+          "tablet": {
+            "descrição": "Layout para tablets",
+            "características": [
+              "Sidebar colapsável",
+              "Split view opcional"
+            ]
+          },
+          "desktop": {
+            "descrição": "Layout para desktop",
+            "características": [
+              "Multi-coluna",
+              "Sidebar fixa",
+              "Múltiplas conversas"
+            ]
+          }
+        }
+      }
+    },
+    "admin": {
+      "versão": "1.0.0",
+      "painelControle": {
+        "visãoGeral": {
+          "descrição": "Dashboard principal de administração",
+          "widgets": [
+            {
+              "nome": "Estatísticas",
+              "dados": [
+                "Usuários ativos",
+                "Mensagens por dia",
+                "Taxa de entrega",
+                "Uso de armazenamento"
+              ]
+            },
+            {
+              "nome": "Alertas",
+              "dados": [
+                "Problemas de sistema",
+                "Limites de uso",
+                "Segurança"
+              ]
+            },
+            {
+              "nome": "Atividade",
+              "dados": [
+                "Log de eventos",
+                "Ações de usuários",
+                "Integrações"
+              ]
+            }
+          ]
+        },
+        "gestãoUsuários": {
+          "descrição": "Interface de gestão de usuários",
+          "funcionalidades": [
+            {
+              "nome": "Listagem",
+              "recursos": [
+                "Filtros avançados",
+                "Ordenação",
+                "Exportação"
+              ]
+            },
+            {
+              "nome": "Edição",
+              "recursos": [
+                "Dados do perfil",
+                "Permissões",
+                "Status da conta"
+              ]
+            },
+            {
+              "nome": "Grupos",
+              "recursos": [
+                "Criação/Edição",
+                "Membros",
+                "Permissões"
+              ]
+            }
+          ]
+        },
+        "configurações": {
+          "descrição": "Configurações do sistema",
+          "seções": [
+            {
+              "nome": "Geral",
+              "opções": [
+                "Nome da organização",
+                "Logotipo",
+                "Fuso horário"
+              ]
+            },
+            {
+              "nome": "Segurança",
+              "opções": [
+                "Política de senhas",
+                "MFA",
+                "Sessões"
+              ]
+            },
+            {
+              "nome": "Integrações",
+              "opções": [
+                "APIs",
+                "Webhooks",
+                "SSO"
+              ]
+            },
+            {
+              "nome": "Personalização",
+              "opções": [
+                "Temas",
+                "Marca",
+                "Layouts"
+              ]
+            }
+          ]
+        },
+        "monitoramento": {
+          "descrição": "Ferramentas de monitoramento",
+          "painéis": [
+            {
+              "nome": "Performance",
+              "métricas": [
+                "Tempo de resposta",
+                "Uso de recursos",
+                "Latência"
+              ]
+            },
+            {
+              "nome": "Segurança",
+              "métricas": [
+                "Tentativas de acesso",
+                "Atividades suspeitas",
+                "Vulnerabilidades"
+              ]
+            },
+            {
+              "nome": "Qualidade",
+              "métricas": [
+                "Uptime",
+                "Erros",
+                "Satisfação"
+              ]
+            }
+          ],
+          "alertas": {
+            "canais": [
+              "Email",
+              "SMS",
+              "Webhook"
+            ],
+            "níveis": [
+              "Info",
+              "Aviso",
+              "Crítico"
+            ]
+          }
+        },
+        "relatórios": {
+          "descrição": "Sistema de relatórios",
+          "tipos": [
+            {
+              "nome": "Uso",
+              "métricas": [
+                "Mensagens enviadas",
+                "Arquivos compartilhados",
+                "Usuários ativos"
+              ]
+            },
+            {
+              "nome": "Segurança",
+              "métricas": [
+                "Tentativas de acesso",
+                "Alterações de permissão",
+                "Ações administrativas"
+              ]
+            },
+            {
+              "nome": "Performance",
+              "métricas": [
+                "Tempo de resposta",
+                "Disponibilidade",
+                "Erros"
+              ]
+            }
+          ],
+          "formatos": [
+            "PDF",
+            "CSV",
+            "JSON"
+          ],
+          "agendamento": {
+            "frequências": [
+              "Diário",
+              "Semanal",
+              "Mensal"
+            ],
+            "entregas": [
+              "Email",
+              "API",
+              "Storage"
+            ]
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,723 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Usability Schema",
+  "description": "Schema para o módulo de usabilidade do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["usability"],
+  "properties": {
+    "usability": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "requisitos", "interfaces", "interação", "acessibilidade", "experiência", "documentação", "testes"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "requisitos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "critérios", "prioridade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^USA-R\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["Interface", "Interação", "Acessibilidade", "Experiência"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["Alta", "Média", "Baixa"]
+              }
+            }
+          }
+        },
+        "interfaces": {
+          "type": "object",
+          "required": ["diretrizes", "componentes", "layouts", "temas"],
+          "properties": {
+            "diretrizes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["categoria", "descrição", "exemplos", "validação"],
+                "properties": {
+                  "categoria": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "validação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "componentes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "variantes", "uso"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "variantes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "uso": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "layouts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "estrutura", "responsividade"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "estrutura": {
+                    "type": "string"
+                  },
+                  "responsividade": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "temas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "cores", "tipografia", "espaçamento"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "cores": {
+                    "type": "object"
+                  },
+                  "tipografia": {
+                    "type": "object"
+                  },
+                  "espaçamento": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "interação": {
+          "type": "object",
+          "required": ["padrões", "navegação", "formulários", "feedback"],
+          "properties": {
+            "padrões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "implementação", "exemplos"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "navegação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "estrutura", "comportamento", "atalhos"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "estrutura": {
+                    "type": "string"
+                  },
+                  "comportamento": {
+                    "type": "string"
+                  },
+                  "atalhos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "formulários": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "campos", "validação", "feedback"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "campos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "validação": {
+                    "type": "string"
+                  },
+                  "feedback": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "feedback": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "mensagem", "apresentação", "duração"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "mensagem": {
+                    "type": "string"
+                  },
+                  "apresentação": {
+                    "type": "string"
+                  },
+                  "duração": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "acessibilidade": {
+          "type": "object",
+          "required": ["diretrizes", "conformidade", "recursos", "testes"],
+          "properties": {
+            "diretrizes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["padrão", "nível", "requisitos", "implementação"],
+                "properties": {
+                  "padrão": {
+                    "type": "string"
+                  },
+                  "nível": {
+                    "type": "string"
+                  },
+                  "requisitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "implementação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "conformidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["diretriz", "status", "observações", "correções"],
+                "properties": {
+                  "diretriz": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["Conforme", "Parcial", "Não Conforme", "Não Aplicável"]
+                  },
+                  "observações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "correções": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "recursos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "implementação", "suporte"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "suporte": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "testes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "ferramenta", "escopo", "critérios"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "ferramenta": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "experiência": {
+          "type": "object",
+          "required": ["personas", "jornadas", "métricas", "feedback"],
+          "properties": {
+            "personas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "perfil", "objetivos", "necessidades"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "perfil": {
+                    "type": "string"
+                  },
+                  "objetivos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "necessidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "jornadas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "persona", "etapas", "pontosDor"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "persona": {
+                    "type": "string"
+                  },
+                  "etapas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "pontosDor": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "coleta", "metas"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "coleta": {
+                    "type": "string"
+                  },
+                  "metas": {
+                    "type": "object",
+                    "required": ["atual", "objetivo", "mínimo"],
+                    "properties": {
+                      "atual": {
+                        "type": "string"
+                      },
+                      "objetivo": {
+                        "type": "string"
+                      },
+                      "mínimo": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "feedback": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "canal", "frequência", "análise"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "canal": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "análise": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "documentação": {
+          "type": "object",
+          "required": ["guias", "tutoriais", "ajuda", "treinamento"],
+          "properties": {
+            "guias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "público", "conteúdo", "formato"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "público": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "formato": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "tutoriais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["título", "nível", "passos", "recursos"],
+                "properties": {
+                  "título": {
+                    "type": "string"
+                  },
+                  "nível": {
+                    "type": "string"
+                  },
+                  "passos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "recursos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "ajuda": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tópico", "conteúdo", "contexto", "relacionados"],
+                "properties": {
+                  "tópico": {
+                    "type": "string"
+                  },
+                  "conteúdo": {
+                    "type": "string"
+                  },
+                  "contexto": {
+                    "type": "string"
+                  },
+                  "relacionados": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "treinamento": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["título", "público", "objetivos", "conteúdo"],
+                "properties": {
+                  "título": {
+                    "type": "string"
+                  },
+                  "público": {
+                    "type": "string"
+                  },
+                  "objetivos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "conteúdo": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "testes": {
+          "type": "object",
+          "required": ["usabilidade", "acessibilidade", "automação", "métricas"],
+          "properties": {
+            "usabilidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "participantes", "tarefas", "métricas"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "participantes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tarefas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "acessibilidade": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ferramenta", "escopo", "critérios", "resultados"],
+                "properties": {
+                  "ferramenta": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "resultados": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "automação": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ferramenta", "escopo", "scripts", "relatórios"],
+                "properties": {
+                  "ferramenta": {
+                    "type": "string"
+                  },
+                  "escopo": {
+                    "type": "string"
+                  },
+                  "scripts": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "relatórios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "coleta", "análise"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "coleta": {
+                    "type": "string"
+                  },
+                  "análise": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

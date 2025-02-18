@@ -1,0 +1,437 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Executive Summary Schema",
+  "description": "Schema para documento de sumário executivo",
+  "type": "object",
+  "required": ["executiveSummary"],
+  "properties": {
+    "executiveSummary": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visãoGeral", "oportunidadeMercado", "solução", "modeloNegócio", "projeçõesFinanceiras", "equipe", "investimento", "cronograma"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "visãoGeral": {
+          "type": "object",
+          "required": ["problema", "solução", "diferencial", "objetivos"],
+          "properties": {
+            "problema": {
+              "type": "string"
+            },
+            "solução": {
+              "type": "string"
+            },
+            "diferencial": {
+              "type": "string"
+            },
+            "objetivos": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "oportunidadeMercado": {
+          "type": "object",
+          "required": ["tamanho", "crescimento", "tendências", "públicoAlvo"],
+          "properties": {
+            "tamanho": {
+              "type": "object",
+              "required": ["valor", "unidade", "ano"],
+              "properties": {
+                "valor": {
+                  "type": "number"
+                },
+                "unidade": {
+                  "type": "string"
+                },
+                "ano": {
+                  "type": "integer"
+                }
+              }
+            },
+            "crescimento": {
+              "type": "object",
+              "required": ["taxa", "período"],
+              "properties": {
+                "taxa": {
+                  "type": "number"
+                },
+                "período": {
+                  "type": "string"
+                }
+              }
+            },
+            "tendências": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "públicoAlvo": {
+              "type": "object",
+              "required": ["descrição", "tamanho", "características"],
+              "properties": {
+                "descrição": {
+                  "type": "string"
+                },
+                "tamanho": {
+                  "type": "number"
+                },
+                "características": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "solução": {
+          "type": "object",
+          "required": ["descrição", "benefícios", "diferenciaisCompetitivos", "estágioAtual"],
+          "properties": {
+            "descrição": {
+              "type": "string"
+            },
+            "benefícios": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "diferenciaisCompetitivos": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "estágioAtual": {
+              "type": "object",
+              "required": ["fase", "progresso", "próximosPassos"],
+              "properties": {
+                "fase": {
+                  "type": "string",
+                  "enum": ["ideação", "protótipo", "mvp", "mercado"]
+                },
+                "progresso": {
+                  "type": "string"
+                },
+                "próximosPassos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "modeloNegócio": {
+          "type": "object",
+          "required": ["fontesReceita", "estruturaCustos", "margemBruta", "estratégiaCrescimento"],
+          "properties": {
+            "fontesReceita": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fonte", "modelo", "projeção"],
+                "properties": {
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "projeção": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "estruturaCustos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["categoria", "valor", "tipo"],
+                "properties": {
+                  "categoria": {
+                    "type": "string"
+                  },
+                  "valor": {
+                    "type": "number"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["fixo", "variável"]
+                  }
+                }
+              }
+            },
+            "margemBruta": {
+              "type": "number"
+            },
+            "estratégiaCrescimento": {
+              "type": "string"
+            }
+          }
+        },
+        "projeçõesFinanceiras": {
+          "type": "object",
+          "required": ["receitas", "custos", "investimentos", "indicadores"],
+          "properties": {
+            "receitas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ano", "valor"],
+                "properties": {
+                  "ano": {
+                    "type": "integer"
+                  },
+                  "valor": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "custos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ano", "valor"],
+                "properties": {
+                  "ano": {
+                    "type": "integer"
+                  },
+                  "valor": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "investimentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["ano", "valor", "tipo"],
+                "properties": {
+                  "ano": {
+                    "type": "integer"
+                  },
+                  "valor": {
+                    "type": "number"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "indicadores": {
+              "type": "object",
+              "required": ["payback", "tir", "vpl"],
+              "properties": {
+                "payback": {
+                  "type": "number"
+                },
+                "tir": {
+                  "type": "number"
+                },
+                "vpl": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "equipe": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["nome", "cargo", "experiência", "responsabilidades"],
+            "properties": {
+              "nome": {
+                "type": "string"
+              },
+              "cargo": {
+                "type": "string"
+              },
+              "experiência": {
+                "type": "string"
+              },
+              "responsabilidades": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "investimento": {
+          "type": "object",
+          "required": ["valorNecessário", "uso", "contrapartida", "retorno"],
+          "properties": {
+            "valorNecessário": {
+              "type": "number"
+            },
+            "uso": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["finalidade", "valor", "percentual"],
+                "properties": {
+                  "finalidade": {
+                    "type": "string"
+                  },
+                  "valor": {
+                    "type": "number"
+                  },
+                  "percentual": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                }
+              }
+            },
+            "contrapartida": {
+              "type": "object",
+              "required": ["tipo", "valor", "percentual"],
+              "properties": {
+                "tipo": {
+                  "type": "string"
+                },
+                "valor": {
+                  "type": "number"
+                },
+                "percentual": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            },
+            "retorno": {
+              "type": "object",
+              "required": ["prazo", "taxa", "modelo"],
+              "properties": {
+                "prazo": {
+                  "type": "string"
+                },
+                "taxa": {
+                  "type": "number"
+                },
+                "modelo": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "cronograma": {
+          "type": "object",
+          "required": ["fases", "marcos", "riscos"],
+          "properties": {
+            "fases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "início", "fim", "entregas"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "início": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "fim": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "entregas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "marcos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "data", "descrição"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "data": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "riscos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["descrição", "impacto", "mitigação"],
+                "properties": {
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto"]
+                  },
+                  "mitigação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

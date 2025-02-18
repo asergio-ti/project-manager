@@ -1,0 +1,525 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Business Model Schema",
+  "description": "Schema para documento de modelo de negócios",
+  "type": "object",
+  "required": ["businessModel"],
+  "properties": {
+    "businessModel": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "contextoBusiness", "análiseMercado", "propostaValor", "canais", "relacionamentoClientes", "recursosChave", "parceriasChave", "estruturaCustos", "fontesReceita"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "contextoBusiness": {
+          "type": "object",
+          "required": ["descrição", "diagrama", "objetivosEstratégicos"],
+          "properties": {
+            "descrição": {
+              "type": "string"
+            },
+            "diagrama": {
+              "type": "string",
+              "description": "Diagrama Mermaid do modelo de negócios"
+            },
+            "objetivosEstratégicos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["objetivo", "indicadores", "metas"],
+                "properties": {
+                  "objetivo": {
+                    "type": "string"
+                  },
+                  "indicadores": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "metas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "análiseMercado": {
+          "type": "object",
+          "required": ["segmentos", "concorrentes", "tendências"],
+          "properties": {
+            "segmentos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "características", "tamanho", "potencial"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "características": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "tamanho": {
+                    "type": "string"
+                  },
+                  "potencial": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "concorrentes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "pontosFortesEFracos", "diferenciais"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "pontosFortesEFracos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "diferenciais": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "tendências": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["descrição", "impacto", "estratégiaAdaptação"],
+                "properties": {
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto"]
+                  },
+                  "estratégiaAdaptação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "propostaValor": {
+          "type": "object",
+          "required": ["produtosEServiços", "diferenciação", "precificação"],
+          "properties": {
+            "produtosEServiços": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "benefícios", "características"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "benefícios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "características": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "diferenciação": {
+              "type": "object",
+              "required": ["vantagensCompetitivas", "elementosInovação"],
+              "properties": {
+                "vantagensCompetitivas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "elementosInovação": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "precificação": {
+              "type": "object",
+              "required": ["estratégia", "modeloPreços", "justificativa"],
+              "properties": {
+                "estratégia": {
+                  "type": "string"
+                },
+                "modeloPreços": {
+                  "type": "string"
+                },
+                "justificativa": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "canais": {
+          "type": "object",
+          "required": ["aquisição", "distribuição"],
+          "properties": {
+            "aquisição": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["canal", "objetivos", "métricas"],
+                "properties": {
+                  "canal": {
+                    "type": "string"
+                  },
+                  "objetivos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "distribuição": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["canal", "processos", "custos"],
+                "properties": {
+                  "canal": {
+                    "type": "string"
+                  },
+                  "processos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "custos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "relacionamentoClientes": {
+          "type": "object",
+          "required": ["estratégias", "suporte"],
+          "properties": {
+            "estratégias": {
+              "type": "object",
+              "required": ["aquisição", "retenção", "crescimento"],
+              "properties": {
+                "aquisição": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "retenção": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "crescimento": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "suporte": {
+              "type": "object",
+              "required": ["canais", "processos", "métricas"],
+              "properties": {
+                "canais": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "processos": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "métricas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "recursosChave": {
+          "type": "object",
+          "required": ["humanos", "tecnológicos", "físicos", "financeiros"],
+          "properties": {
+            "humanos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["cargo", "quantidade", "habilidades"],
+                "properties": {
+                  "cargo": {
+                    "type": "string"
+                  },
+                  "quantidade": {
+                    "type": "integer"
+                  },
+                  "habilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "tecnológicos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["recurso", "finalidade", "custoEstimado"],
+                "properties": {
+                  "recurso": {
+                    "type": "string"
+                  },
+                  "finalidade": {
+                    "type": "string"
+                  },
+                  "custoEstimado": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "físicos": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "financeiros": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "parceriasChave": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["parceiro", "tipoRelação", "benefíciosMútuos"],
+            "properties": {
+              "parceiro": {
+                "type": "string"
+              },
+              "tipoRelação": {
+                "type": "string"
+              },
+              "benefíciosMútuos": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "estruturaCustos": {
+          "type": "object",
+          "required": ["custosFixes", "custosVariáveis", "investimentosIniciais"],
+          "properties": {
+            "custosFixes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "valor", "periodicidade"],
+                "properties": {
+                  "item": {
+                    "type": "string"
+                  },
+                  "valor": {
+                    "type": "number"
+                  },
+                  "periodicidade": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "custosVariáveis": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "baseCalculo", "estimativa"],
+                "properties": {
+                  "item": {
+                    "type": "string"
+                  },
+                  "baseCalculo": {
+                    "type": "string"
+                  },
+                  "estimativa": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "investimentosIniciais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "valor", "justificativa"],
+                "properties": {
+                  "item": {
+                    "type": "string"
+                  },
+                  "valor": {
+                    "type": "number"
+                  },
+                  "justificativa": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "fontesReceita": {
+          "type": "object",
+          "required": ["receitasPrimárias", "receitasSecundárias", "projeçõesFinanceiras"],
+          "properties": {
+            "receitasPrimárias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fonte", "modelo", "estimativa"],
+                "properties": {
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "estimativa": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "receitasSecundárias": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["fonte", "modelo", "estimativa"],
+                "properties": {
+                  "fonte": {
+                    "type": "string"
+                  },
+                  "modelo": {
+                    "type": "string"
+                  },
+                  "estimativa": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "projeçõesFinanceiras": {
+              "type": "object",
+              "required": ["breakeven", "margemLucro", "retornoInvestimento"],
+              "properties": {
+                "breakeven": {
+                  "type": "string"
+                },
+                "margemLucro": {
+                  "type": "string"
+                },
+                "retornoInvestimento": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

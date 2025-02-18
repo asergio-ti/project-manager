@@ -1,0 +1,310 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 42010 Software Architecture Schema",
+  "description": "Schema para descrição de arquitetura de software seguindo ISO/IEC 42010:2011",
+  "type": "object",
+  "required": ["architectureDescription"],
+  "properties": {
+    "architectureDescription": {
+      "type": "object",
+      "required": ["identification", "stakeholders", "concerns", "viewpoints", "views", "correspondences", "rationale"],
+      "properties": {
+        "identification": {
+          "type": "object",
+          "required": ["system", "version", "date", "status"],
+          "properties": {
+            "system": {
+              "type": "string",
+              "description": "Nome do sistema sendo descrito"
+            },
+            "version": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$",
+              "description": "Versão da descrição arquitetural"
+            },
+            "date": {
+              "type": "string",
+              "format": "date",
+              "description": "Data da descrição"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "stakeholders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "description", "concerns"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único do stakeholder"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome do stakeholder"
+              },
+              "description": {
+                "type": "string",
+                "description": "Descrição do papel do stakeholder"
+              },
+              "concerns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Lista de preocupações do stakeholder"
+              }
+            }
+          }
+        },
+        "concerns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "description", "stakeholders"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único da preocupação"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome da preocupação"
+              },
+              "description": {
+                "type": "string",
+                "description": "Descrição detalhada da preocupação"
+              },
+              "stakeholders": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "IDs dos stakeholders relacionados"
+              }
+            }
+          }
+        },
+        "viewpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "concerns", "languages", "methods"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único do viewpoint"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome do viewpoint"
+              },
+              "concerns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "IDs das preocupações endereçadas"
+              },
+              "languages": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Linguagens de modelagem utilizadas"
+              },
+              "methods": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Métodos de análise e modelagem"
+              }
+            }
+          }
+        },
+        "views": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "viewpoint", "diagram", "models"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único da view"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome da view"
+              },
+              "viewpoint": {
+                "type": "string",
+                "description": "ID do viewpoint relacionado"
+              },
+              "diagram": {
+                "type": "object",
+                "required": ["type", "content", "description"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["mermaid", "uml", "c4model"],
+                    "description": "Tipo do diagrama"
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Conteúdo do diagrama"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do diagrama"
+                  }
+                }
+              },
+              "models": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["type", "content"],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "Tipo do modelo"
+                    },
+                    "content": {
+                      "type": "string",
+                      "description": "Conteúdo do modelo"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "correspondences": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "name", "elements", "rules"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Identificador único da correspondência"
+              },
+              "name": {
+                "type": "string",
+                "description": "Nome da correspondência"
+              },
+              "elements": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Elementos relacionados"
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Regras de correspondência"
+              }
+            }
+          }
+        },
+        "rationale": {
+          "type": "object",
+          "required": ["decisions", "alternatives", "impacts"],
+          "properties": {
+            "decisions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "status"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador da decisão"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da decisão"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["proposed", "accepted", "rejected", "superseded"],
+                    "description": "Status da decisão"
+                  }
+                }
+              }
+            },
+            "alternatives": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "pros", "cons"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador da alternativa"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição da alternativa"
+                  },
+                  "pros": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Pontos positivos"
+                  },
+                  "cons": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Pontos negativos"
+                  }
+                }
+              }
+            },
+            "impacts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "description", "severity", "stakeholders"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identificador do impacto"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Descrição do impacto"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": ["low", "medium", "high", "critical"],
+                    "description": "Severidade do impacto"
+                  },
+                  "stakeholders": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Stakeholders afetados"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

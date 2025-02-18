@@ -1,0 +1,595 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Constraints Schema",
+  "description": "Schema para documento de restrições",
+  "type": "object",
+  "required": ["constraints"],
+  "properties": {
+    "constraints": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "restriçõesTécnicas", "restriçõesNegócio", "restriçõesRegulamentares", "restriçõesRecursos", "restriçõesSegurança", "restriçõesQualidade", "restriçõesTemporais", "mitigações"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "restriçõesTécnicas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "impacto", "severidade", "origem", "alternativas"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TECH-\\d+$"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["plataforma", "infraestrutura", "arquitetura", "performance", "compatibilidade", "integração"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["áreas", "severidade", "descrição"],
+                "properties": {
+                  "áreas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"]
+                  },
+                  "descrição": {
+                    "type": "string"
+                  }
+                }
+              },
+              "severidade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta", "crítica"]
+              },
+              "origem": {
+                "type": "string"
+              },
+              "alternativas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "viabilidade", "custos"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "viabilidade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta"]
+                    },
+                    "custos": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restriçõesNegócio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "impacto", "stakeholders", "justificativa"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^BUS-\\d+$"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["orçamento", "prazo", "escopo", "recursos", "política", "estratégia"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["financeiro", "operacional", "estratégico"],
+                "properties": {
+                  "financeiro": {
+                    "type": "string"
+                  },
+                  "operacional": {
+                    "type": "string"
+                  },
+                  "estratégico": {
+                    "type": "string"
+                  }
+                }
+              },
+              "stakeholders": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "justificativa": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "restriçõesRegulamentares": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "fonte", "requisitos", "conformidade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REG-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["legal", "normativa", "padrão", "certificação"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "fonte": {
+                "type": "object",
+                "required": ["nome", "referência", "versão"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "referência": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string"
+                  }
+                }
+              },
+              "requisitos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "obrigatoriedade", "prazo"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "obrigatoriedade": {
+                      "type": "string",
+                      "enum": ["mandatório", "recomendado", "opcional"]
+                    },
+                    "prazo": {
+                      "type": "string",
+                      "format": "date"
+                    }
+                  }
+                }
+              },
+              "conformidade": {
+                "type": "object",
+                "required": ["status", "evidências", "responsável"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["conforme", "parcial", "não_conforme", "não_aplicável"]
+                  },
+                  "evidências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "responsável": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restriçõesRecursos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "disponibilidade", "impacto", "alternativas"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RES-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["humano", "financeiro", "tecnológico", "material", "temporal"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "disponibilidade": {
+                "type": "object",
+                "required": ["atual", "necessária", "período"],
+                "properties": {
+                  "atual": {
+                    "type": "string"
+                  },
+                  "necessária": {
+                    "type": "string"
+                  },
+                  "período": {
+                    "type": "string"
+                  }
+                }
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["descrição", "severidade", "áreas"],
+                "properties": {
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"]
+                  },
+                  "áreas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "alternativas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "custo", "viabilidade"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "custo": {
+                      "type": "string"
+                    },
+                    "viabilidade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restriçõesSegurança": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "requisitos", "impacto", "controles"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^SEC-\\d+$"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["acesso", "dados", "comunicação", "infraestrutura", "conformidade"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "requisitos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "nível", "justificativa"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "nível": {
+                      "type": "string",
+                      "enum": ["baixo", "médio", "alto", "crítico"]
+                    },
+                    "justificativa": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["confidencialidade", "integridade", "disponibilidade"],
+                "properties": {
+                  "confidencialidade": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto", "crítico"]
+                  },
+                  "integridade": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto", "crítico"]
+                  },
+                  "disponibilidade": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto", "crítico"]
+                  }
+                }
+              },
+              "controles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição", "implementação", "verificação"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "implementação": {
+                      "type": "string"
+                    },
+                    "verificação": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restriçõesQualidade": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "atributo", "descrição", "critérios", "métricas", "verificação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^QUAL-\\d+$"
+              },
+              "atributo": {
+                "type": "string",
+                "enum": ["desempenho", "usabilidade", "confiabilidade", "manutenibilidade", "portabilidade"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "critérios": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "nível", "aceitação"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "nível": {
+                      "type": "string",
+                      "enum": ["mínimo", "desejável", "excepcional"]
+                    },
+                    "aceitação": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "método", "meta"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "método": {
+                      "type": "string"
+                    },
+                    "meta": {
+                      "type": "object",
+                      "required": ["valor", "unidade"],
+                      "properties": {
+                        "valor": {
+                          "type": "number"
+                        },
+                        "unidade": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "verificação": {
+                "type": "object",
+                "required": ["método", "frequência", "responsável"],
+                "properties": {
+                  "método": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "responsável": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restriçõesTemporais": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "período", "impacto", "dependências"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TEMP-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["prazo", "dependência", "janela", "sequência"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "período": {
+                "type": "object",
+                "required": ["início", "fim", "duração"],
+                "properties": {
+                  "início": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "fim": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "duração": {
+                    "type": "string"
+                  }
+                }
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["descrição", "severidade", "contingência"],
+                "properties": {
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"]
+                  },
+                  "contingência": {
+                    "type": "string"
+                  }
+                }
+              },
+              "dependências": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "tipo", "descrição"],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["início-início", "início-fim", "fim-início", "fim-fim"]
+                    },
+                    "descrição": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "mitigações": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "restriçãoId", "descrição", "estratégia", "ações", "status"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^MIT-\\d+$"
+              },
+              "restriçãoId": {
+                "type": "string",
+                "pattern": "^(TECH|BUS|REG|RES|SEC|QUAL|TEMP)-\\d+$"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "estratégia": {
+                "type": "string",
+                "enum": ["eliminar", "transferir", "mitigar", "aceitar"]
+              },
+              "ações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "responsável", "prazo", "recursos", "status"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "responsável": {
+                      "type": "string"
+                    },
+                    "prazo": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "recursos": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["pendente", "em_andamento", "concluída", "cancelada"]
+                    }
+                  }
+                }
+              },
+              "status": {
+                "type": "string",
+                "enum": ["planejada", "em_execução", "concluída", "cancelada"]
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

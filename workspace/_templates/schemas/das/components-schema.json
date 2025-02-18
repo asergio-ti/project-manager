@@ -1,0 +1,291 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DAS Components Schema",
+  "description": "Schema para o módulo de componentes do Documento de Arquitetura de Software seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["components"],
+  "properties": {
+    "components": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "componentes"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "componentes": {
+          "type": "object",
+          "required": ["core", "interfaces", "dados", "infraestrutura"],
+          "properties": {
+            "core": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "descrição", "responsabilidades", "dependências", "interfaces"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^COMP-\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "responsabilidades": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "dependências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^COMP-\\d+$"
+                    }
+                  },
+                  "interfaces": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "tipo", "descrição"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string",
+                          "enum": ["entrada", "saída", "bidirecional"]
+                        },
+                        "descrição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "interfaces": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "tipo", "descrição", "operações"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^IF-\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["API", "CLI", "GUI", "Biblioteca"]
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "operações": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "parâmetros", "retorno"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "parâmetros": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": ["nome", "tipo", "descrição"],
+                            "properties": {
+                              "nome": {
+                                "type": "string"
+                              },
+                              "tipo": {
+                                "type": "string"
+                              },
+                              "descrição": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        },
+                        "retorno": {
+                          "type": "object",
+                          "required": ["tipo", "descrição"],
+                          "properties": {
+                            "tipo": {
+                              "type": "string"
+                            },
+                            "descrição": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "dados": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "tipo", "estrutura", "persistência"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^DATA-\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["Entidade", "DTO", "Configuração", "Cache"]
+                  },
+                  "estrutura": {
+                    "type": "object",
+                    "required": ["atributos"],
+                    "properties": {
+                      "atributos": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["nome", "tipo", "descrição"],
+                          "properties": {
+                            "nome": {
+                              "type": "string"
+                            },
+                            "tipo": {
+                              "type": "string"
+                            },
+                            "descrição": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "persistência": {
+                    "type": "object",
+                    "required": ["tipo", "estratégia"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string",
+                        "enum": ["Arquivo", "Memória", "Banco de Dados"]
+                      },
+                      "estratégia": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "infraestrutura": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "tipo", "recursos", "configuração"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^INFRA-\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["Runtime", "Container", "Biblioteca", "Serviço"]
+                  },
+                  "recursos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["tipo", "especificação"],
+                      "properties": {
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "especificação": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "configuração": {
+                    "type": "object",
+                    "required": ["parâmetros"],
+                    "properties": {
+                      "parâmetros": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "required": ["nome", "valor", "descrição"],
+                          "properties": {
+                            "nome": {
+                              "type": "string"
+                            },
+                            "valor": {
+                              "type": "string"
+                            },
+                            "descrição": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,292 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Validations Schema",
+  "description": "Schema para documento de validações",
+  "type": "object",
+  "required": ["validations"],
+  "properties": {
+    "validations": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "critérios", "testes", "resultados", "recomendações"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "critérios": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "importância", "métricas"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^CRIT-\\d+$"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["funcional", "usabilidade", "desempenho", "segurança", "compatibilidade"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "importância": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta", "crítica"]
+              },
+              "métricas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "descrição", "método", "alvo"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "método": {
+                      "type": "string"
+                    },
+                    "alvo": {
+                      "type": "object",
+                      "required": ["valor", "unidade"],
+                      "properties": {
+                        "valor": {
+                          "type": "number"
+                        },
+                        "unidade": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "testes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "critérioId", "tipo", "descrição", "préCondições", "passos", "resultadoEsperado", "ambiente"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TEST-\\d+$"
+              },
+              "critérioId": {
+                "type": "string",
+                "pattern": "^CRIT-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["manual", "automatizado", "híbrido"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "préCondições": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "passos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["número", "ação", "dados", "verificação"],
+                  "properties": {
+                    "número": {
+                      "type": "integer"
+                    },
+                    "ação": {
+                      "type": "string"
+                    },
+                    "dados": {
+                      "type": "object"
+                    },
+                    "verificação": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "resultadoEsperado": {
+                "type": "string"
+              },
+              "ambiente": {
+                "type": "object",
+                "required": ["plataforma", "versão", "configurações"],
+                "properties": {
+                  "plataforma": {
+                    "type": "string"
+                  },
+                  "versão": {
+                    "type": "string"
+                  },
+                  "configurações": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "resultados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["testeId", "execução", "status", "evidências", "problemas"],
+            "properties": {
+              "testeId": {
+                "type": "string",
+                "pattern": "^TEST-\\d+$"
+              },
+              "execução": {
+                "type": "object",
+                "required": ["data", "responsável", "duração"],
+                "properties": {
+                  "data": {
+                    "type": "string",
+                    "format": "date-time"
+                  },
+                  "responsável": {
+                    "type": "string"
+                  },
+                  "duração": {
+                    "type": "string"
+                  }
+                }
+              },
+              "status": {
+                "type": "string",
+                "enum": ["passou", "falhou", "bloqueado", "não_executado"]
+              },
+              "evidências": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição", "localização"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["screenshot", "log", "vídeo", "dados"]
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "localização": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "problemas": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "severidade", "status"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^BUG-\\d+$"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "severidade": {
+                      "type": "string",
+                      "enum": ["baixa", "média", "alta", "crítica"]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["aberto", "em_análise", "corrigido", "fechado"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "recomendações": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "prioridade", "ações"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REC-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["melhoria", "correção", "otimização", "segurança"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "prioridade": {
+                "type": "string",
+                "enum": ["baixa", "média", "alta", "crítica"]
+              },
+              "ações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "responsável", "prazo", "status"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "responsável": {
+                      "type": "string"
+                    },
+                    "prazo": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["pendente", "em_andamento", "concluída"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

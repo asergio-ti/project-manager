@@ -1,0 +1,494 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Software Requirements Schema",
+  "description": "Schema para documento de requisitos de software",
+  "type": "object",
+  "required": ["requirements"],
+  "properties": {
+    "requirements": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "introdução", "requisitos", "casoDeUso", "regrasNegócio", "interfaces", "qualidade", "restrições"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "introdução": {
+          "type": "object",
+          "required": ["propósito", "escopo", "definições", "referências"],
+          "properties": {
+            "propósito": {
+              "type": "string"
+            },
+            "escopo": {
+              "type": "string"
+            },
+            "definições": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["termo", "definição"],
+                "properties": {
+                  "termo": {
+                    "type": "string"
+                  },
+                  "definição": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "referências": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["título", "link"],
+                "properties": {
+                  "título": {
+                    "type": "string"
+                  },
+                  "link": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "requisitos": {
+          "type": "object",
+          "required": ["funcionais", "nãoFuncionais"],
+          "properties": {
+            "funcionais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "título", "descrição", "prioridade", "complexidade", "dependências", "critériosAceitação"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^RF\\d+$"
+                  },
+                  "título": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "complexidade": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"]
+                  },
+                  "dependências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critériosAceitação": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "nãoFuncionais": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "categoria", "descrição", "métricas", "restrições"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^RNF\\d+$"
+                  },
+                  "categoria": {
+                    "type": "string",
+                    "enum": ["desempenho", "segurança", "usabilidade", "disponibilidade", "manutenibilidade", "portabilidade"]
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "restrições": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "casoDeUso": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "título", "descrição", "atores", "préCondições", "fluxoPrincipal", "fluxosAlternativos", "pósCondições"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^UC\\d+$"
+              },
+              "título": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "atores": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "préCondições": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "fluxoPrincipal": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["passo", "descrição", "ator"],
+                  "properties": {
+                    "passo": {
+                      "type": "integer"
+                    },
+                    "descrição": {
+                      "type": "string"
+                    },
+                    "ator": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "fluxosAlternativos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "condição", "passos"],
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "condição": {
+                      "type": "string"
+                    },
+                    "passos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["passo", "descrição", "ator"],
+                        "properties": {
+                          "passo": {
+                            "type": "integer"
+                          },
+                          "descrição": {
+                            "type": "string"
+                          },
+                          "ator": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "pósCondições": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "regrasNegócio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "impacto", "validação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RN\\d+$"
+              },
+              "categoria": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "string"
+              },
+              "validação": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "interfaces": {
+          "type": "object",
+          "required": ["usuário", "sistema", "hardware"],
+          "properties": {
+            "usuário": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "descrição", "wireframe", "elementos", "comportamentos"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^IU\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "wireframe": {
+                    "type": "string",
+                    "description": "Link ou caminho para o wireframe"
+                  },
+                  "elementos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["id", "tipo", "descrição"],
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "tipo": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "comportamentos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["evento", "ação", "resultado"],
+                      "properties": {
+                        "evento": {
+                          "type": "string"
+                        },
+                        "ação": {
+                          "type": "string"
+                        },
+                        "resultado": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "sistema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "nome", "descrição", "protocolo", "formato"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^IS\\d+$"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "protocolo": {
+                    "type": "string"
+                  },
+                  "formato": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "hardware": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "tipo", "especificações", "requisitos"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^IH\\d+$"
+                  },
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "especificações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "requisitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["atributos", "métricas", "testes"],
+          "properties": {
+            "atributos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["categoria", "descrição", "critérios"],
+                "properties": {
+                  "categoria": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "fórmula", "alvo"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "fórmula": {
+                    "type": "string"
+                  },
+                  "alvo": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "testes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "critériosAceitação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "critériosAceitação": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restrições": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "impacto", "estratégiaMitigação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RT\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["técnica", "regulatória", "negócio", "projeto"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "string"
+              },
+              "estratégiaMitigação": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

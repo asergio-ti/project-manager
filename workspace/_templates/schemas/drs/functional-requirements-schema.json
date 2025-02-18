@@ -1,0 +1,693 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Functional Requirements Schema",
+  "description": "Schema para documentação de requisitos funcionais seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["functionalRequirements"],
+  "properties": {
+    "functionalRequirements": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "módulos", "funcionalidades", "interfaces", "dados", "processos"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "módulos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "responsabilidades", "funcionalidades", "interfaces"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^MOD-\\d+$",
+                "description": "ID do módulo"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome do módulo"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do módulo"
+              },
+              "responsabilidades": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Responsabilidades do módulo"
+              },
+              "funcionalidades": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^FUNC-\\d+$",
+                  "description": "IDs das funcionalidades do módulo"
+                }
+              },
+              "interfaces": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^IF-\\d+$",
+                  "description": "IDs das interfaces do módulo"
+                }
+              }
+            }
+          }
+        },
+        "funcionalidades": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "tipo", "prioridade", "complexidade", "atores", "préCondições", "pósCondições", "fluxoPrincipal", "fluxosAlternativos", "exceções", "requisitosEspeciais"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^FUNC-\\d+$",
+                "description": "ID da funcionalidade"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da funcionalidade"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da funcionalidade"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["crud", "processo", "relatório", "integração", "configuração"],
+                "description": "Tipo da funcionalidade"
+              },
+              "prioridade": {
+                "type": "object",
+                "required": ["valor", "justificativa"],
+                "properties": {
+                  "valor": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta", "crítica"],
+                    "description": "Prioridade da funcionalidade"
+                  },
+                  "justificativa": {
+                    "type": "string",
+                    "description": "Justificativa da prioridade"
+                  }
+                }
+              },
+              "complexidade": {
+                "type": "object",
+                "required": ["valor", "justificativa"],
+                "properties": {
+                  "valor": {
+                    "type": "string",
+                    "enum": ["baixa", "média", "alta"],
+                    "description": "Complexidade da funcionalidade"
+                  },
+                  "justificativa": {
+                    "type": "string",
+                    "description": "Justificativa da complexidade"
+                  }
+                }
+              },
+              "atores": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "papel"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["usuário", "sistema", "dispositivo"],
+                      "description": "Tipo do ator"
+                    },
+                    "papel": {
+                      "type": "string",
+                      "description": "Papel do ator"
+                    }
+                  }
+                }
+              },
+              "préCondições": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "tipo"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da pré-condição"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["estado", "dados", "permissão", "sistema"],
+                      "description": "Tipo da pré-condição"
+                    }
+                  }
+                }
+              },
+              "pósCondições": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["descrição", "tipo"],
+                  "properties": {
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da pós-condição"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["estado", "dados", "notificação", "sistema"],
+                      "description": "Tipo da pós-condição"
+                    }
+                  }
+                }
+              },
+              "fluxoPrincipal": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["passo", "ação", "responsável", "dados"],
+                  "properties": {
+                    "passo": {
+                      "type": "integer",
+                      "description": "Número do passo"
+                    },
+                    "ação": {
+                      "type": "string",
+                      "description": "Descrição da ação"
+                    },
+                    "responsável": {
+                      "type": "string",
+                      "description": "Responsável pela ação"
+                    },
+                    "dados": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["nome", "tipo", "obrigatório"],
+                        "properties": {
+                          "nome": {
+                            "type": "string",
+                            "description": "Nome do dado"
+                          },
+                          "tipo": {
+                            "type": "string",
+                            "description": "Tipo do dado"
+                          },
+                          "obrigatório": {
+                            "type": "boolean",
+                            "description": "Se o dado é obrigatório"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "fluxosAlternativos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "condição", "passos"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^ALT-\\d+$",
+                      "description": "ID do fluxo alternativo"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do fluxo alternativo"
+                    },
+                    "condição": {
+                      "type": "string",
+                      "description": "Condição para o fluxo alternativo"
+                    },
+                    "passos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["passo", "ação", "responsável"],
+                        "properties": {
+                          "passo": {
+                            "type": "integer",
+                            "description": "Número do passo"
+                          },
+                          "ação": {
+                            "type": "string",
+                            "description": "Descrição da ação"
+                          },
+                          "responsável": {
+                            "type": "string",
+                            "description": "Responsável pela ação"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "exceções": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "condição", "ação", "tratamento"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^EXC-\\d+$",
+                      "description": "ID da exceção"
+                    },
+                    "condição": {
+                      "type": "string",
+                      "description": "Condição para a exceção"
+                    },
+                    "ação": {
+                      "type": "string",
+                      "description": "Ação que gera a exceção"
+                    },
+                    "tratamento": {
+                      "type": "string",
+                      "description": "Tratamento da exceção"
+                    }
+                  }
+                }
+              },
+              "requisitosEspeciais": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "descrição"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["performance", "segurança", "usabilidade", "disponibilidade"],
+                      "description": "Tipo do requisito especial"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do requisito especial"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "interfaces": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "elementos", "comportamentos", "validações"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^IF-\\d+$",
+                "description": "ID da interface"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["tela", "api", "relatório", "integração"],
+                "description": "Tipo da interface"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da interface"
+              },
+              "elementos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "tipo", "propriedades"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "ID do elemento"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo do elemento"
+                    },
+                    "propriedades": {
+                      "type": "object",
+                      "description": "Propriedades do elemento"
+                    }
+                  }
+                }
+              },
+              "comportamentos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["evento", "ação", "condições"],
+                  "properties": {
+                    "evento": {
+                      "type": "string",
+                      "description": "Evento que dispara o comportamento"
+                    },
+                    "ação": {
+                      "type": "string",
+                      "description": "Ação a ser executada"
+                    },
+                    "condições": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Condições para execução"
+                    }
+                  }
+                }
+              },
+              "validações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["campo", "tipo", "regras"],
+                  "properties": {
+                    "campo": {
+                      "type": "string",
+                      "description": "Campo a ser validado"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo de validação"
+                    },
+                    "regras": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Regras de validação"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "dados": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "tipo", "estrutura", "validações", "relacionamentos"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^DATA-\\d+$",
+                "description": "ID da estrutura de dados"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome da estrutura"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["entidade", "dto", "enum", "valor"],
+                "description": "Tipo da estrutura"
+              },
+              "estrutura": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "tipo", "descrição", "obrigatório"],
+                  "properties": {
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome do campo"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo do campo"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do campo"
+                    },
+                    "obrigatório": {
+                      "type": "boolean",
+                      "description": "Se o campo é obrigatório"
+                    }
+                  }
+                }
+              },
+              "validações": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["campo", "tipo", "regras"],
+                  "properties": {
+                    "campo": {
+                      "type": "string",
+                      "description": "Campo a ser validado"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "description": "Tipo de validação"
+                    },
+                    "regras": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Regras de validação"
+                    }
+                  }
+                }
+              },
+              "relacionamentos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "destino", "cardinalidade"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["composição", "agregação", "associação"],
+                      "description": "Tipo do relacionamento"
+                    },
+                    "destino": {
+                      "type": "string",
+                      "pattern": "^DATA-\\d+$",
+                      "description": "ID da estrutura de destino"
+                    },
+                    "cardinalidade": {
+                      "type": "string",
+                      "description": "Cardinalidade do relacionamento"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "processos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "nome", "descrição", "tipo", "atores", "atividades", "regras"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^PROC-\\d+$",
+                "description": "ID do processo"
+              },
+              "nome": {
+                "type": "string",
+                "description": "Nome do processo"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do processo"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["negócio", "suporte", "gerencial"],
+                "description": "Tipo do processo"
+              },
+              "atores": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["papel", "responsabilidades"],
+                  "properties": {
+                    "papel": {
+                      "type": "string",
+                      "description": "Papel no processo"
+                    },
+                    "responsabilidades": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Responsabilidades no processo"
+                    }
+                  }
+                }
+              },
+              "atividades": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "nome", "tipo", "responsável", "entradas", "saídas", "passos"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^ATIV-\\d+$",
+                      "description": "ID da atividade"
+                    },
+                    "nome": {
+                      "type": "string",
+                      "description": "Nome da atividade"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["manual", "automatizada", "mista"],
+                      "description": "Tipo da atividade"
+                    },
+                    "responsável": {
+                      "type": "string",
+                      "description": "Responsável pela atividade"
+                    },
+                    "entradas": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["tipo", "descrição"],
+                        "properties": {
+                          "tipo": {
+                            "type": "string",
+                            "description": "Tipo da entrada"
+                          },
+                          "descrição": {
+                            "type": "string",
+                            "description": "Descrição da entrada"
+                          }
+                        }
+                      }
+                    },
+                    "saídas": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["tipo", "descrição"],
+                        "properties": {
+                          "tipo": {
+                            "type": "string",
+                            "description": "Tipo da saída"
+                          },
+                          "descrição": {
+                            "type": "string",
+                            "description": "Descrição da saída"
+                          }
+                        }
+                      }
+                    },
+                    "passos": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["ordem", "descrição", "tipo"],
+                        "properties": {
+                          "ordem": {
+                            "type": "integer",
+                            "description": "Ordem do passo"
+                          },
+                          "descrição": {
+                            "type": "string",
+                            "description": "Descrição do passo"
+                          },
+                          "tipo": {
+                            "type": "string",
+                            "enum": ["ação", "decisão", "espera"],
+                            "description": "Tipo do passo"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "regras": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "tipo", "condições", "ações"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^RULE-\\d+$",
+                      "description": "ID da regra"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição da regra"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["negócio", "validação", "cálculo", "fluxo"],
+                      "description": "Tipo da regra"
+                    },
+                    "condições": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Condições da regra"
+                    },
+                    "ações": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Ações da regra"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,263 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Introduction Schema",
+  "description": "Schema para documentação de introdução seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["introduction"],
+  "properties": {
+    "introduction": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "propósito", "escopo", "definições", "referências", "visãoGeral"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "propósito": {
+          "type": "object",
+          "required": ["descrição", "objetivos", "público"],
+          "properties": {
+            "descrição": {
+              "type": "string",
+              "description": "Descrição do propósito do documento"
+            },
+            "objetivos": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Lista de objetivos do documento"
+            },
+            "público": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "interesse"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "description": "Tipo de público alvo"
+                  },
+                  "interesse": {
+                    "type": "string",
+                    "description": "Interesse específico deste público"
+                  }
+                }
+              },
+              "description": "Público alvo do documento"
+            }
+          }
+        },
+        "escopo": {
+          "type": "object",
+          "required": ["incluso", "excluso", "premissas", "restrições"],
+          "properties": {
+            "incluso": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "O que está no escopo"
+            },
+            "excluso": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "O que está fora do escopo"
+            },
+            "premissas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Premissas consideradas"
+            },
+            "restrições": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Restrições aplicáveis"
+            }
+          }
+        },
+        "definições": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["termo", "definição", "fonte"],
+            "properties": {
+              "termo": {
+                "type": "string",
+                "description": "Termo a ser definido"
+              },
+              "definição": {
+                "type": "string",
+                "description": "Definição do termo"
+              },
+              "fonte": {
+                "type": "string",
+                "description": "Fonte da definição"
+              },
+              "exemplos": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Exemplos de uso do termo"
+              }
+            }
+          },
+          "description": "Definições de termos importantes"
+        },
+        "referências": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "título", "autor", "data", "tipo"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REF-\\d+$",
+                "description": "Identificador único da referência"
+              },
+              "título": {
+                "type": "string",
+                "description": "Título da referência"
+              },
+              "autor": {
+                "type": "string",
+                "description": "Autor da referência"
+              },
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data da referência"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["artigo", "livro", "norma", "site", "outro"],
+                "description": "Tipo da referência"
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL da referência, se aplicável"
+              },
+              "citações": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Seções que citam esta referência"
+              }
+            }
+          },
+          "description": "Referências bibliográficas"
+        },
+        "visãoGeral": {
+          "type": "object",
+          "required": ["estrutura", "convenções"],
+          "properties": {
+            "estrutura": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["seção", "descrição"],
+                "properties": {
+                  "seção": {
+                    "type": "string",
+                    "description": "Nome da seção"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do conteúdo da seção"
+                  },
+                  "subseções": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "descrição"],
+                      "properties": {
+                        "nome": {
+                          "type": "string",
+                          "description": "Nome da subseção"
+                        },
+                        "descrição": {
+                          "type": "string",
+                          "description": "Descrição do conteúdo da subseção"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "description": "Estrutura do documento"
+            },
+            "convenções": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "descrição", "exemplos"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "description": "Tipo de convenção"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição da convenção"
+                  },
+                  "exemplos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Exemplos de uso da convenção"
+                  }
+                }
+              },
+              "description": "Convenções utilizadas no documento"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

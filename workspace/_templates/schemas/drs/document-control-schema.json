@@ -1,0 +1,245 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Document Control Schema",
+  "description": "Schema para documentação de controle de documentos seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["documentControl"],
+  "properties": {
+    "documentControl": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "histórico", "aprovações", "distribuição", "referências"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "histórico": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "autor", "descrição", "mudanças"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                "description": "Versão da mudança"
+              },
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data da mudança"
+              },
+              "autor": {
+                "type": "string",
+                "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+                "description": "Autor da mudança"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição da mudança"
+              },
+              "mudanças": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["tipo", "seção", "descrição"],
+                  "properties": {
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["adição", "remoção", "modificação", "correção"],
+                      "description": "Tipo de mudança"
+                    },
+                    "seção": {
+                      "type": "string",
+                      "description": "Seção afetada"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição detalhada da mudança"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "aprovações": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "aprovador", "papel", "status", "comentários"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                "description": "Versão aprovada"
+              },
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data da aprovação"
+              },
+              "aprovador": {
+                "type": "string",
+                "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+                "description": "Aprovador no formato 'Nome <email>'"
+              },
+              "papel": {
+                "type": "string",
+                "enum": ["autor", "revisor", "aprovador", "stakeholder"],
+                "description": "Papel do aprovador"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["aprovado", "reprovado", "pendente"],
+                "description": "Status da aprovação"
+              },
+              "comentários": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["data", "texto"],
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Data e hora do comentário"
+                    },
+                    "texto": {
+                      "type": "string",
+                      "description": "Texto do comentário"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "distribuição": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "destinatário", "tipo", "status"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                "description": "Versão distribuída"
+              },
+              "data": {
+                "type": "string",
+                "format": "date",
+                "description": "Data da distribuição"
+              },
+              "destinatário": {
+                "type": "object",
+                "required": ["nome", "papel", "organização"],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "description": "Nome do destinatário"
+                  },
+                  "papel": {
+                    "type": "string",
+                    "description": "Papel do destinatário"
+                  },
+                  "organização": {
+                    "type": "string",
+                    "description": "Organização do destinatário"
+                  }
+                }
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["informativo", "aprovação", "revisão"],
+                "description": "Tipo de distribuição"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["enviado", "recebido", "lido", "respondido"],
+                "description": "Status da distribuição"
+              }
+            }
+          }
+        },
+        "referências": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "título", "versão", "localização"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REF-\\d+$",
+                "description": "ID da referência"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["documento", "norma", "template", "guia"],
+                "description": "Tipo de referência"
+              },
+              "título": {
+                "type": "string",
+                "description": "Título da referência"
+              },
+              "versão": {
+                "type": "string",
+                "description": "Versão da referência"
+              },
+              "localização": {
+                "type": "object",
+                "required": ["tipo", "caminho"],
+                "properties": {
+                  "tipo": {
+                    "type": "string",
+                    "enum": ["local", "rede", "repositório"],
+                    "description": "Tipo de localização"
+                  },
+                  "caminho": {
+                    "type": "string",
+                    "description": "Caminho para o documento"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

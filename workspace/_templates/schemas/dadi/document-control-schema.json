@@ -1,0 +1,136 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Document Control Schema",
+  "description": "Schema para o módulo de controle de documentos do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001 e ISO/IEC 16085",
+  "type": "object",
+  "required": ["documentControl"],
+  "properties": {
+    "documentControl": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "histórico", "documentos", "diagramas"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "histórico": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["versão", "data", "autor", "mudanças"],
+            "properties": {
+              "versão": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$"
+              },
+              "data": {
+                "type": "string",
+                "format": "date"
+              },
+              "autor": {
+                "type": "string"
+              },
+              "mudanças": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "documentos": {
+          "type": "object",
+          "required": ["arquitetura"],
+          "properties": {
+            "arquitetura": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "dependências"],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "pattern": "^DADI_[a-zA-Z]+\\.json$",
+                    "description": "Nome do arquivo do documento"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do documento"
+                  },
+                  "dependências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "pattern": "^DADI_[a-zA-Z]+\\.json$"
+                    },
+                    "description": "Lista de documentos dos quais este depende"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "diagramas": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z]+$": {
+              "type": "object",
+              "required": ["type", "content", "viewpoint", "rationale"],
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": ["mermaid"],
+                  "description": "Tipo do diagrama"
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Conteúdo do diagrama em formato Mermaid"
+                },
+                "viewpoint": {
+                  "type": "string",
+                  "description": "Ponto de vista representado pelo diagrama"
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Justificativa para o diagrama"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

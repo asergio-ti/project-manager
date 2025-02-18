@@ -1,0 +1,373 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 27001 Information Security Schema",
+  "description": "Schema para gestão de segurança da informação seguindo ISO/IEC 27001:2013",
+  "type": "object",
+  "required": ["isms"],
+  "properties": {
+    "isms": {
+      "type": "object",
+      "description": "Information Security Management System",
+      "required": ["context", "leadership", "planning", "support", "operation", "performance_evaluation", "improvement"],
+      "properties": {
+        "context": {
+          "type": "object",
+          "required": ["organization", "requirements", "scope"],
+          "properties": {
+            "organization": {
+              "type": "object",
+              "required": ["internal_issues", "external_issues", "interested_parties"],
+              "properties": {
+                "internal_issues": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "external_issues": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "interested_parties": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/interested_party"
+                  }
+                }
+              }
+            },
+            "requirements": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/requirement"
+              }
+            },
+            "scope": {
+              "type": "object",
+              "required": ["boundaries", "interfaces", "dependencies"],
+              "properties": {
+                "boundaries": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "interfaces": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "leadership": {
+          "type": "object",
+          "required": ["policy", "roles_responsibilities"],
+          "properties": {
+            "policy": {
+              "$ref": "#/definitions/policy"
+            },
+            "roles_responsibilities": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/role"
+              }
+            }
+          }
+        },
+        "planning": {
+          "type": "object",
+          "required": ["risk_assessment", "risk_treatment", "objectives"],
+          "properties": {
+            "risk_assessment": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/risk"
+              }
+            },
+            "risk_treatment": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/treatment"
+              }
+            },
+            "objectives": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/objective"
+              }
+            }
+          }
+        },
+        "support": {
+          "type": "object",
+          "required": ["resources", "competence", "awareness", "communication", "documentation"],
+          "properties": {
+            "resources": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/resource"
+              }
+            },
+            "competence": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/competence"
+              }
+            },
+            "awareness": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/awareness_program"
+              }
+            },
+            "communication": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/communication"
+              }
+            },
+            "documentation": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/document"
+              }
+            }
+          }
+        },
+        "operation": {
+          "type": "object",
+          "required": ["planning", "risk_assessment", "risk_treatment"],
+          "properties": {
+            "planning": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/operational_plan"
+              }
+            },
+            "risk_assessment": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/risk_assessment"
+              }
+            },
+            "risk_treatment": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/risk_treatment"
+              }
+            }
+          }
+        },
+        "performance_evaluation": {
+          "type": "object",
+          "required": ["monitoring", "internal_audit", "management_review"],
+          "properties": {
+            "monitoring": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/monitoring"
+              }
+            },
+            "internal_audit": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/audit"
+              }
+            },
+            "management_review": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/review"
+              }
+            }
+          }
+        },
+        "improvement": {
+          "type": "object",
+          "required": ["nonconformity", "corrective_action", "continual_improvement"],
+          "properties": {
+            "nonconformity": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/nonconformity"
+              }
+            },
+            "corrective_action": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/corrective_action"
+              }
+            },
+            "continual_improvement": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/improvement"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "interested_party": {
+      "type": "object",
+      "required": ["id", "name", "requirements", "expectations"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "requirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "expectations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "required": ["id", "description", "type", "source"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["legal", "regulatory", "contractual", "business"]
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["id", "name", "description", "objectives", "scope", "controls"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "objectives": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope": {
+          "type": "string"
+        },
+        "controls": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/control"
+          }
+        }
+      }
+    },
+    "control": {
+      "type": "object",
+      "required": ["id", "name", "description", "implementation", "measurement"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "implementation": {
+          "type": "string"
+        },
+        "measurement": {
+          "type": "object",
+          "required": ["metric", "target", "frequency"],
+          "properties": {
+            "metric": {
+              "type": "string"
+            },
+            "target": {
+              "type": "string"
+            },
+            "frequency": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "risk": {
+      "type": "object",
+      "required": ["id", "description", "assets", "threats", "vulnerabilities", "impact", "likelihood", "level"],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "threats": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "vulnerabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "impact": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "likelihood": {
+          "type": "string",
+          "enum": ["rare", "unlikely", "possible", "likely", "almost_certain"]
+        },
+        "level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        }
+      }
+    }
+  }
+} 

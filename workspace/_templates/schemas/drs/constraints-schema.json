@@ -1,0 +1,320 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Constraints Schema",
+  "description": "Schema para documentação de restrições seguindo ISO/IEC 25010 e ISO/IEC 12207",
+  "type": "object",
+  "required": ["constraints"],
+  "properties": {
+    "constraints": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "técnicas", "negócio", "regulatórias", "recursos"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10,
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "técnicas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "categoria", "descrição", "impacto", "mitigação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^TECH-\\d+$",
+                "description": "Identificador único da restrição técnica"
+              },
+              "categoria": {
+                "type": "string",
+                "enum": ["arquitetura", "performance", "segurança", "compatibilidade", "manutenibilidade"],
+                "description": "Categoria da restrição técnica"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição detalhada da restrição"
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["severidade", "áreas", "descrição"],
+                "properties": {
+                  "severidade": {
+                    "type": "string",
+                    "enum": ["baixo", "médio", "alto", "crítico"],
+                    "description": "Severidade do impacto"
+                  },
+                  "áreas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Áreas afetadas"
+                  },
+                  "descrição": {
+                    "type": "string",
+                    "description": "Descrição do impacto"
+                  }
+                }
+              },
+              "mitigação": {
+                "type": "object",
+                "required": ["estratégia", "ações", "recursos"],
+                "properties": {
+                  "estratégia": {
+                    "type": "string",
+                    "description": "Estratégia de mitigação"
+                  },
+                  "ações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Ações de mitigação"
+                  },
+                  "recursos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Recursos necessários"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "negócio": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "origem", "impacto"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^BUS-\\d+$",
+                "description": "Identificador único da restrição de negócio"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["operacional", "financeiro", "legal", "estratégico"],
+                "description": "Tipo da restrição de negócio"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição detalhada da restrição"
+              },
+              "origem": {
+                "type": "object",
+                "required": ["stakeholder", "justificativa"],
+                "properties": {
+                  "stakeholder": {
+                    "type": "string",
+                    "description": "Stakeholder que originou a restrição"
+                  },
+                  "justificativa": {
+                    "type": "string",
+                    "description": "Justificativa da restrição"
+                  }
+                }
+              },
+              "impacto": {
+                "type": "object",
+                "required": ["processos", "custos", "prazo"],
+                "properties": {
+                  "processos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Processos afetados"
+                  },
+                  "custos": {
+                    "type": "object",
+                    "description": "Impacto nos custos"
+                  },
+                  "prazo": {
+                    "type": "object",
+                    "description": "Impacto no prazo"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "regulatórias": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "norma", "requisitos", "conformidade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^REG-\\d+$",
+                "description": "Identificador único da restrição regulatória"
+              },
+              "norma": {
+                "type": "object",
+                "required": ["nome", "versão", "escopo"],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "description": "Nome da norma"
+                  },
+                  "versão": {
+                    "type": "string",
+                    "description": "Versão da norma"
+                  },
+                  "escopo": {
+                    "type": "string",
+                    "description": "Escopo de aplicação"
+                  }
+                }
+              },
+              "requisitos": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["id", "descrição", "critérios"],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "ID do requisito"
+                    },
+                    "descrição": {
+                      "type": "string",
+                      "description": "Descrição do requisito"
+                    },
+                    "critérios": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Critérios de conformidade"
+                    }
+                  }
+                }
+              },
+              "conformidade": {
+                "type": "object",
+                "required": ["status", "evidências", "riscos"],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": ["conforme", "parcial", "nãoConforme", "nãoAplicável"],
+                    "description": "Status de conformidade"
+                  },
+                  "evidências": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Evidências de conformidade"
+                  },
+                  "riscos": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["descrição", "impacto", "mitigação"],
+                      "properties": {
+                        "descrição": {
+                          "type": "string",
+                          "description": "Descrição do risco"
+                        },
+                        "impacto": {
+                          "type": "string",
+                          "description": "Impacto do risco"
+                        },
+                        "mitigação": {
+                          "type": "string",
+                          "description": "Estratégia de mitigação"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "recursos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "disponibilidade"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RES-\\d+$",
+                "description": "Identificador único do recurso"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["humano", "tecnológico", "financeiro", "infraestrutura"],
+                "description": "Tipo do recurso"
+              },
+              "descrição": {
+                "type": "string",
+                "description": "Descrição do recurso"
+              },
+              "disponibilidade": {
+                "type": "object",
+                "required": ["período", "quantidade", "restrições"],
+                "properties": {
+                  "período": {
+                    "type": "string",
+                    "description": "Período de disponibilidade"
+                  },
+                  "quantidade": {
+                    "type": "object",
+                    "description": "Quantidade disponível"
+                  },
+                  "restrições": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Restrições de uso"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

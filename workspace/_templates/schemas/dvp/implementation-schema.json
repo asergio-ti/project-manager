@@ -1,0 +1,598 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Implementation Schema",
+  "description": "Schema para documento de implementação",
+  "type": "object",
+  "required": ["implementation"],
+  "properties": {
+    "implementation": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "estratégia", "arquitetura", "tecnologias", "componentesPrincipais", "integrações", "segurança", "qualidade"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "estratégia": {
+          "type": "object",
+          "required": ["abordagem", "fases", "prioridades", "riscos"],
+          "properties": {
+            "abordagem": {
+              "type": "object",
+              "required": ["metodologia", "práticas", "ferramentas"],
+              "properties": {
+                "metodologia": {
+                  "type": "string",
+                  "description": "Metodologia de desenvolvimento adotada"
+                },
+                "práticas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Práticas de desenvolvimento a serem seguidas"
+                },
+                "ferramentas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "propósito", "versão"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "propósito": {
+                        "type": "string"
+                      },
+                      "versão": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "fases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "objetivos", "entregáveis", "duração"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "objetivos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "entregáveis": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "duração": {
+                    "type": "string",
+                    "pattern": "^P(?:\\d+Y)?(?:\\d+M)?(?:\\d+W)?(?:\\d+D)?$"
+                  }
+                }
+              }
+            },
+            "prioridades": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["item", "importância", "urgência"],
+                "properties": {
+                  "item": {
+                    "type": "string"
+                  },
+                  "importância": {
+                    "type": "string",
+                    "enum": ["alta", "média", "baixa"]
+                  },
+                  "urgência": {
+                    "type": "string",
+                    "enum": ["alta", "média", "baixa"]
+                  }
+                }
+              }
+            },
+            "riscos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["descrição", "impacto", "probabilidade", "mitigação"],
+                "properties": {
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string",
+                    "enum": ["alto", "médio", "baixo"]
+                  },
+                  "probabilidade": {
+                    "type": "string",
+                    "enum": ["alta", "média", "baixa"]
+                  },
+                  "mitigação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "arquitetura": {
+          "type": "object",
+          "required": ["padrões", "componentização", "fluxoDados"],
+          "properties": {
+            "padrões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "aplicação"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "aplicação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "componentização": {
+              "type": "object",
+              "required": ["estrutura", "dependências"],
+              "properties": {
+                "estrutura": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["nome", "responsabilidade", "interfaces"],
+                    "properties": {
+                      "nome": {
+                        "type": "string"
+                      },
+                      "responsabilidade": {
+                        "type": "string"
+                      },
+                      "interfaces": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "dependências": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["de", "para", "tipo"],
+                    "properties": {
+                      "de": {
+                        "type": "string"
+                      },
+                      "para": {
+                        "type": "string"
+                      },
+                      "tipo": {
+                        "type": "string",
+                        "enum": ["usa", "estende", "implementa", "depende"]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "fluxoDados": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["origem", "destino", "dados", "protocolo"],
+                "properties": {
+                  "origem": {
+                    "type": "string"
+                  },
+                  "destino": {
+                    "type": "string"
+                  },
+                  "dados": {
+                    "type": "string"
+                  },
+                  "protocolo": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tecnologias": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["categoria", "nome", "versão", "propósito", "justificativa"],
+            "properties": {
+              "categoria": {
+                "type": "string",
+                "enum": ["frontend", "backend", "database", "infraestrutura", "ferramentas"]
+              },
+              "nome": {
+                "type": "string"
+              },
+              "versão": {
+                "type": "string"
+              },
+              "propósito": {
+                "type": "string"
+              },
+              "justificativa": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "componentesPrincipais": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["nome", "descrição", "responsabilidades", "interfaces", "dependências"],
+            "properties": {
+              "nome": {
+                "type": "string"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "responsabilidades": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "interfaces": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["nome", "tipo", "descrição"],
+                  "properties": {
+                    "nome": {
+                      "type": "string"
+                    },
+                    "tipo": {
+                      "type": "string",
+                      "enum": ["entrada", "saída", "bidirecional"]
+                    },
+                    "descrição": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "dependências": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "integrações": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["sistema", "tipo", "protocolos", "dados", "segurança"],
+            "properties": {
+              "sistema": {
+                "type": "string"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["síncrona", "assíncrona"]
+              },
+              "protocolos": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "dados": {
+                "type": "object",
+                "required": ["entrada", "saída"],
+                "properties": {
+                  "entrada": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "saída": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "segurança": {
+                "type": "object",
+                "required": ["autenticação", "autorização", "criptografia"],
+                "properties": {
+                  "autenticação": {
+                    "type": "string"
+                  },
+                  "autorização": {
+                    "type": "string"
+                  },
+                  "criptografia": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "segurança": {
+          "type": "object",
+          "required": ["políticas", "controles", "monitoramento"],
+          "properties": {
+            "políticas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["área", "descrição", "requisitos"],
+                "properties": {
+                  "área": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "requisitos": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "controles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "implementação", "verificação"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  },
+                  "verificação": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "monitoramento": {
+              "type": "object",
+              "required": ["ferramentas", "alertas", "auditorias"],
+              "properties": {
+                "ferramentas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "alertas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["condição", "severidade", "ação"],
+                    "properties": {
+                      "condição": {
+                        "type": "string"
+                      },
+                      "severidade": {
+                        "type": "string",
+                        "enum": ["crítica", "alta", "média", "baixa"]
+                      },
+                      "ação": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "auditorias": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["tipo", "frequência", "escopo"],
+                    "properties": {
+                      "tipo": {
+                        "type": "string"
+                      },
+                      "frequência": {
+                        "type": "string"
+                      },
+                      "escopo": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["métricas", "testes", "revisões"],
+          "properties": {
+            "métricas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "meta", "medição"],
+                "properties": {
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "meta": {
+                    "type": "string"
+                  },
+                  "medição": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "testes": {
+              "type": "object",
+              "required": ["unitários", "integração", "sistema", "aceitação"],
+              "properties": {
+                "unitários": {
+                  "type": "object",
+                  "required": ["cobertura", "ferramentas"],
+                  "properties": {
+                    "cobertura": {
+                      "type": "string",
+                      "pattern": "^\\d+%$"
+                    },
+                    "ferramentas": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "integração": {
+                  "type": "object",
+                  "required": ["escopo", "ferramentas"],
+                  "properties": {
+                    "escopo": {
+                      "type": "string"
+                    },
+                    "ferramentas": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "sistema": {
+                  "type": "object",
+                  "required": ["cenários", "ambientes"],
+                  "properties": {
+                    "cenários": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "ambientes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "aceitação": {
+                  "type": "object",
+                  "required": ["critérios", "responsáveis"],
+                  "properties": {
+                    "critérios": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "responsáveis": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "revisões": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["tipo", "frequência", "participantes", "critérios"],
+                "properties": {
+                  "tipo": {
+                    "type": "string"
+                  },
+                  "frequência": {
+                    "type": "string"
+                  },
+                  "participantes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "critérios": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

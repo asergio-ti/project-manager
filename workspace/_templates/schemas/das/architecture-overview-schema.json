@@ -1,0 +1,318 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Architecture Overview Schema",
+  "description": "Schema para visão geral da arquitetura do sistema",
+  "type": "object",
+  "required": ["architectureOverview"],
+  "properties": {
+    "architectureOverview": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "visãoGeral", "decisões", "restrições", "qualidade", "riscos"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "minLength": 10
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"]
+            }
+          }
+        },
+        "visãoGeral": {
+          "type": "object",
+          "required": ["contexto", "objetivos", "stakeholders", "drivers"],
+          "properties": {
+            "contexto": {
+              "type": "string"
+            },
+            "objetivos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "descrição", "prioridade", "métricas"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^OBJ-\\d+$"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "prioridade": {
+                    "type": "string",
+                    "enum": ["alta", "média", "baixa"]
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "stakeholders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["papel", "interesses", "preocupações"],
+                "properties": {
+                  "papel": {
+                    "type": "string"
+                  },
+                  "interesses": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "preocupações": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "drivers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["categoria", "descrição", "impacto"],
+                "properties": {
+                  "categoria": {
+                    "type": "string",
+                    "enum": ["negócio", "técnico", "regulatório", "operacional"]
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "impacto": {
+                    "type": "string",
+                    "enum": ["alto", "médio", "baixo"]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "decisões": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "título", "status", "contexto", "decisão", "consequências"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^ADR-\\d+$"
+              },
+              "título": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": ["proposta", "aceita", "rejeitada", "substituída", "obsoleta"]
+              },
+              "contexto": {
+                "type": "string"
+              },
+              "decisão": {
+                "type": "string"
+              },
+              "consequências": {
+                "type": "object",
+                "required": ["positivas", "negativas"],
+                "properties": {
+                  "positivas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "negativas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "restrições": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "tipo", "descrição", "impacto", "mitigação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^CONST-\\d+$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": ["técnica", "negócio", "regulatória", "organizacional"]
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "impacto": {
+                "type": "string",
+                "enum": ["alto", "médio", "baixo"]
+              },
+              "mitigação": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "qualidade": {
+          "type": "object",
+          "required": ["atributos", "cenários", "táticas"],
+          "properties": {
+            "atributos": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["nome", "descrição", "importância", "métricas"],
+                "properties": {
+                  "nome": {
+                    "type": "string",
+                    "enum": ["desempenho", "disponibilidade", "modificabilidade", "segurança", "testabilidade", "usabilidade"]
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "importância": {
+                    "type": "string",
+                    "enum": ["alta", "média", "baixa"]
+                  },
+                  "métricas": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["nome", "descrição", "meta"],
+                      "properties": {
+                        "nome": {
+                          "type": "string"
+                        },
+                        "descrição": {
+                          "type": "string"
+                        },
+                        "meta": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "cenários": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "atributo", "estímulo", "ambiente", "resposta", "medida"],
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^QAS-\\d+$"
+                  },
+                  "atributo": {
+                    "type": "string"
+                  },
+                  "estímulo": {
+                    "type": "string"
+                  },
+                  "ambiente": {
+                    "type": "string"
+                  },
+                  "resposta": {
+                    "type": "string"
+                  },
+                  "medida": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "táticas": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["atributo", "nome", "descrição", "implementação"],
+                "properties": {
+                  "atributo": {
+                    "type": "string"
+                  },
+                  "nome": {
+                    "type": "string"
+                  },
+                  "descrição": {
+                    "type": "string"
+                  },
+                  "implementação": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "riscos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "descrição", "probabilidade", "impacto", "mitigação"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^RISK-\\d+$"
+              },
+              "descrição": {
+                "type": "string"
+              },
+              "probabilidade": {
+                "type": "string",
+                "enum": ["alta", "média", "baixa"]
+              },
+              "impacto": {
+                "type": "string",
+                "enum": ["alto", "médio", "baixo"]
+              },
+              "mitigação": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

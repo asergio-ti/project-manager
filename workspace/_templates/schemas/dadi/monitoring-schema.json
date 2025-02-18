@@ -1,0 +1,306 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Monitoring Schema",
+  "description": "Schema para o módulo de monitoramento do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["monitoring"],
+  "properties": {
+    "monitoring": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "metrics", "logging", "alerts"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "required": ["performance", "usage"],
+          "properties": {
+            "performance": {
+              "type": "object",
+              "required": ["description", "diagram", "indicators"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "diagram": {
+                  "type": "object",
+                  "required": ["required", "type", "content", "viewpoint", "rationale"],
+                  "properties": {
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": ["mermaid"]
+                    },
+                    "content": {
+                      "type": "string"
+                    },
+                    "viewpoint": {
+                      "type": "string"
+                    },
+                    "rationale": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "indicators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "type", "unit", "threshold"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["gauge", "counter", "histogram"]
+                      },
+                      "unit": {
+                        "type": "string"
+                      },
+                      "threshold": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "usage": {
+              "type": "object",
+              "required": ["description", "indicators"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "indicators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "type", "labels"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": ["counter"]
+                      },
+                      "labels": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "logging": {
+          "type": "object",
+          "required": ["levels", "outputs"],
+          "properties": {
+            "levels": {
+              "type": "object",
+              "required": ["error", "warn", "info", "debug"],
+              "properties": {
+                "error": {
+                  "type": "object",
+                  "required": ["description", "action"],
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": ["notify", "log"]
+                    }
+                  }
+                },
+                "warn": {
+                  "type": "object",
+                  "required": ["description", "action"],
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": ["notify", "log"]
+                    }
+                  }
+                },
+                "info": {
+                  "type": "object",
+                  "required": ["description", "action"],
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": ["notify", "log"]
+                    }
+                  }
+                },
+                "debug": {
+                  "type": "object",
+                  "required": ["description", "action"],
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": ["notify", "log", "log_if_enabled"]
+                    }
+                  }
+                }
+              }
+            },
+            "outputs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["type"],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": ["file", "console"]
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "rotation": {
+                    "type": "object",
+                    "required": ["size", "keep"],
+                    "properties": {
+                      "size": {
+                        "type": "string"
+                      },
+                      "keep": {
+                        "type": "integer"
+                      }
+                    }
+                  },
+                  "format": {
+                    "type": "string"
+                  },
+                  "levels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["error", "warn", "info", "debug"]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "alerts": {
+          "type": "object",
+          "required": ["rules", "notifications"],
+          "properties": {
+            "rules": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "condition", "severity", "action"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "condition": {
+                    "type": "string"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": ["critical", "warning"]
+                  },
+                  "action": {
+                    "type": "string",
+                    "enum": ["notify", "log"]
+                  }
+                }
+              }
+            },
+            "notifications": {
+              "type": "object",
+              "required": ["channels"],
+              "properties": {
+                "channels": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["type", "levels"],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["console", "file"]
+                      },
+                      "format": {
+                        "type": "string"
+                      },
+                      "path": {
+                        "type": "string"
+                      },
+                      "levels": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": ["critical", "warning"]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

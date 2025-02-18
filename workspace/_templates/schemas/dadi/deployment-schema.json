@@ -1,0 +1,504 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DADI Deployment Schema",
+  "description": "Schema para o módulo de implantação do DADI (Documento de Ambiente de Desenvolvimento e Infraestrutura) seguindo ISO/IEC 27001",
+  "type": "object",
+  "required": ["deployment"],
+  "properties": {
+    "deployment": {
+      "type": "object",
+      "required": ["version", "lastUpdate", "metadata", "strategy", "environments", "pipeline", "configuration", "monitoring"],
+      "properties": {
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Versão do documento seguindo SemVer"
+        },
+        "lastUpdate": {
+          "type": "string",
+          "format": "date",
+          "description": "Data da última atualização"
+        },
+        "metadata": {
+          "type": "object",
+          "required": ["description", "autor", "revisores", "status"],
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "Descrição do documento"
+            },
+            "autor": {
+              "type": "string",
+              "pattern": "^[\\w\\s]+\\s<[\\w\\.]+@[\\w\\.]+>$",
+              "description": "Autor no formato 'Nome <email>'"
+            },
+            "revisores": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1,
+              "description": "Lista de revisores"
+            },
+            "status": {
+              "type": "string",
+              "enum": ["draft", "review", "approved"],
+              "description": "Status do documento"
+            }
+          }
+        },
+        "strategy": {
+          "type": "object",
+          "required": ["type", "rollback", "validation"],
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": ["blue-green", "canary", "rolling", "recreate"]
+            },
+            "rollback": {
+              "type": "object",
+              "required": ["automatic", "conditions", "steps"],
+              "properties": {
+                "automatic": {
+                  "type": "boolean"
+                },
+                "conditions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "validation": {
+              "type": "object",
+              "required": ["healthcheck", "smoke", "acceptance"],
+              "properties": {
+                "healthcheck": {
+                  "type": "object",
+                  "required": ["endpoint", "timeout", "interval"],
+                  "properties": {
+                    "endpoint": {
+                      "type": "string"
+                    },
+                    "timeout": {
+                      "type": "integer"
+                    },
+                    "interval": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "smoke": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "command"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "command": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "acceptance": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "criteria"],
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "criteria": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "environments": {
+          "type": "object",
+          "required": ["production", "staging"],
+          "properties": {
+            "production": {
+              "type": "object",
+              "required": ["infrastructure", "configuration", "scaling"],
+              "properties": {
+                "infrastructure": {
+                  "type": "object",
+                  "required": ["provider", "region", "resources"],
+                  "properties": {
+                    "provider": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    },
+                    "resources": {
+                      "type": "object",
+                      "required": ["compute", "storage", "network"],
+                      "properties": {
+                        "compute": {
+                          "type": "object",
+                          "additionalProperties": true
+                        },
+                        "storage": {
+                          "type": "object",
+                          "additionalProperties": true
+                        },
+                        "network": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "configuration": {
+                  "type": "object",
+                  "required": ["variables", "secrets"],
+                  "properties": {
+                    "variables": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "secrets": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "scaling": {
+                  "type": "object",
+                  "required": ["auto", "rules"],
+                  "properties": {
+                    "auto": {
+                      "type": "boolean"
+                    },
+                    "rules": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["metric", "threshold", "action"],
+                        "properties": {
+                          "metric": {
+                            "type": "string"
+                          },
+                          "threshold": {
+                            "type": "number"
+                          },
+                          "action": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "staging": {
+              "type": "object",
+              "required": ["infrastructure", "configuration", "scaling"],
+              "properties": {
+                "infrastructure": {
+                  "type": "object",
+                  "required": ["provider", "region", "resources"],
+                  "properties": {
+                    "provider": {
+                      "type": "string"
+                    },
+                    "region": {
+                      "type": "string"
+                    },
+                    "resources": {
+                      "type": "object",
+                      "required": ["compute", "storage", "network"],
+                      "properties": {
+                        "compute": {
+                          "type": "object",
+                          "additionalProperties": true
+                        },
+                        "storage": {
+                          "type": "object",
+                          "additionalProperties": true
+                        },
+                        "network": {
+                          "type": "object",
+                          "additionalProperties": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "configuration": {
+                  "type": "object",
+                  "required": ["variables", "secrets"],
+                  "properties": {
+                    "variables": {
+                      "type": "object",
+                      "additionalProperties": true
+                    },
+                    "secrets": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "scaling": {
+                  "type": "object",
+                  "required": ["auto", "rules"],
+                  "properties": {
+                    "auto": {
+                      "type": "boolean"
+                    },
+                    "rules": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "required": ["metric", "threshold", "action"],
+                        "properties": {
+                          "metric": {
+                            "type": "string"
+                          },
+                          "threshold": {
+                            "type": "number"
+                          },
+                          "action": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "pipeline": {
+          "type": "object",
+          "required": ["stages", "approvals", "notifications"],
+          "properties": {
+            "stages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "steps", "conditions"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "steps": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": ["name", "command"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "command": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "conditions": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "approvals": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["stage", "approvers", "timeout"],
+                "properties": {
+                  "stage": {
+                    "type": "string"
+                  },
+                  "approvers": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "timeout": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "notifications": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["event", "channels"],
+                "properties": {
+                  "event": {
+                    "type": "string"
+                  },
+                  "channels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "required": ["artifacts", "dependencies", "scripts"],
+          "properties": {
+            "artifacts": {
+              "type": "object",
+              "required": ["type", "location", "retention"],
+              "properties": {
+                "type": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "retention": {
+                  "type": "integer"
+                }
+              }
+            },
+            "dependencies": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "version"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "scripts": {
+              "type": "object",
+              "required": ["pre", "post"],
+              "properties": {
+                "pre": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "post": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "monitoring": {
+          "type": "object",
+          "required": ["metrics", "alerts", "logs"],
+          "properties": {
+            "metrics": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "description", "threshold"],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "threshold": {
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "alerts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["condition", "action", "severity"],
+                "properties": {
+                  "condition": {
+                    "type": "string"
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "severity": {
+                    "type": "string",
+                    "enum": ["info", "warning", "error", "critical"]
+                  }
+                }
+              }
+            },
+            "logs": {
+              "type": "object",
+              "required": ["retention", "shipping"],
+              "properties": {
+                "retention": {
+                  "type": "object",
+                  "required": ["period", "storage"],
+                  "properties": {
+                    "period": {
+                      "type": "string"
+                    },
+                    "storage": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "shipping": {
+                  "type": "object",
+                  "required": ["destination", "format"],
+                  "properties": {
+                    "destination": {
+                      "type": "string"
+                    },
+                    "format": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+} 

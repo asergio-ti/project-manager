@@ -29,76 +29,219 @@ export interface ChatState {
   messages: Record<string, Message[]>;
 }
 
-// Tipos Base
-export type DocumentStatus = 'pending' | 'in-progress' | 'completed';
-export type DocumentPhase = 'DVP' | 'DRS' | 'DAS';
+// Tipos base do sistema
+export type DocumentPhase = 'DVP' | 'DRS' | 'DAS' | 'DADI';
+export type DocumentStatus = 'draft' | 'in_progress' | 'review' | 'approved';
+export type ConfidenceLevel = 'low' | 'medium' | 'high';
 
-// Domínio: Documentation
+// Interfaces de Documento
 export interface Document {
   id: string;
   name: string;
   phase: DocumentPhase;
   status: DocumentStatus;
-  progress: number;
-  content?: {
-    title: string;
-    description: string;
-    sections: {
-      title: string;
-      content: string;
-      subsections?: {
-        title: string;
-        content: string;
-      }[];
-    }[];
-  };
+  content: DocumentContent;
+  metadata: DocumentMetadata;
+  analysis: DocumentAnalysis;
+}
+
+export interface DocumentContent {
+  sections: DocumentSection[];
+  extractedTopics: string[];
+  identifiedConcerns: string[];
+}
+
+export interface DocumentSection {
+  id: string;
+  title: string;
+  content: string;
+  confidence: ConfidenceLevel;
+  needsReview: boolean;
+  suggestedImprovements?: string[];
+  subsections?: DocumentSection[];
 }
 
 export interface DocumentMetadata {
-  lastModified: Date;
+  createdAt: string;
+  updatedAt: string;
   version: string;
   author: string;
+  lastAnalysis: string;
 }
 
-// Domínio: Interview
-export interface Message {
+export interface DocumentAnalysis {
+  domainType: string;
+  complexity: ComplexityLevel;
+  identifiedPatterns: string[];
+  suggestedApproaches: string[];
+  riskAreas: string[];
+  completeness: number;
+}
+
+// Interfaces de Entrevista
+export interface ConversationContext {
+  currentPhase: DocumentPhase;
+  conversationHistory: ConversationEntry[];
+  identifiedTopics: Set<string>;
+  confidenceLevels: Record<string, number>;
+  activeTopics: string[];
+  pendingQuestions: Question[];
+}
+
+export interface ConversationEntry {
   id: string;
+  timestamp: string;
+  type: 'user' | 'assistant';
   content: string;
-  sender: 'user' | 'assistant';
-  timestamp: Date;
-  reference?: string;
+  analysis?: {
+    topics: string[];
+    sentiment: string;
+    confidence: number;
+    suggestedFollowUps: string[];
+  };
 }
 
+export interface Question {
+  id: string;
+  type: QuestionType;
+  content: string;
+  context?: string;
+  priority: number;
+  followUpStrategy?: FollowUpStrategy;
+}
+
+export type QuestionType = 
+  | 'open_exploration'     // Perguntas abertas para explorar tópicos
+  | 'clarification'        // Pedir esclarecimentos sobre algo mencionado
+  | 'confirmation'         // Confirmar entendimento
+  | 'elaboration'         // Pedir mais detalhes
+  | 'suggestion'          // Sugerir considerações
+  | 'validation';         // Validar informações específicas
+
+export interface FollowUpStrategy {
+  conditions: string[];
+  triggers: string[];
+  alternativeQuestions: Question[];
+  confidenceThreshold: number;
+}
+
+// Interfaces de Análise
+export interface AnalysisResult {
+  topics: Topic[];
+  patterns: Pattern[];
+  concerns: Concern[];
+  suggestions: Suggestion[];
+  confidence: number;
+}
+
+export interface Topic {
+  name: string;
+  relevance: number;
+  confidence: number;
+  relatedTopics: string[];
+  needsElaboration: boolean;
+}
+
+export interface Pattern {
+  type: string;
+  confidence: number;
+  implications: string[];
+  suggestedPractices: string[];
+}
+
+export interface Concern {
+  type: string;
+  severity: 'low' | 'medium' | 'high';
+  description: string;
+  suggestedActions: string[];
+}
+
+export interface Suggestion {
+  type: string;
+  priority: number;
+  description: string;
+  rationale: string;
+  impact: string[];
+}
+
+// Interfaces de Contexto
 export interface InterviewContext {
-  currentDocument?: string;
-  activeSection?: string;
-  phase: DocumentPhase;
+  projectContext: ProjectContext;
+  conversationContext: ConversationContext;
+  analysisContext: AnalysisContext;
+  domainAnalysis?: string;
+  complexityLevel?: 'high' | 'medium' | 'low';
 }
 
-export interface InterviewConfig {
-  apiKey: string;
-  baseURL: string;
-  model: string;
-  temperature: number;
+export interface ProjectContext {
+  id: string;
+  name: string;
+  currentPhase: DocumentPhase;
+  currentDocument?: Document;
+  domainType: string;
+  complexity: ComplexityLevel;
 }
 
-// Domínio: Validation
+export interface AnalysisContext {
+  identifiedPatterns: Pattern[];
+  currentConfidence: Record<string, number>;
+  pendingTopics: string[];
+  suggestedApproaches: string[];
+}
+
+// Tipos de Complexidade
+export type ComplexityLevel = {
+  overall: 'low' | 'medium' | 'high';
+  factors: {
+    technical: number;
+    business: number;
+    integration: number;
+    security: number;
+    scale: number;
+  };
+  indicators: string[];
+};
+
+// Interfaces de Validação
 export interface ValidationResult {
   isValid: boolean;
   feedback: string;
   errors?: string[];
   warnings?: string[];
   suggestions?: string[];
+  confidence: number;
 }
 
 export interface ValidationContext {
-  schema: string;
+  schema: Schema | string;
   phase: DocumentPhase;
   document: Document;
+  previousDocuments?: Document[];
+  projectContext?: ProjectContext;
+  conversationContext?: ConversationContext;
+  analysisContext?: AnalysisContext;
 }
 
-// Estado da Aplicação
+// Interfaces de Schema
+export interface Schema {
+  id: string;
+  version: string;
+  type: string;
+  properties: Record<string, SchemaProperty>;
+  required: string[];
+}
+
+export interface SchemaProperty {
+  type: string;
+  description: string;
+  pattern?: string;
+  items?: SchemaProperty;
+  properties?: Record<string, SchemaProperty>;
+}
+
+// Interfaces de Estado
 export interface ProjectState {
+  currentPhase: DocumentPhase;
   documents: Document[];
   messages: Message[];
   context: ProjectContext;
@@ -106,21 +249,14 @@ export interface ProjectState {
   error?: string;
 }
 
-export interface ProjectContext {
-  currentPhase: DocumentPhase;
-  activeDocument?: Document;
-  lastValidation?: ValidationResult;
-}
-
-export interface TimelineState {
-  currentPhase: DocumentPhase;
-  phases: {
-    id: DocumentPhase;
-    status: DocumentStatus;
-    progress: number;
-    documents: Document[];
-  }[];
-}
+// Ações do Reducer
+export type Action =
+  | { type: 'SET_PHASE'; payload: DocumentPhase }
+  | { type: 'ADD_DOCUMENT'; payload: Document }
+  | { type: 'UPDATE_DOCUMENT'; payload: Document }
+  | { type: 'ADD_MESSAGE'; payload: Message }
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_ERROR'; payload: string | undefined };
 
 // Configurações
 export interface ApiConfig {

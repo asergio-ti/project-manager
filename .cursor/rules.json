@@ -1,481 +1,78 @@
 {
-  "projectGuide": {
+  "documentationGuide": {
     "version": "1.0.0",
-    "description": "Guia de entrevista e regras para geração de projetos",
-    "interviewPhases": [
+    "description": "Regras para geração e validação de documentação",
+    "phases": [
       {
-        "phase": "contextualização",
-        "priority": "high",
+        "phase": "DVP",
         "schema": "schemas/dvp/vision-schema.json",
-        "questions": [
+        "extractors": [
           {
-            "id": "CONTEXT-001",
-            "question": "Me conte sobre seu projeto. Descreva a ideia geral, incluindo o problema que pretende resolver, público-alvo, principais funcionalidades e qualquer outra informação que considere relevante.",
-            "type": "openContext",
-            "analysis": {
-              "extractors": [
-                {
-                  "type": "problemDomain",
-                  "updatePaths": ["project.problemStatement", "api.metadata.description"]
-                },
-                {
-                  "type": "stakeholders",
-                  "updatePaths": ["project.stakeholders"]
-                },
-                {
-                  "type": "scale",
-                  "updatePaths": [
-                    "architecturalViews.visões.física.description",
-                    "performance.métricas.throughput"
-                  ]
-                }
-              ]
-            }
+            "type": "problemDomain",
+            "updatePaths": ["project.problemStatement"]
+          },
+          {
+            "type": "stakeholders",
+            "updatePaths": ["project.stakeholders"]
+          },
+          {
+            "type": "scope",
+            "updatePaths": ["project.scope"]
           }
         ]
       },
       {
-        "phase": "requisitos",
-        "executesAfter": "contextualização",
+        "phase": "DRS",
         "schema": "schemas/drs/requirements-schema.json",
-        "questions": [
+        "extractors": [
           {
-            "id": "REQ-001",
-            "question": "Quais são os principais requisitos funcionais do sistema?",
-            "updatePaths": [
-              "requirements.functional",
-              "requirements.priority"
-            ]
+            "type": "functionalRequirements",
+            "updatePaths": ["requirements.functional"]
           },
           {
-            "id": "REQ-002",
-            "question": "Existem requisitos não-funcionais críticos para o sistema?",
-            "updatePaths": [
-              "requirements.nonFunctional",
-              "requirements.constraints"
-            ]
+            "type": "nonFunctionalRequirements",
+            "updatePaths": ["requirements.nonFunctional"]
           }
         ]
       },
       {
-        "phase": "requisitosArquiteturais",
-        "executesAfter": "requisitos",
+        "phase": "DAS",
         "schema": "schemas/das/architectural-decisions-schema.json",
-        "questions": [
+        "extractors": [
           {
-            "id": "ARQ-001",
-            "question": "O sistema precisará estar disponível 24/7?",
-            "updatePaths": [
-              "architecturalViews.visões.física.description",
-              "architecturalViews.visões.física.componentes.runtime.requisitos"
-            ]
+            "type": "architecturalDecisions",
+            "updatePaths": ["architecture.decisions"]
           },
           {
-            "id": "ARQ-002",
-            "question": "Qual é a expectativa de escala do sistema?",
-            "updatePaths": [
-              "architecturalViews.visões.física.componentes.runtime.requisitos",
-              "performance.métricas.throughput"
-            ]
+            "type": "components",
+            "updatePaths": ["architecture.components"]
           }
         ]
       },
       {
-        "phase": "infraestruturaDisponível",
-        "executesAfter": "requisitosArquiteturais",
-        "schema": "schemas/das/deployment-schema.json",
-        "questions": [
+        "phase": "DADI",
+        "schema": "schemas/dadi/api-schema.json",
+        "extractors": [
           {
-            "id": "INFRA-001",
-            "question": "Com base nos requisitos identificados, onde o sistema será hospedado?",
-            "type": "infrastructureContext",
-            "updatePaths": [
-              "deployment.environment.type",
-              "deployment.constraints.hosting"
-            ]
-          }
-        ]
-      },
-      {
-        "phase": "componentesEInterfaces",
-        "executesAfter": ["requisitosArquiteturais", "infraestruturaDisponível"],
-        "schema": "schemas/das/components-schema.json",
-        "questions": [
+            "type": "apiContracts",
+            "updatePaths": ["apis.contracts"]
+          },
           {
-            "id": "COMP-001",
-            "question": "Com base na arquitetura e infraestrutura definidas, quais integrações serão necessárias?",
-            "updatePaths": [
-              "components.interfaces.external",
-              "interfaces.integration.points"
-            ],
-            "relatedSchemas": [
-              "schemas/das/interfaces-schema.json"
-            ]
-          }
-        ]
-      },
-      {
-        "phase": "segurançaEPrivacidade",
-        "executesAfter": ["componentesEInterfaces"],
-        "schema": "schemas/das/security-schema.json",
-        "questions": [
-          {
-            "id": "SEC-001",
-            "question": "Considerando as integrações e componentes definidos, quais dados sensíveis serão manipulados?",
-            "updatePaths": [
-              "security.gestãoAcessos.autenticação.métodos",
-              "security.conformidade.regulamentos"
-            ]
-          }
-        ]
-      },
-      {
-        "phase": "performance",
-        "executesAfter": ["segurançaEPrivacidade"],
-        "schema": "schemas/das/performance-schema.json",
-        "questions": [
-          {
-            "id": "PERF-001",
-            "question": "Considerando toda a arquitetura definida, quais são os requisitos de performance?",
-            "updatePaths": [
-              "performance.métricas.tempoResposta",
-              "performance.objetivos"
-            ]
+            "type": "interfaces",
+            "updatePaths": ["interfaces.definitions"]
           }
         ]
       }
     ],
-    "updateRules": {
-      "crossSchemaUpdates": true,
-      "autoUpdateRelated": true,
-      "validateConsistency": true,
-      "inferComplexity": true
-    },
-    "inferenceRules": {
-      "complexityFactors": [
-        "userScale",
-        "dataVolume",
-        "securityRequirements",
-        "integrationPoints",
-        "complianceRequirements",
-        "availabilityRequirements"
-      ],
-      "architecturalPatterns": {
-        "microservices": {
-          "conditions": [
-            "highUserScale",
-            "complexDomains",
-            "highAvailability"
-          ]
-        },
-        "monolithic": {
-          "conditions": [
-            "lowUserScale",
-            "simpleDomain",
-            "singleTeam"
-          ]
-        },
-        "serverless": {
-          "conditions": [
-            "variableLoad",
-            "costOptimization",
-            "rapidDevelopment"
-          ]
-        }
-      },
-      "technicalStack": {
-        "inferFrom": [
-          "scalabilityRequirements",
-          "performanceRequirements",
-          "securityRequirements",
-          "teamExpertise"
-        ]
-      }
+    "validation": {
+      "crossValidation": true,
+      "requireCompleteness": true,
+      "enforceConsistency": true
     },
     "documentationRules": {
-      "autoGenerateArchitecture": true,
-      "updateDiagrams": true,
-      "maintainTraceability": true,
-      "generateTechnicalSpecs": true
-    },
-    "contextAnalysis": {
-      "domainPatterns": {
-        "ecommerce": {
-          "keywords": ["marketplace", "vendas", "produtos", "pagamentos"],
-          "suggestedModules": ["payment", "catalog", "cart", "shipping"]
-        },
-        "healthcare": {
-          "keywords": ["clínica", "médico", "paciente", "agendamento"],
-          "suggestedModules": ["scheduling", "medical-records", "prescriptions"]
-        }
-      },
-      "complexityIndicators": {
-        "highComplexity": [
-          "integração com sistemas externos",
-          "dados sensíveis",
-          "alta disponibilidade",
-          "tempo real"
-        ],
-        "mediumComplexity": [
-          "autenticação de usuários",
-          "relatórios",
-          "dashboard"
-        ]
-      }
-    },
-    "followUpStrategy": {
-      "conditionalQuestions": {
-        "security": {
-          "condition": "containsSensitiveData",
-          "questions": [
-            {
-              "id": "SEC-DETAIL-001",
-              "question": "Quais normas de compliance precisamos considerar?"
-            }
-          ]
-        },
-        "scale": {
-          "condition": "hasHighUserLoad",
-          "questions": [
-            {
-              "id": "SCALE-DETAIL-001",
-              "question": "Qual a expectativa de crescimento mensal?"
-            }
-          ]
-        }
-      }
-    },
-    "schemaUpdates": {
-      "batchUpdate": true,
-      "validateRelationships": true,
-      "generateDocumentation": {
-        "formats": ["markdown", "diagrams"],
-        "sections": [
-          "architecture-overview",
-          "technical-decisions",
-          "security-considerations"
-        ]
-      }
-    },
-    "infrastructureAnalysis": {
-      "resourceProfiles": {
-        "minimal": {
-          "cpu": "2 cores",
-          "ram": "4GB",
-          "storage": "50GB",
-          "bandwidth": "10Mbps",
-          "suitable": ["small", "prototype", "mvp"]
-        },
-        "standard": {
-          "cpu": "4-8 cores",
-          "ram": "16GB",
-          "storage": "200GB",
-          "bandwidth": "100Mbps",
-          "suitable": ["medium", "production", "scalable"]
-        },
-        "enterprise": {
-          "cpu": "16+ cores",
-          "ram": "32GB+",
-          "storage": "1TB+",
-          "bandwidth": "1Gbps+",
-          "suitable": ["large", "distributed", "high-availability"]
-        }
-      },
-      "warningTriggers": {
-        "highAvailability": {
-          "condition": "resources.below.enterprise",
-          "message": "Recursos disponíveis podem não suportar alta disponibilidade"
-        },
-        "microservices": {
-          "condition": "resources.below.standard",
-          "message": "Infraestrutura pode ser insuficiente para arquitetura de microsserviços"
-        }
-      },
-      "autoDiscovery": {
-        "enabled": true,
-        "methods": {
-          "local": {
-            "checkSystem": {
-              "commands": [
-                {
-                  "windows": "systeminfo",
-                  "linux": "lscpu && free -h && df -h",
-                  "mac": "system_profiler SPHardwareDataType"
-                }
-              ],
-              "extractors": {
-                "cpu": {
-                  "cores": "regex:(?:Number of Processors|processor cores):\\s*(\\d+)",
-                  "model": "regex:(?:Processor|Model Name):\\s*(.+)"
-                },
-                "memory": {
-                  "total": "regex:(?:Total Physical Memory|MemTotal):\\s*(.+)",
-                  "available": "regex:(?:Available Physical Memory|MemAvailable):\\s*(.+)"
-                },
-                "storage": {
-                  "total": "regex:(?:Total Space|Size):\\s*(.+)",
-                  "available": "regex:(?:Free Space|Available):\\s*(.+)"
-                }
-              }
-            },
-            "checkNetwork": {
-              "commands": [
-                {
-                  "windows": "netstat -e",
-                  "linux": "ifconfig || ip addr",
-                  "mac": "netstat -i"
-                }
-              ]
-            },
-            "checkDocker": {
-              "command": "docker info",
-              "required": false
-            }
-          },
-          "wslSupport": {
-            "enabled": true,
-            "methods": {
-              "authentication": {
-                "type": "keychain",
-                "options": {
-                  "storeCredentials": true,
-                  "credentialTimeout": "8h",
-                  "sudoersConfig": {
-                    "enabled": true,
-                    "nopasswd": [
-                      "/usr/bin/docker",
-                      "/usr/local/bin/docker-compose"
-                    ]
-                  }
-                }
-              },
-              "wslConfig": {
-                "defaultDistro": "auto-detect",
-                "interopConfig": {
-                  "appendWindowsPath": false,
-                  "enableCrossDistro": true,
-                  "mountOptions": {
-                    "metadata": true,
-                    "uid": "1000",
-                    "gid": "1000",
-                    "umask": "022"
-                  }
-                }
-              },
-              "dockerConfig": {
-                "socket": "/var/run/docker.sock",
-                "groupMembership": true,
-                "configureGroup": {
-                  "command": "sudo usermod -aG docker $USER",
-                  "runOnce": true
-                }
-              }
-            },
-            "checkCommands": {
-              "wsl": {
-                "status": "wsl.exe -l -v",
-                "version": "wsl.exe --version"
-              },
-              "docker": {
-                "socket": "test -S /var/run/docker.sock",
-                "service": "service docker status"
-              }
-            }
-          }
-        },
-        "analysis": {
-          "compareWithProfiles": true,
-          "generateRecommendations": true
-        }
-      }
-    },
-    "phaseIntegration": {
-      "validateAcross": true,
-      "dependencies": {
-        "componentesEInterfaces": {
-          "requires": ["requisitosArquiteturais", "infraestruturaDisponível"],
-          "validates": ["interfaces", "components"]
-        },
-        "segurançaEPrivacidade": {
-          "requires": ["componentesEInterfaces"],
-          "validates": ["security", "compliance"]
-        },
-        "performance": {
-          "requires": ["segurançaEPrivacidade"],
-          "validates": ["metrics", "sla"]
-        }
-      }
-    }
-  },
-  "hybridMode": {
-    "useSchemas": true,
-    "allowComposerEnrichment": true,
-    "validateAgainstSchemas": true,
-    "documentation": {
-      "enforceStructure": true,
-      "allowCreativeInput": true
-    }
-  },
-  "projectManager": {
-    "version": "1.0.0",
-    "projectCreation": {
-      "templatesPath": "docs/templates",
-      "schemasPath": "docs/schemas",
-      "projectsPath": "projects",
-      "initialization": {
-        "steps": [
-          {
-            "phase": "projectSetup",
-            "actions": [
-              {
-                "type": "createStructure",
-                "template": "{{projectType}}",
-                "destination": "projects/{{projectName}}"
-              },
-              {
-                "type": "instantiateSchemas",
-                "source": "docs/schemas",
-                "destination": "projects/{{projectName}}/docs"
-              },
-              {
-                "type": "configureRules",
-                "template": "templates/{{projectType}}/rules.json",
-                "destination": "projects/{{projectName}}/.cursor/rules.json"
-              }
-            ]
-          },
-          {
-            "phase": "environmentSetup",
-            "actions": [
-              {
-                "type": "analyzeInfrastructure",
-                "updatePath": "projects/{{projectName}}/docs/das/deployment-schema.json"
-              },
-              {
-                "type": "configureDevEnvironment",
-                "based": "infrastructureAnalysis"
-              }
-            ]
-          }
-        ]
-      },
-      "templateRules": {
-        "inheritance": true,
-        "overrides": "allow",
-        "validation": "strict"
-      }
-    },
-    "projectManagement": {
-      "monitoring": {
-        "watchSchemas": true,
-        "watchRules": true,
-        "syncChanges": true
-      },
-      "versioning": {
-        "enabled": true,
-        "strategy": "semantic",
-        "trackChanges": true
-      }
+      "format": "markdown",
+      "requireExamples": true,
+      "validateReferences": true
     }
   }
 } 

@@ -3,7 +3,7 @@
 ## 📋 Visão Geral
 
 O sistema de entrevistas dinâmicas é a interface principal do Project Manager, consistindo em:
-- Interface dividida com timeline e chat
+- Interface moderna construída com React + Vite
 - Interação guiada com o agente Claude
 - Visualização humanizada de documentos
 - Navegação intuitiva entre fases
@@ -40,40 +40,36 @@ interface ProjectTimeline {
 }
 ```
 
-## 🤖 Fluxo de Interação
+## 🔄 Fluxo de Interação
 
-### 1. Boas-Vindas e Inicialização
+### 1. Inicialização do Ambiente
 ```typescript
-class WelcomeFlow {
-  async start(): Promise<void> {
-    // Mensagem inicial
-    await this.showWelcomeMessage();
+class EnvironmentSetup {
+  async initialize(): Promise<void> {
+    // Verificar ambiente
+    const env = await this.detectEnvironment();
     
-    // Opções iniciais
-    const choice = await this.askUserChoice([
-      'Criar novo projeto',
-      'Acessar projeto existente'
-    ]);
-    
-    if (choice === 'novo') {
-      const name = await this.askProjectName();
-      await this.createProject(name);
-    } else {
-      await this.showProjectSelector();
+    // Configurar Codespaces se necessário
+    if (env.type === 'codespaces') {
+      await this.setupCodespaces();
     }
+    
+    // Iniciar servidor Vite
+    await this.startDevServer();
+    
+    // Configurar conexão SSH para Cursor
+    await this.setupSSH();
   }
   
-  private async createProject(name: string): Promise<Project> {
-    // Criar estrutura base
-    const project = await this.initializeProject(name);
+  private async setupCodespaces(): Promise<void> {
+    // Configurar ambiente de desenvolvimento
+    await this.configureDevContainer();
     
-    // Configurar timeline
-    await this.setupTimeline(project);
+    // Instalar extensões necessárias
+    await this.installExtensions();
     
-    // Iniciar entrevista
-    await this.startInterview(project);
-    
-    return project;
+    // Configurar variáveis de ambiente
+    await this.setupEnvVars();
   }
 }
 ```
@@ -119,32 +115,7 @@ class InterviewConductor {
 }
 ```
 
-### 3. Visualização de Documentos
-```typescript
-class DocumentViewer {
-  async renderDocument(schema: Schema): Promise<ReactNode> {
-    // Transformar schema em formato humanizado
-    const humanized = await this.humanizeSchema(schema);
-    
-    // Criar visualização interativa
-    return this.createInteractiveView(humanized, {
-      onEdit: this.handleEdit,
-      onValidate: this.handleValidate,
-      onNavigate: this.handleNavigate
-    });
-  }
-  
-  private async humanizeSchema(schema: Schema): Promise<HumanizedView> {
-    return {
-      sections: await this.transformSections(schema),
-      navigation: await this.createNavigation(schema),
-      metadata: await this.extractMetadata(schema)
-    };
-  }
-}
-```
-
-## �� Distribuição de Informações
+## 📦 Distribuição de Informações
 
 ### Análise e Distribuição
 ```typescript
@@ -167,14 +138,6 @@ class InformationDistributor {
     // Atualizar interface
     await this.refreshUI();
   }
-  
-  private async identifyTargetSchemas(
-    analysis: Analysis
-  ): Promise<Schema[]> {
-    return this.schemas.filter(schema => 
-      this.isRelevant(schema, analysis)
-    );
-  }
 }
 ```
 
@@ -193,114 +156,106 @@ class ConsistencyValidator {
 }
 ```
 
-## 🔄 Integração de Protótipos
+## 🔄 Integração com Vite
 
-### Validação Bidirecional
+### Hot Module Replacement
 ```typescript
-class PrototypeIntegration {
-  async validatePrototype(
-    prototype: ReactComponent
-  ): Promise<ValidationResult> {
-    // Extrair informações do protótipo
-    const prototypeInfo = await this.analyzePrototype(prototype);
-    
-    // Carregar documentação relacionada
-    const docs = await this.getRelatedDocs(prototypeInfo);
-    
-    // Validar consistência
-    return this.validateConsistency(prototypeInfo, docs);
-  }
-  
-  async generatePrototype(
-    docs: Schema[]
-  ): Promise<ReactComponent> {
-    // Analisar requisitos
-    const requirements = await this.extractRequirements(docs);
-    
-    // Gerar protótipo
-    return this.prototypeGenerator.generate(requirements);
-  }
-}
-```
-
-## 📊 Monitoramento de Progresso
-
-### Tracking de Progresso
-```typescript
-class ProgressTracker {
-  async updateProgress(phase: Phase): Promise<void> {
-    // Calcular progresso
-    const progress = await this.calculateProgress(phase);
-    
-    // Atualizar timeline
-    await this.timeline.updatePhase(phase.id, progress);
-    
-    // Verificar completude
-    if (await this.isPhaseComplete(phase)) {
-      await this.handlePhaseCompletion(phase);
+class ViteIntegration {
+  setupHMR(): void {
+    if (import.meta.hot) {
+      import.meta.hot.accept(module => {
+        // Recarregar componentes
+        this.reloadComponents(module);
+        
+        // Manter estado
+        this.preserveState();
+        
+        // Atualizar interface
+        this.refreshUI();
+      });
     }
   }
   
-  private async calculateProgress(
-    phase: Phase
-  ): Promise<number> {
-    const schemas = await this.getPhaseSchemas(phase);
-    const completions = await Promise.all(
-      schemas.map(s => this.calculateSchemaCompletion(s))
-    );
+  private preserveState(): void {
+    // Salvar estado atual
+    const state = this.store.getState();
     
-    return this.aggregateCompletions(completions);
+    // Registrar para restauração
+    this.hmr.register(state);
   }
 }
 ```
 
-### Validação de Completude
+### Otimização de Build
 ```typescript
-class CompletenessValidator {
-  async validatePhase(phase: Phase): Promise<ValidationResult> {
-    const schemas = await this.getPhaseSchemas(phase);
-    
-    return {
-      isComplete: await this.areAllSchemasComplete(schemas),
-      missingFields: await this.identifyMissingFields(schemas),
-      recommendations: await this.generateRecommendations(schemas)
-    };
-  }
-}
-```
-
-## 🔒 Segurança e Persistência
-
-### Gerenciamento de Dados
-```typescript
-class DataManager {
-  async saveProject(project: Project): Promise<void> {
-    // Salvar schemas
-    await this.saveSchemas(project.schemas);
-    
-    // Salvar protótipos
-    await this.savePrototypes(project.prototypes);
-    
-    // Salvar metadados
-    await this.saveMetadata({
-      timeline: project.timeline,
-      progress: project.progress,
-      history: project.history
+class BuildOptimizer {
+  async optimize(): Promise<void> {
+    await this.vite.build({
+      // Configurações de build
+      build: {
+        target: 'esnext',
+        minify: 'esbuild',
+        rollupOptions: {
+          output: {
+            manualChunks: this.defineChunks()
+          }
+        }
+      },
+      
+      // Otimizações de dependências
+      optimizeDeps: {
+        include: [
+          'react',
+          'react-dom',
+          'zustand',
+          'tailwindcss'
+        ]
+      }
     });
   }
 }
 ```
 
-### Controle de Versão
+## 🔍 Monitoramento e Métricas
+
+### Performance
 ```typescript
-class VersionControl {
-  async createSnapshot(project: Project): Promise<Snapshot> {
-    return {
-      timestamp: new Date(),
-      schemas: await this.snapshotSchemas(project.schemas),
-      prototypes: await this.snapshotPrototypes(project.prototypes),
-      metadata: await this.snapshotMetadata(project.metadata)
-    };
+class PerformanceMonitor {
+  track(): void {
+    // Métricas de build
+    this.trackBuildMetrics();
+    
+    // Métricas de HMR
+    this.trackHMRMetrics();
+    
+    // Métricas de runtime
+    this.trackRuntimeMetrics();
+  }
+  
+  private trackBuildMetrics(): void {
+    vite.build.onProgress(progress => {
+      this.metrics.record('build', {
+        duration: progress.duration,
+        chunks: progress.chunks,
+        assets: progress.assets
+      });
+    });
+  }
+}
+```
+
+### Análise de Uso
+```typescript
+class UsageAnalytics {
+  analyze(): void {
+    // Tracking de interações
+    this.trackInteractions();
+    
+    // Análise de performance
+    this.analyzePerformance();
+    
+    // Feedback do usuário
+    this.collectFeedback();
   }
 }
 ``` 

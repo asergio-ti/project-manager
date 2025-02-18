@@ -1,228 +1,78 @@
 # Project Manager
 
-## 🎯 Visão Geral
+## 🚀 Visão Geral
+Project Manager é uma ferramenta moderna para gerenciamento de projetos de software, integrando:
+- Sistema de entrevistas dinâmicas com IA
+- Geração e validação de documentação
+- Prototipagem rápida
+- Análise de requisitos em tempo real
 
-O Project Manager é uma ferramenta avançada de planejamento e documentação de projetos de software, projetada para trabalhar em conjunto com a IDE Cursor. Seu objetivo principal é criar uma base documental robusta e estruturada que possa ser interpretada por IA para futura automação de implementação.
+## 🛠️ Tecnologias
+- **Frontend**: React + TypeScript + Vite
+- **Estilização**: Tailwind CSS
+- **Documentação**: Markdown + JSON Schemas
+- **Ambiente**: GitHub Codespaces + Docker
+- **IDE**: Cursor (com suporte SSH)
 
-## 🏗️ Propósito
-
-- Criar documentação estruturada e padronizada
-- Estabelecer base para automação futura
-- Garantir conformidade com padrões e boas práticas
-- Facilitar a interpretação por IA
-- Manter rastreabilidade de decisões
-
-## 📁 Estrutura do Projeto
-
+## 🏗️ Arquitetura
 ```
 project-manager/
-├── .vscode/             # Configurações compartilhadas VSCode/Cursor
-├── .devcontainer/       # Configurações do GitHub Codespaces
-├── client/             # Frontend React
-├── docker/             # Configurações Docker
-├── workspace/          # Área de trabalho
-│   ├── _templates/     # Templates e schemas
-│   └── projects/       # Projetos gerenciados
-└── scripts/           # Scripts de automação
+├── .devcontainer/    # Configuração GitHub Codespaces
+├── client/           # Frontend React + Vite
+├── docker/           # Configurações Docker
+├── docs/            # Documentação
+│   ├── schemas/     # JSON Schemas
+│   └── templates/   # Templates
+└── workspace/       # Área de trabalho
+    └── projects/    # Projetos gerenciados
 ```
 
-### 📂 Detalhamento dos Diretórios
+## 🚀 Início Rápido
 
-#### .vscode/
-- Configurações compartilhadas entre ambientes
-- Extensões recomendadas
-- Configurações de terminal
-- Exclusões de watch
-- Perfis de desenvolvimento
+### Usando GitHub Codespaces (Recomendado)
+1. Abra o repositório no GitHub
+2. Clique em "Code" > "Open with Codespaces"
+3. Aguarde a configuração automática
+4. Conecte o Cursor IDE via SSH (instruções abaixo)
 
-#### .devcontainer/
-- Configurações do GitHub Codespaces
-- Definições de container de desenvolvimento
-- Configurações de ambiente
-- Integrações com serviços
-
-#### .cursor/
-- Contém as regras e configurações para a IDE Cursor
-- Define o fluxo de entrevistas
-- Estabelece regras de inferência
-- Configura análise contextual
-
-#### guides/
-- Documentação sobre uso do sistema
-- Guias de entrevista estruturada
-- Melhores práticas
-- Exemplos de uso
-
-#### managed-projects/
-- Armazena os projetos gerenciados
-- Cada projeto possui sua própria estrutura
-- Mantém histórico de decisões
-- Documentação específica do projeto
-
-#### schemas/
-Conjunto de schemas JSON para validação e estruturação:
-
-##### core/
-- Schemas fundamentais
-- Definições base
-- Tipos comuns
-- Validações básicas
-
-##### dadi/
-- Documentação de API
-- Especificações de interfaces
-- Definições de endpoints
-- Modelos de dados
-
-##### das/
-- Decisões arquiteturais
-- Visões arquiteturais
-- Componentes e interfaces
-- Padrões e qualidade
-- Segurança e performance
-- Deployment e infraestrutura
-
-##### drs/
-- Requisitos de desenvolvimento
-- Especificações técnicas
-- Restrições de implementação
-- Padrões de código
-
-##### dvp/
-- Documentação de visão
-- Proposta de solução
-- Contexto do projeto
-- Objetivos e escopo
-
-##### iso/
-- Conformidade com ISO
-- Padrões internacionais
-- Requisitos de qualidade
-- Normas específicas
-
-#### scripts/
-Scripts de automação e gerenciamento:
-
-##### managers/
-- Gerenciadores específicos
-- Inicializadores de projeto
-- Validadores de schema
-- Analisadores de contexto
-
-##### Scripts Principais:
-- `contextAnalyzer.ts`: Análise de contexto do projeto
-- `projectInterviewer.ts`: Condução de entrevistas
-- `create-project.ts`: Criação de novos projetos
-- `schemaWatcher.ts`: Monitoramento de schemas
-
-## 🔄 Fluxo de Trabalho
-
-### 1. Fase Inicial - DVP (Documentação de Visão e Proposta)
-1. Entrevista inicial
-2. Documentação da visão
-3. Definição da proposta
-4. Análise contextual
-5. Definição de objetivos e escopo
-
-### 2. Fase de Requisitos - DRS (Documento de Requisitos de Software)
-1. Levantamento de requisitos funcionais
-2. Definição de requisitos não-funcionais
-3. Restrições técnicas
-4. Regras de negócio
-5. Validação com stakeholders
-
-### 3. Fase de Arquitetura - DAS (Documento de Arquitetura de Software)
-1. Decisões arquiteturais
-2. Definição de componentes
-3. Especificação de interfaces
-4. Padrões de design
-5. Aspectos de qualidade (performance, segurança, escalabilidade)
-
-### 4. Fase de API - DADI (Documento de Arquitetura e Design de Interfaces)
-1. Especificação de APIs
-2. Definição de endpoints
-3. Modelos de dados
-4. Protocolos de comunicação
-5. Documentação de interfaces
-
-## 🤖 Integração com IA
-
-### Preparação para Automação
-- Documentação estruturada
-- Schemas validados
-- Relacionamentos explícitos
-- Contexto completo
-
-### Pontos de Automação Futura
-- Geração de código
-- Configuração de infraestrutura
-- Setup de ambiente
-- Implementação de padrões
-
-## 📊 Funcionalidades Principais
-
-### Sistema de Entrevistas
-- Entrevistas guiadas
-- Extração de informações
-- Validação de respostas
-- Análise contextual
-
-### Gestão de Documentação
-- Geração automática
-- Validação contínua
-- Versionamento
-- Rastreabilidade
-
-### Análise Contextual
-- Identificação de padrões
-- Sugestões contextuais
-- Inferência de requisitos
-- Validação de decisões
-
-### Conformidade
-- Validação ISO
-- Padrões internacionais
-- Boas práticas
-- Qualidade assegurada
-
-## 🛠️ Uso do Sistema
-
-### Inicialização
-```typescript
-const projectManager = new ProjectManager();
-await projectManager.initialize();
+### Desenvolvimento Local
+1. Clone o repositório
+2. Configure Docker e Node.js
+3. Execute:
+```bash
+cd client
+npm install
+npm run dev
 ```
 
-### Criação de Projeto
-```typescript
-const project = await projectManager.createProject({
-  name: "novo-projeto",
-  type: "web-application",
-  context: "e-commerce"
-});
+### Conexão com Cursor IDE
+1. No Codespace, obtenha as credenciais SSH:
+```bash
+gh codespace ssh --config
 ```
+2. No Cursor IDE:
+   - Configure a conexão SSH usando as credenciais
+   - Conecte ao ambiente remoto
 
-### Condução de Entrevista
-```typescript
-const interviewer = new ProjectInterviewer(project);
-await interviewer.startInterview();
-```
+## 📚 Documentação
+- [Arquitetura](./docs/ARCHITECTURE.md)
+- [Entrevistas Dinâmicas](./docs/DYNAMIC_INTERVIEWS.md)
+- [Troubleshooting](./TROUBLESHOOTING.md)
+- [Regras e Configurações](./.cursor/rules.json)
 
-## 📋 Requisitos do Sistema
+## 🔧 Scripts Disponíveis
+- `npm run dev`: Inicia o servidor de desenvolvimento
+- `npm run build`: Gera build de produção
+- `npm run preview`: Visualiza build local
+- `npm run test`: Executa testes
+- `npm run lint`: Verifica código
 
-- Node.js 14+
-- TypeScript 4.9+
-- IDE Cursor
-- Git
-
-## 🤝 Contribuição
-
+## 🤝 Contribuindo
 1. Fork o projeto
-2. Crie sua branch de feature
-3. Commit suas mudanças
-4. Push para a branch
+2. Crie sua branch (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add: amazing feature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
 ## 📝 Licença
-
-Este projeto está sob a licença MIT. 
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.

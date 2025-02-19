@@ -19,7 +19,13 @@ WORKDIR /workspaces/${PROJECT_NAME:-app}
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     netcat \
+    openssh-server \
     && rm -rf /var/lib/apt/lists/*
+
+# Configurar SSH
+RUN mkdir -p /home/node/.ssh && \
+    chmod 700 /home/node/.ssh && \
+    chown -R node:node /home/node/.ssh
 
 # Copiar scripts de inicialização
 COPY docker/init.sh /usr/local/bin/

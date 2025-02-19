@@ -41,7 +41,9 @@
   "remoteUser": "node",
   "features": {
     "ghcr.io/devcontainers/features/sshd:1": {
-      "version": "latest"
+      "version": "latest",
+      "configPath": "/home/node/.ssh/sshd_config",
+      "listenPort": 22
     },
     "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/devcontainers/features/docker-in-docker:2": {
@@ -66,5 +68,6 @@
   },
   "runArgs": ["--init"],
   "overrideCommand": false,
-  "shutdownAction": "stopContainer"
+  "shutdownAction": "stopContainer",
+  "initializeCommand": "mkdir -p ${localEnv:HOME}/.ssh"
 } 

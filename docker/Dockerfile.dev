@@ -19,18 +19,7 @@ WORKDIR /workspaces/${PROJECT_NAME:-app}
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     netcat \
-    openssh-server \
     && rm -rf /var/lib/apt/lists/*
-
-# Configurar SSH para Cursor IDE
-RUN mkdir -p /var/run/sshd && \
-    echo "PermitUserEnvironment yes" >> /etc/ssh/sshd_config && \
-    echo "AllowTcpForwarding yes" >> /etc/ssh/sshd_config && \
-    echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
-
-# Configurar usuário não-root (já existe na imagem base do devcontainer)
-RUN mkdir -p /home/node/.ssh && \
-    chown -R node:node /home/node/.ssh
 
 # Copiar scripts de inicialização
 COPY docker/init.sh /usr/local/bin/
@@ -39,5 +28,5 @@ RUN chmod +x /usr/local/bin/init.sh
 # Expor portas
 EXPOSE 3000 22
 
-# Comando para desenvolvimento com hot reload e SSH
+# Comando para desenvolvimento com hot reload
 CMD ["/usr/local/bin/init.sh"] 

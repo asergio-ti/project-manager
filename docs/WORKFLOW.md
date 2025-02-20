@@ -211,4 +211,34 @@ No Codespace:
    - feat: nova funcionalidade
    - fix: correção de bug
    - chore: atualização de dependências
-   - docs: atualização de documentação 
+   - docs: atualização de documentação
+
+### Casos Especiais
+
+#### Sincronização Inicial do package-lock.json
+Quando houver uma dessincronização entre `package.json` e `package-lock.json`:
+
+1. **Exceção Única**: Execute no ambiente local:
+   ```bash
+   # Apenas uma vez, quando houver dessincronização
+   npm install --package-lock-only
+   ```
+   Este comando:
+   - Atualiza apenas o package-lock.json
+   - NÃO instala módulos
+   - NÃO modifica node_modules
+
+2. **Commit das Alterações**:
+   ```bash
+   git add package.json package-lock.json
+   git commit -m "chore: sincroniza package-lock.json com novas dependências"
+   git push origin main
+   ```
+
+3. **No Codespace**:
+   ```bash
+   git pull
+   npm ci  # Agora funcionará corretamente
+   ```
+
+⚠️ IMPORTANTE: Esta é uma exceção à regra de "não executar npm no ambiente local" e deve ser usada apenas neste caso específico de dessincronização. 

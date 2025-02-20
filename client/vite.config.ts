@@ -10,6 +10,12 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@lib': path.resolve(__dirname, './src/lib'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@domains': path.resolve(__dirname, './src/domains'),
+      '@services': path.resolve(__dirname, './src/services'),
+      '@state': path.resolve(__dirname, './src/state'),
+      '@types': path.resolve(__dirname, './src/types'),
       '@managed-projects': path.resolve(__dirname, '../managed-projects'),
       '@schemas': path.resolve(__dirname, '../schemas')
     }

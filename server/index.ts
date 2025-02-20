@@ -2,6 +2,40 @@ import express from 'express';
 import path from 'path';
 import { readdir, readFile } from 'fs/promises';
 
+interface Document {
+  schema: string;
+  completion: number;
+  status: 'pending' | 'in_progress' | 'completed';
+}
+
+interface Phase {
+  id: string;
+  name: string;
+  status: 'pending' | 'in_progress' | 'completed';
+  documents: Document[];
+}
+
+interface ProjectPhases {
+  [key: string]: Phase;
+}
+
+interface Project {
+  id: string;
+  name: string;
+  path: string;
+  phases: ProjectPhases;
+}
+
+interface ProgressPhase {
+  status: 'pending' | 'in_progress' | 'completed';
+}
+
+interface Progress {
+  phases: {
+    [key: string]: ProgressPhase;
+  };
+}
+
 const app = express();
 const port = 3001;
 
@@ -20,7 +54,7 @@ app.get('/workspace/projects', async (req, res) => {
     
     const projectList = await Promise.all(projects.map(async (projectName) => {
       const projectPath = path.join(workspacePath, projectName);
-      const metadata = {
+      const metadata: Project = {
         id: projectName,
         name: projectName,
         path: projectPath,
@@ -34,10 +68,10 @@ app.get('/workspace/projects', async (req, res) => {
 
       try {
         const progressData = await readFile(path.join(projectPath, 'metadata', 'progress.json'), 'utf-8');
-        const progress = JSON.parse(progressData);
+        const progress: Progress = JSON.parse(progressData);
         // Atualizar fases com dados do progress.json
-        Object.entries(progress.phases).forEach(([phaseId, phaseData]: [string, any]) => {
-          if (metadata.phases[phaseId]) {
+        Object.entries(progress.phases).forEach(([phaseId, phaseData]) => {
+          if (phaseId in metadata.phases) {
             metadata.phases[phaseId].status = phaseData.status;
           }
         });

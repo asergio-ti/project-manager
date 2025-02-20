@@ -37,8 +37,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "test": "jest --env=jsdom",
-    "test:watch": "jest --env=jsdom --watch"
+    "test": "jest -c jest.config.cjs",
+    "test:watch": "jest -c jest.config.cjs --watch"
   },
   "jest": {
     "testEnvironment": "jsdom",

@@ -2,7 +2,6 @@
   "name": "project-manager-client",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "engines": {
     "node": ">=16.0.0"
   },
@@ -38,8 +37,8 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "test": "jest",
-    "test:watch": "jest --watch"
+    "test": "jest --env=jsdom",
+    "test:watch": "jest --env=jsdom --watch"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -49,8 +48,10 @@
     },
     "transform": {
       "^.+\\.(ts|tsx)$": ["ts-jest", {
-        "useESM": true
+        "useESM": false
       }]
-    }
+    },
+    "testMatch": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+    "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"]
   }
 }

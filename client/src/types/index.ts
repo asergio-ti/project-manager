@@ -30,7 +30,7 @@ export interface ChatState {
 }
 
 // Tipos base do sistema
-export type DocumentPhase = 'DVP' | 'DRS' | 'DAS' | 'DADI';
+export type DocumentPhase = 'dvp' | 'drs' | 'das' | 'dadi';
 export type DocumentStatus = 'draft' | 'in_progress' | 'review' | 'approved';
 export type ConfidenceLevel = 'low' | 'medium' | 'high';
 
@@ -91,7 +91,7 @@ export interface ConversationContext {
 export interface ConversationEntry {
   id: string;
   timestamp: string;
-  type: 'user' | 'assistant';
+  type: UserRole;
   content: string;
   analysis?: {
     topics: string[];
@@ -103,20 +103,11 @@ export interface ConversationEntry {
 
 export interface Question {
   id: string;
-  type: QuestionType;
-  content: string;
-  context?: string;
-  priority: number;
-  followUpStrategy?: FollowUpStrategy;
+  text: string;
+  type: 'open' | 'choice' | 'confirmation';
+  options?: string[];
+  required?: boolean;
 }
-
-export type QuestionType = 
-  | 'open_exploration'     // Perguntas abertas para explorar tópicos
-  | 'clarification'        // Pedir esclarecimentos sobre algo mencionado
-  | 'confirmation'         // Confirmar entendimento
-  | 'elaboration'         // Pedir mais detalhes
-  | 'suggestion'          // Sugerir considerações
-  | 'validation';         // Validar informações específicas
 
 export interface FollowUpStrategy {
   conditions: string[];
@@ -127,50 +118,42 @@ export interface FollowUpStrategy {
 
 // Interfaces de Análise
 export interface AnalysisResult {
-  topics: Topic[];
-  patterns: Pattern[];
-  concerns: Concern[];
-  suggestions: Suggestion[];
+  topics: string[];
+  patterns: string[];
+  concerns: string[];
+  suggestions: string[];
   confidence: number;
 }
 
 export interface Topic {
+  id: string;
   name: string;
   relevance: number;
-  confidence: number;
-  relatedTopics: string[];
-  needsElaboration: boolean;
 }
 
 export interface Pattern {
-  type: string;
-  confidence: number;
-  implications: string[];
-  suggestedPractices: string[];
+  id: string;
+  description: string;
+  frequency: number;
 }
 
 export interface Concern {
-  type: string;
-  severity: 'low' | 'medium' | 'high';
+  id: string;
   description: string;
-  suggestedActions: string[];
+  severity: 'low' | 'medium' | 'high';
 }
 
 export interface Suggestion {
-  type: string;
-  priority: number;
-  description: string;
-  rationale: string;
-  impact: string[];
+  id: string;
+  text: string;
+  priority: 'low' | 'medium' | 'high';
 }
 
 // Interfaces de Contexto
 export interface InterviewContext {
-  projectContext: ProjectContext;
-  conversationContext: ConversationContext;
-  analysisContext: AnalysisContext;
-  domainAnalysis?: string;
-  complexityLevel?: 'high' | 'medium' | 'low';
+  phase: DocumentPhase;
+  previousAnswers: Record<string, any>;
+  currentTopic?: string;
 }
 
 export interface ProjectContext {
@@ -205,11 +188,9 @@ export type ComplexityLevel = {
 // Interfaces de Validação
 export interface ValidationResult {
   isValid: boolean;
-  feedback: string;
-  errors?: string[];
-  warnings?: string[];
-  suggestions?: string[];
-  confidence: number;
+  errors: string[];
+  warnings: string[];
+  suggestions: string[];
 }
 
 export interface ValidationContext {
@@ -225,9 +206,8 @@ export interface ValidationContext {
 // Interfaces de Schema
 export interface Schema {
   id: string;
-  version: string;
   type: string;
-  properties: Record<string, SchemaProperty>;
+  properties: Record<string, any>;
   required: string[];
 }
 
@@ -263,4 +243,11 @@ export interface ApiConfig {
   baseURL: string;
   apiKey: string;
   version: string;
+}
+
+export type UserRole = 'user' | 'assistant';
+
+export interface AnalysisPrompt {
+  content: string;
+  context?: any;
 } 

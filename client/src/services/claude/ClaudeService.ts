@@ -1,16 +1,10 @@
-import { Message, Question, InterviewContext, ValidationResult, Document, Schema, AnalysisResult, ConversationEntry, DocumentPhase, Topic, Pattern, Concern, Suggestion } from '../../types';
+import { Message, Question, InterviewContext, ValidationResult, Document, Schema, AnalysisResult, ConversationEntry, DocumentPhase, Topic, Pattern, Concern, Suggestion, AnalysisPrompt, UserRole } from '../../types';
 
 interface ClaudeConfig {
   apiKey: string;
   baseURL: string;
   model: string;
   temperature: number;
-}
-
-interface AnalysisPrompt {
-  systemPrompt: string;
-  userContext: string;
-  previousContext?: string;
 }
 
 export class ClaudeService {
@@ -93,8 +87,13 @@ export class ClaudeService {
       return {
         id: data.id,
         content: data.content[0].text,
-        sender: 'assistant',
-        timestamp: new Date()
+        sender: {
+          id: 'claude',
+          name: 'Claude',
+          status: 'online'
+        },
+        timestamp: new Date(),
+        status: 'delivered'
       };
     } catch (error) {
       console.error('Erro ao enviar mensagem para o Claude:', error);

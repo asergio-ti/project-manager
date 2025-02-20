@@ -10,17 +10,13 @@ const config = {
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
       tsconfig: '<rootDir>/tsconfig.json',
-      useESM: false
+      useESM: false,
+      isolatedModules: true
     }]
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  testPathIgnorePatterns: ['/node_modules/'],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true
-    }
-  }
+  testPathIgnorePatterns: ['/node_modules/']
 };
 
 module.exports = config; 

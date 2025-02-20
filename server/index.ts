@@ -1,10 +1,6 @@
 import express from 'express';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import path from 'path';
 import { readdir, readFile } from 'fs/promises';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const app = express();
 const port = 3001;
@@ -19,11 +15,11 @@ app.use((req, res, next) => {
 // Rota para listar projetos
 app.get('/workspace/projects', async (req, res) => {
   try {
-    const workspacePath = join(__dirname, '..', 'workspace', 'projects');
+    const workspacePath = path.join(__dirname, '..', 'workspace', 'projects');
     const projects = await readdir(workspacePath);
     
     const projectList = await Promise.all(projects.map(async (projectName) => {
-      const projectPath = join(workspacePath, projectName);
+      const projectPath = path.join(workspacePath, projectName);
       const metadata = {
         id: projectName,
         name: projectName,
@@ -37,7 +33,7 @@ app.get('/workspace/projects', async (req, res) => {
       };
 
       try {
-        const progressData = await readFile(join(projectPath, 'metadata', 'progress.json'), 'utf-8');
+        const progressData = await readFile(path.join(projectPath, 'metadata', 'progress.json'), 'utf-8');
         const progress = JSON.parse(progressData);
         // Atualizar fases com dados do progress.json
         Object.entries(progress.phases).forEach(([phaseId, phaseData]: [string, any]) => {
@@ -63,7 +59,7 @@ app.get('/workspace/projects', async (req, res) => {
 app.get('/workspace/projects/:projectId/metadata/:file', async (req, res) => {
   try {
     const { projectId, file } = req.params;
-    const filePath = join(__dirname, '..', 'workspace', 'projects', projectId, 'metadata', file);
+    const filePath = path.join(__dirname, '..', 'workspace', 'projects', projectId, 'metadata', file);
     const data = await readFile(filePath, 'utf-8');
     res.json(JSON.parse(data));
   } catch (error) {

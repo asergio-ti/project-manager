@@ -43,7 +43,8 @@ const port = 3001;
 app.use((req, res, next) => {
   const allowedOrigins = [
     'http://localhost:3000',
-    'https://curly-dollop-9pg67x7x5g4hxjgx-3000.app.github.dev'
+    'https://curly-dollop-9pg67x7x5g4hxjgx-3000.app.github.dev',
+    'https://curly-dollop-9pg67x7x5g4hxjgx.github.dev'
   ];
   
   const origin = req.headers.origin;
@@ -57,6 +58,14 @@ app.use((req, res, next) => {
   }
   
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  
+  // Handle preflight
+  if (req.method === 'OPTIONS') {
+    res.status(200).end();
+    return;
+  }
+  
   next();
 });
 
@@ -141,6 +150,7 @@ app.listen(port, () => {
   console.log('Diretório atual:', __dirname);
   console.log('Origens permitidas:', [
     'http://localhost:3000',
-    'https://curly-dollop-9pg67x7x5g4hxjgx-3000.app.github.dev'
+    'https://curly-dollop-9pg67x7x5g4hxjgx-3000.app.github.dev',
+    'https://curly-dollop-9pg67x7x5g4hxjgx.github.dev'
   ]);
 }); 

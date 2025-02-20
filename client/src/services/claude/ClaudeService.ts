@@ -7,11 +7,27 @@ interface ClaudeConfig {
   temperature: number;
 }
 
+interface ExtendedInterviewContext extends InterviewContext {
+  phase: DocumentPhase;
+  previousAnswers: Record<string, any>;
+  projectContext?: {
+    currentPhase: string;
+    domainType: string;
+    complexity: { overall: string };
+  };
+  conversationContext?: {
+    conversationHistory: ConversationEntry[];
+    identifiedTopics: Set<string>;
+  };
+}
+
 export class ClaudeService {
   private config: ClaudeConfig;
+  private context: ExtendedInterviewContext;
 
-  constructor(config: ClaudeConfig) {
+  constructor(config: ClaudeConfig, context: ExtendedInterviewContext) {
     this.config = config;
+    this.context = context;
   }
 
   private async sendMessage(prompt: string, context?: any): Promise<any> {
@@ -52,11 +68,13 @@ export class ClaudeService {
   }
 
   async sendMessageToClaude(
-    message: string,
-    context?: string,
-    reference?: string
+    message: string | AnalysisPrompt,
+    context?: any
   ): Promise<Message> {
     try {
+      const content = typeof message === 'string' ? message : message.content;
+      const messageContext = typeof message === 'string' ? context : message.context;
+
       const response = await fetch(`${this.config.baseURL}/v1/messages`, {
         method: 'POST',
         headers: {
@@ -69,7 +87,7 @@ export class ClaudeService {
           messages: [
             {
               role: 'user',
-              content: this.formatMessage(message, context, reference)
+              content: this.formatMessage(content, messageContext)
             }
           ],
           max_tokens: 1000,
@@ -103,17 +121,12 @@ export class ClaudeService {
 
   private formatMessage(
     message: string,
-    context?: string,
-    reference?: string
+    context?: any
   ): string {
     let formattedMessage = message;
 
     if (context) {
-      formattedMessage = `Contexto: ${context}\n\nMensagem: ${message}`;
-    }
-
-    if (reference) {
-      formattedMessage = `Referência: ${reference}\n\n${formattedMessage}`;
+      formattedMessage = `Contexto: ${JSON.stringify(context)}\n\nMensagem: ${message}`;
     }
 
     return formattedMessage;
@@ -141,7 +154,6 @@ export class ClaudeService {
       return {
         isValid: !response.toLowerCase().includes('erro') && 
                 !response.toLowerCase().includes('inválido'),
-        feedback: response,
         errors: this.extractErrors(response),
         warnings: this.extractWarnings(response),
         suggestions: this.extractSuggestions(response)
@@ -153,17 +165,17 @@ export class ClaudeService {
   }
 
   async suggestImprovements(
-    document: any,
+    document: Document,
     context: string
   ): Promise<string> {
     try {
-      const response = await this.sendMessage(
-        'Por favor, analise este documento e sugira melhorias específicas baseadas no contexto fornecido.',
-        JSON.stringify(document),
+      const prompt = 'Por favor, analise este documento e sugira melhorias específicas baseadas no contexto fornecido.';
+      const response = await this.sendMessage(prompt, {
+        document: JSON.stringify(document),
         context
-      );
+      });
 
-      return response.content;
+      return response;
     } catch (error) {
       console.error('Erro ao solicitar sugestões:', error);
       throw error;
@@ -172,11 +184,11 @@ export class ClaudeService {
 
   async analyzeContext(
     input: string,
-    context: InterviewContext
+    context: ExtendedInterviewContext
   ): Promise<AnalysisResult> {
     try {
       const prompt = this.buildAnalysisPrompt(input, context);
-      const response = await this.sendMessage(prompt);
+      const response = await this.sendMessage(prompt.content, prompt.context);
       return this.parseAnalysisResponse(response);
     } catch (error) {
       console.error('Erro na análise de contexto:', error);
@@ -184,23 +196,20 @@ export class ClaudeService {
     }
   }
 
-  private buildAnalysisPrompt(input: string, context: InterviewContext): AnalysisPrompt {
+  private buildAnalysisPrompt(input: string, context: ExtendedInterviewContext): AnalysisPrompt {
     return {
-      systemPrompt: `Você é um especialista em análise de requisitos e documentação de software.
+      content: `Você é um especialista em análise de requisitos e documentação de software.
 Analise a entrada do usuário considerando:
 1. Tópicos mencionados e sua relevância
 2. Padrões de arquitetura ou design identificados
 3. Possíveis preocupações ou riscos
 4. Sugestões para melhorar ou expandir o conceito
-5. Nível de confiança nas informações fornecidas`,
+5. Nível de confiança nas informações fornecidas
 
-      userContext: `Fase atual: ${context.projectContext.currentPhase}
-Histórico da conversa: ${this.formatConversationHistory(context.conversationContext.conversationHistory)}
+Fase atual: ${context.projectContext?.currentPhase || 'N/A'}
+Histórico da conversa: ${this.formatConversationHistory(context.conversationContext?.conversationHistory || [])}
 Entrada atual: ${input}`,
-
-      previousContext: context.conversationContext.conversationHistory.length > 0
-        ? this.summarizeContext(context)
-        : undefined
+      context: context.projectContext
     };
   }
 
@@ -210,12 +219,12 @@ Entrada atual: ${input}`,
       .join('\n');
   }
 
-  private summarizeContext(context: InterviewContext): string {
-    const topics = Array.from(context.conversationContext.identifiedTopics).join(', ');
+  private summarizeContext(context: ExtendedInterviewContext): string {
+    const topics = Array.from(context.conversationContext?.identifiedTopics || []).join(', ');
     return `Tópicos identificados: ${topics}
-Fase atual: ${context.projectContext.currentPhase}
-Domínio: ${context.projectContext.domainType}
-Complexidade: ${context.projectContext.complexity.overall}`;
+Fase atual: ${context.projectContext?.currentPhase || 'N/A'}
+Domínio: ${context.projectContext?.domainType || 'N/A'}
+Complexidade: ${context.projectContext?.complexity.overall || 'N/A'}`;
   }
 
   private async parseAnalysisResponse(response: any): Promise<AnalysisResult> {
@@ -234,22 +243,22 @@ Complexidade: ${context.projectContext.complexity.overall}`;
     }
   }
 
-  private extractTopics(response: any): Topic[] {
+  private extractTopics(response: any): string[] {
     // Implementar extração de tópicos da resposta
     return [];
   }
 
-  private extractPatterns(response: any): Pattern[] {
+  private extractPatterns(response: any): string[] {
     // Implementar extração de padrões da resposta
     return [];
   }
 
-  private extractConcerns(response: any): Concern[] {
+  private extractConcerns(response: any): string[] {
     // Implementar extração de preocupações da resposta
     return [];
   }
 
-  private extractSuggestions(response: any): Suggestion[] {
+  private extractSuggestions(response: any): string[] {
     // Implementar extração de sugestões da resposta
     return [];
   }
@@ -273,15 +282,15 @@ Complexidade: ${context.projectContext.complexity.overall}`;
     }
   }
 
-  private buildCustomizationPrompt(questions: Question[], context: InterviewContext): string {
+  private buildCustomizationPrompt(questions: Question[], context: ExtendedInterviewContext): string {
     return `Com base no contexto atual:
-- Fase: ${context.projectContext.currentPhase}
-- Tópicos identificados: ${Array.from(context.conversationContext.identifiedTopics).join(', ')}
-- Domínio: ${context.projectContext.domainType}
-- Complexidade: ${context.projectContext.complexity.overall}
+- Fase: ${context.projectContext?.currentPhase || 'N/A'}
+- Tópicos identificados: ${Array.from(context.conversationContext?.identifiedTopics || []).join(', ')}
+- Domínio: ${context.projectContext?.domainType || 'N/A'}
+- Complexidade: ${context.projectContext?.complexity.overall || 'N/A'}
 
 Adapte as seguintes perguntas para serem mais relevantes e naturais:
-${questions.map(q => q.content).join('\n')}`;
+${questions.map(q => q.text).join('\n')}`;
   }
 
   private async parseCustomizedQuestions(response: any): Promise<Question[]> {
@@ -299,6 +308,22 @@ ${questions.map(q => q.content).join('\n')}`;
     // Implementar extração de avisos do texto
     return [];
   }
+
+  async analyzeDocument(prompt: AnalysisPrompt): Promise<AnalysisResult> {
+    try {
+      const response = await this.sendMessageToClaude(prompt);
+      return {
+        topics: this.extractTopics(response),
+        patterns: this.extractPatterns(response),
+        concerns: this.extractConcerns(response),
+        suggestions: this.extractSuggestions(response),
+        confidence: this.calculateOverallConfidence(response)
+      };
+    } catch (error) {
+      console.error('Erro ao analisar documento:', error);
+      throw error;
+    }
+  }
 }
 
 export const claudeService = new ClaudeService({
@@ -306,6 +331,18 @@ export const claudeService = new ClaudeService({
   baseURL: process.env.REACT_APP_CLAUDE_API_URL || 'https://api.anthropic.com',
   model: process.env.REACT_APP_CLAUDE_MODEL || 'claude-3-opus-20240229',
   temperature: 0.7
+}, {
+  phase: 'dvp',
+  previousAnswers: {},
+  projectContext: {
+    currentPhase: 'Phase 1',
+    domainType: 'Software Development',
+    complexity: { overall: 'High' }
+  },
+  conversationContext: {
+    conversationHistory: [],
+    identifiedTopics: new Set()
+  }
 });
 
 export default ClaudeService; 

@@ -9,8 +9,8 @@ const config = {
   },
   transform: {
     '^.+\\.(ts|tsx)$': ['ts-jest', {
-      useESM: false,
-      tsconfig: '<rootDir>/tsconfig.json'
+      tsconfig: '<rootDir>/tsconfig.json',
+      useESM: false
     }]
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],

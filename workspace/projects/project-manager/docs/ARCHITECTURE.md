@@ -2,11 +2,12 @@
 
 ## 📋 Sumário
 1. [Visão Geral](#visão-geral)
-2. [Ambiente de Desenvolvimento](#ambiente-de-desenvolvimento)
-3. [Interface do Usuário](#interface-do-usuário)
-4. [Estrutura de Dados](#estrutura-de-dados)
-5. [Componentes](#componentes)
-6. [Integração com Claude](#integração-com-claude)
+2. [Tecnologias](#tecnologias)
+3. [Estrutura do Projeto](#estrutura-do-projeto)
+4. [Componentes](#componentes)
+5. [Gerenciamento de Estado](#gerenciamento-de-estado)
+6. [Testes](#testes)
+7. [Integração com Claude](#integração-com-claude)
 
 ## 🎯 Visão Geral
 
@@ -17,348 +18,226 @@ O Project Manager é uma plataforma de documentação guiada que:
 - Suporta referências diretas a seções de documentos no chat
 - Gerencia progresso de fases e documentos
 
-## 🛠️ Ambiente de Desenvolvimento
+## 🛠️ Tecnologias
 
-### Arquitetura de Desenvolvimento
+### Frontend
 ```typescript
-interface DevelopmentEnvironment {
-  codespaces: {
-    workspace: string;
-    ssh: {
-      host: string;
-      port: number;
-      user: string;
-    };
-    containers: {
-      dev: Container;
-      services: Container[];
-    };
+interface TechStack {
+  framework: 'React 18';
+  language: 'TypeScript';
+  buildTool: 'Vite';
+  styling: 'TailwindCSS';
+  testing: {
+    framework: 'Jest';
+    libraries: ['@testing-library/react', '@testing-library/user-event'];
   };
-  cursorIDE: {
-    connection: SSHConfig;
-    workspace: LocalPath;
-    settings: VSCodeSettings;
-  };
-  docker: {
-    compose: DockerCompose;
-    dev: Dockerfile;
-  };
+  stateManagement: 'React Context';
+  routing: 'React Router v6';
 }
 ```
 
-### Fluxo de Desenvolvimento
-1. **GitHub Codespaces**
-   - Ambiente principal de desenvolvimento
-   - Containers Docker nativos
-   - Integração com serviços externos
-   - Configurações VSCode compartilhadas
-
-2. **Cursor IDE**
-   - Conexão SSH com Codespaces
-   - Desenvolvimento local
-   - Sincronização em tempo real
-   - Herança de configurações VSCode
-
-3. **Configurações VSCode/Cursor**
-   - Extensões padrão para desenvolvimento
-   - Configurações de terminal integrado
-   - Exclusões de arquivos para watch
-   - Perfis de terminal otimizados
-
-4. **Integração Contínua**
-   - Build automatizado
-   - Testes integrados
-   - Deploy contínuo
-
-## 🖥️ Interface do Usuário
-
-### Layout Principal
+### Backend
 ```typescript
-interface ProjectManager {
-  leftPanel: {
-    width: number;
-    content: Timeline | DocumentViewer;
-  };
-  rightPanel: {
-    content: Chat;
-  };
-  divider: ResizablePanel;
+interface BackendStack {
+  runtime: 'Node.js';
+  framework: 'Express';
+  language: 'TypeScript';
+  fileSystem: 'Node.js fs/promises';
 }
 ```
 
-### Estrutura de Documentos
-```typescript
-interface Document {
-  id: string;
-  name: string;
-  phase: DocumentPhase; // 'DVP' | 'DRS' | 'DAS'
-  status: DocumentStatus; // 'pending' | 'in-progress' | 'completed'
-  progress: number;
-  content?: {
-    title: string;
-    description: string;
-    sections: {
-      title: string;
-      content: string;
-      subsections?: {
-        title: string;
-        content: string;
-      }[];
-    }[];
-  };
-}
-```
-
-### Sistema de Chat
-```typescript
-interface Message {
-  id: string;
-  content: string;
-  sender: 'user' | 'assistant';
-  reference?: string; // Referência a seções do documento
-}
-```
-
-## 🔧 Componentes
-
-### 1. Timeline
-- Exibe fases do projeto (DVP, DRS, DAS)
-- Mostra progresso geral de cada fase
-- Lista documentos com progresso individual
-- Permite navegação para visualização de documentos
-
-### 2. DocumentViewer
-- Visualização detalhada de documentos
-- Suporte a modo tela cheia
-- Sistema de comentários por seção
-- Estrutura hierárquica de conteúdo
-- Referências diretas para o chat
-
-### 3. Chat
-- Interface de comunicação com Claude
-- Suporte a referências de documentos
-- Histórico de mensagens estilizado
-- Input expansível com preview de referências
-
-## 🎨 Estilização
-
-### Tema Base
-```css
-:root {
-  /* Cores do Tema Claro */
-  --background: rgb(243 244 246); /* gray-100 */
-  --foreground: rgb(255 255 255); /* white */
-  --text: rgb(17 24 39); /* gray-900 */
-  --border: rgb(229 231 235); /* gray-200 */
-  --primary: rgb(59 130 246); /* blue-500 */
-}
-
-.dark {
-  /* Cores do Tema Escuro */
-  --background: rgb(17 24 39); /* gray-900 */
-  --foreground: rgb(31 41 55); /* gray-800 */
-  --text: rgb(255 255 255); /* white */
-  --border: rgb(75 85 99); /* gray-600 */
-  --primary: rgb(59 130 246); /* blue-500 */
-}
-```
-
-### Componentes Visuais
-- Cards com sombras e bordas arredondadas
-- Barras de progresso animadas
-- Transições suaves em interações
-- Feedback visual em elementos interativos
-- Ícones consistentes do Lucide
-
-## 🔄 Fluxo de Trabalho
-
-1. **Navegação de Documentos**
-   ```typescript
-   Timeline -> DocumentViewer -> Comentários -> Chat
-   ```
-
-2. **Sistema de Referências**
-   ```typescript
-   DocumentViewer -> Comentário -> Chat (com referência) -> Resposta
-   ```
-
-3. **Progresso do Projeto**
-   ```typescript
-   Fase -> Documentos -> Progresso Individual -> Progresso da Fase
-   ```
-
-## 🛠️ Próximos Passos
-
-1. **Migração para GitPod**
-   - Configurar ambiente de desenvolvimento
-   - Adaptar scripts de build
-   - Configurar variáveis de ambiente
-   - Preparar containers Docker
-
-2. **Integrações**
-   - API do Claude
-   - Sistema de persistência
-   - Autenticação
-   - Controle de versão de documentos
-
-3. **Melhorias Futuras**
-   - Exportação de documentos
-   - Templates personalizados
-   - Histórico de alterações
-   - Colaboração em tempo real
-
-## 📁 Estrutura de Diretórios
+## 📁 Estrutura do Projeto
 
 ```
 project-manager/
 ├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Chat/              # Componentes do chat
+│   │   │   │   ├── ChatInterface.tsx
+│   │   │   │   ├── ChatHeader.tsx
+│   │   │   │   ├── ChatInput.tsx
+│   │   │   │   └── MessageBubble.tsx
+│   │   │   ├── Layout/           # Componentes de layout
+│   │   │   │   └── SplitLayout.tsx
+│   │   │   ├── ProjectList/      # Lista de projetos
+│   │   │   │   └── ProjectList.tsx
+│   │   │   └── ui/              # Componentes reutilizáveis
+│   │   │       ├── Spinner.tsx
+│   │   │       └── ErrorMessage.tsx
+│   │   ├── contexts/            # Contextos React
+│   │   │   ├── ProjectContext.tsx
+│   │   │   └── ChatContext.tsx
+│   │   ├── services/           # Serviços de API
+│   │   │   └── ProjectService.ts
+│   │   └── types/             # Definições de tipos
+│   │       ├── project.ts
+│   │       └── chat.ts
+│   └── tests/                # Testes unitários
+│       └── __mocks__/
+├── server/
 │   └── src/
-│       ├── components/
-│       │   ├── Layout/
-│       │   │   ├── SplitLayout.tsx        # Layout dividido
-│       │   │   ├── Timeline.tsx           # Timeline do projeto
-│       │   │   └── ChatInterface.tsx      # Interface com Claude
-│       │   │
-│       │   ├── Documentation/
-│       │   │   ├── SchemaViewer.tsx       # Visualizador humanizado
-│       │   │   └── PrototypeViewer.tsx    # Visualizador de protótipos
-│       │   │
-│       │   └── Navigation/
-│       │       └── PhaseNavigator.tsx     # Navegação entre fases
-│       │
-│       ├── domains/
-│       │   ├── interview/
-│       │   │   ├── ClaudeIntegration.ts   # Integração com IA
-│       │   │   └── InterviewManager.ts    # Gestão de entrevistas
-│       │   │
-│       │   ├── documentation/
-│       │   │   ├── SchemaManager.ts       # Gestão de schemas
-│       │   │   └── Distributor.ts         # Distribuição de informações
-│       │   │
-│       │   └── validation/
-│       │       ├── SchemaValidator.ts     # Validação de schemas
-│       │       └── PrototypeValidator.ts  # Validação de protótipos
-│       │
-│       └── state/
-│           ├── ProjectContext.ts          # Estado do projeto
-│           └── TimelineContext.ts         # Estado da timeline
-│
+│       └── index.ts         # Servidor Express
 └── workspace/
-    └── managed-projects/
+    └── projects/           # Projetos gerenciados
         └── [project-name]/
-            ├── docs/                      # Documentação
-            │   ├── dvp/
-            │   ├── drs/
-            │   ├── das/
-            │   └── dadi/
-            │
-            ├── prototypes/                # Protótipos React
-            │   └── react/
-            │
-            └── metadata/                  # Metadados
-                ├── timeline.json          # Estado da timeline
-                └── progress.json          # Progresso do projeto
+            ├── docs/       # Documentação
+            ├── metadata/   # Metadados
+            └── prototypes/ # Protótipos
 ```
 
-## 🔧 Componentes do Sistema
+## 🔧 Componentes
 
-### Gerenciador de Timeline
+### ProjectList
 ```typescript
-class TimelineManager {
-  phases: Phase[];
-  currentPhase: Phase;
-  
-  async navigateToPhase(phaseId: string): Promise<void> {
-    const phase = this.phases.find(p => p.id === phaseId);
-    await this.loadPhaseContent(phase);
-    await this.updateChatContext(phase);
-  }
-  
-  async updateProgress(phase: Phase): Promise<void> {
-    const progress = await this.calculateProgress(phase);
-    await this.updateUI(progress);
+/**
+ * Lista de projetos disponíveis no workspace
+ * - Carrega e exibe todos os projetos
+ * - Mostra status de cada fase
+ * - Permite navegação para projeto específico
+ */
+interface ProjectListProps {
+  // Componente não requer props
+}
+```
+
+### ChatInterface
+```typescript
+/**
+ * Interface de chat com o assistente
+ * - Exibe histórico de mensagens
+ * - Permite envio de mensagens
+ * - Mostra estados de loading
+ * - Gerencia erros
+ */
+interface Message {
+  id: string;
+  type: 'user' | 'assistant';
+  content: string;
+  timestamp: Date;
+}
+```
+
+### SplitLayout
+```typescript
+/**
+ * Layout dividido com painéis redimensionáveis
+ */
+interface SplitLayoutProps {
+  leftPanel: ReactNode;
+  rightPanel: ReactNode;
+}
+```
+
+## 📊 Gerenciamento de Estado
+
+### ProjectContext
+```typescript
+interface ProjectContextData {
+  currentProject: Project | null;
+  projectMetadata: ProgressState | null;
+  projectTimeline: TimelineState | null;
+  loading: boolean;
+  error: string | null;
+  setCurrentProject: (project: Project) => void;
+  loadProjectData: (projectId: string) => Promise<void>;
+}
+```
+
+### ChatContext
+```typescript
+interface ChatContextData {
+  messages: Message[];
+  loading: boolean;
+  error: string | null;
+  sendMessage: (content: string) => Promise<void>;
+  clearMessages: () => void;
+}
+```
+
+## 🧪 Testes
+
+### Configuração
+```javascript
+{
+  preset: 'ts-jest',
+  testEnvironment: 'jsdom',
+  setupFilesAfterEnv: ['./src/setupTests.ts'],
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   }
 }
 ```
 
-### Visualizador Humanizado
-```typescript
-class HumanizedViewer {
-  async renderSchema(schema: Schema): Promise<ReactNode> {
-    const humanized = await this.transformToHuman(schema);
-    return this.createInteractiveView(humanized);
-  }
-  
-  async updateSchema(updates: Partial<Schema>): Promise<void> {
-    await this.validateUpdates(updates);
-    await this.applyUpdates(updates);
-    await this.refreshView();
-  }
-}
-```
+### Cobertura de Testes
+- Componentes principais
+- Contextos
+- Serviços
+- Casos de sucesso e erro
+- Estados de loading
+- Interações do usuário
 
-### Validador de Protótipos
+### Exemplos de Testes
 ```typescript
-class PrototypeValidator {
-  async validateAgainstDocs(
-    prototype: ReactComponent
-  ): Promise<ValidationResult> {
-    const docs = await this.getRelatedDocs(prototype);
-    const analysis = await this.analyzePrototype(prototype);
-    
-    return this.compareWithDocs(analysis, docs);
-  }
-}
+describe('ProjectList', () => {
+  it('deve mostrar loading ao iniciar');
+  it('deve mostrar a lista de projetos quando carregada');
+  it('deve mostrar erro quando falhar');
+  it('deve navegar para o projeto ao clicar');
+});
+
+describe('ChatInterface', () => {
+  it('deve mostrar a mensagem inicial do assistente');
+  it('deve permitir enviar uma mensagem');
+  it('não deve enviar mensagem vazia');
+  it('deve desabilitar input durante loading');
+});
 ```
 
 ## 🤖 Integração com Claude
 
-### Gerenciador de Entrevistas
+### Fluxo de Mensagens
 ```typescript
-class ClaudeInterviewManager {
-  async conductInterview(): Promise<void> {
-    // Inicialização
-    await this.showWelcome();
-    const project = await this.handleProjectSelection();
-    
-    // Processo de entrevista
-    while (!this.isComplete()) {
-      const question = await this.generateNextQuestion();
-      const response = await this.getResponse(question);
-      
-      await this.processResponse(response);
-      await this.updateTimeline();
-    }
-  }
+interface ChatFlow {
+  userMessage: {
+    type: 'user';
+    content: string;
+    context?: {
+      projectId: string;
+      currentPhase: string;
+      documentReference?: string;
+    };
+  };
   
-  private async processResponse(response: string): Promise<void> {
-    const analysis = await this.analyzeResponse(response);
-    await this.distributeToSchemas(analysis);
-    await this.validateConsistency();
-  }
+  assistantResponse: {
+    type: 'assistant';
+    content: string;
+    actions?: {
+      updateDocument?: DocumentUpdate;
+      changePhase?: PhaseTransition;
+      requestInfo?: InfoRequest;
+    };
+  };
 }
 ```
 
-### Distribuidor de Informações
-```typescript
-class InformationDistributor {
-  async distribute(
-    information: Information,
-    context: Context
-  ): Promise<void> {
-    // Identificar schemas relevantes
-    const schemas = await this.identifyRelevantSchemas(information);
-    
-    // Distribuir informações
-    for (const schema of schemas) {
-      await this.updateSchema(schema, information);
-    }
-    
-    // Validar consistência
-    await this.validateUpdates();
-    
-    // Atualizar timeline
-    await this.updateProgress();
-  }
-}
-``` 
+### Próximos Passos
+1. **Implementação da API do Claude**
+   - Integração com o serviço
+   - Gerenciamento de contexto
+   - Processamento de ações
+
+2. **Sistema de Documentos**
+   - Editor de documentos
+   - Controle de versão
+   - Referências no chat
+
+3. **Melhorias de UX**
+   - Feedback em tempo real
+   - Atalhos de teclado
+   - Temas claro/escuro
+
+4. **Expansão de Testes**
+   - Testes E2E
+   - Testes de integração
+   - Métricas de cobertura 

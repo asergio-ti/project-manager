@@ -18,11 +18,23 @@ class ProjectService {
   constructor() {
     // Determina a URL base com base no ambiente
     const isCodespace = window.location.hostname.includes('github.dev');
-    this.baseUrl = isCodespace
-      ? 'https://curly-dollop-9pg67x7x5g4hxjgx-3001.app.github.dev/workspace/projects'
-      : 'http://localhost:3001/workspace/projects';
+    const hostname = window.location.hostname;
     
-    console.log('ProjectService inicializado com baseUrl:', this.baseUrl);
+    if (isCodespace) {
+      // Extrai o identificador do Codespace do hostname atual
+      // Format: curly-dollop-9pg67x7x5g4hxjgx-3000.app.github.dev
+      const parts = hostname.split('.');
+      const prefix = parts[0]; // curly-dollop-9pg67x7x5g4hxjgx-3000
+      const serverPrefix = prefix.replace('-3000', '-3001'); // substitui a porta
+      this.baseUrl = `https://${serverPrefix}.${parts.slice(1).join('.')}/workspace/projects`;
+    } else {
+      this.baseUrl = 'http://localhost:3001/workspace/projects';
+    }
+    
+    console.log('ProjectService inicializado com:');
+    console.log('- Hostname atual:', hostname);
+    console.log('- É Codespace?', isCodespace);
+    console.log('- URL base:', this.baseUrl);
   }
 
   async listProjects(): Promise<Project[]> {

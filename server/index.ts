@@ -41,20 +41,17 @@ const port = 3001;
 
 // Middleware para CORS
 app.use((req, res, next) => {
-  const allowedOrigins = [
-    'http://localhost:3000',
-    'https://curly-dollop-9pg67x7x5g4hxjgx-3000.app.github.dev',
-    'https://curly-dollop-9pg67x7x5g4hxjgx.github.dev'
-  ];
-  
   const origin = req.headers.origin;
   console.log('Requisição recebida de:', origin);
   
-  if (origin && allowedOrigins.includes(origin)) {
-    res.header('Access-Control-Allow-Origin', origin);
-    console.log('CORS permitido para:', origin);
-  } else {
-    console.log('Origem não permitida:', origin);
+  // Permite qualquer origem do github.dev ou localhost
+  if (origin) {
+    if (origin.includes('.github.dev') || origin === 'http://localhost:3000') {
+      res.header('Access-Control-Allow-Origin', origin);
+      console.log('CORS permitido para:', origin);
+    } else {
+      console.log('Origem não permitida:', origin);
+    }
   }
   
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');

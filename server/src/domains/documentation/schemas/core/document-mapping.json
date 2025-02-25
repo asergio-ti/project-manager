@@ -1,0 +1,177 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Document Mapping Schema",
+  "description": "Mapeamento entre normas ISO/IEC e documentos do projeto",
+  "type": "object",
+  "required": ["documentTypes"],
+  "properties": {
+    "documentTypes": {
+      "type": "object",
+      "required": ["DVP", "DRS", "DAS", "DADI"],
+      "properties": {
+        "DVP": {
+          "type": "object",
+          "required": ["baseStandards", "sections"],
+          "properties": {
+            "baseStandards": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["ISO/IEC 29110"]
+              },
+              "description": "Normas ISO/IEC base para este documento"
+            },
+            "sections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "file", "schema"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da seção"
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Nome do arquivo a ser gerado"
+                  },
+                  "schema": {
+                    "type": "string",
+                    "description": "Caminho do schema a ser usado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "DRS": {
+          "type": "object",
+          "required": ["baseStandards", "sections"],
+          "properties": {
+            "baseStandards": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["ISO/IEC 25010", "ISO/IEC 12207"]
+              },
+              "description": "Normas ISO/IEC base para este documento"
+            },
+            "sections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "file", "schema"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da seção"
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Nome do arquivo a ser gerado"
+                  },
+                  "schema": {
+                    "type": "string",
+                    "description": "Caminho do schema a ser usado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "DAS": {
+          "type": "object",
+          "required": ["baseStandards", "sections"],
+          "properties": {
+            "baseStandards": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["ISO/IEC 42010", "ISO/IEC 15026"]
+              },
+              "description": "Normas ISO/IEC base para este documento"
+            },
+            "sections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "file", "schema"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da seção"
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Nome do arquivo a ser gerado"
+                  },
+                  "schema": {
+                    "type": "string",
+                    "description": "Caminho do schema a ser usado"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "DADI": {
+          "type": "object",
+          "required": ["baseStandards", "sections"],
+          "properties": {
+            "baseStandards": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": ["ISO/IEC 27001", "ISO/IEC 16085"]
+              },
+              "description": "Normas ISO/IEC base para este documento"
+            },
+            "sections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "file", "schema"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Nome da seção"
+                  },
+                  "file": {
+                    "type": "string",
+                    "description": "Nome do arquivo a ser gerado"
+                  },
+                  "schema": {
+                    "type": "string",
+                    "description": "Caminho do schema a ser usado"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "defaultValues": {
+      "type": "object",
+      "required": ["metadata"],
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "required": ["version", "status"],
+          "properties": {
+            "version": {
+              "type": "string",
+              "default": "1.0.0",
+              "description": "Versão inicial do documento"
+            },
+            "status": {
+              "type": "string",
+              "default": "draft",
+              "description": "Status inicial do documento"
+            }
+          }
+        }
+      }
+    }
+  }
+} 

@@ -18,6 +18,19 @@ describe('AIService', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        
+        // Mock da resposta inicial do Claude
+        const mockWelcomeResponse: ClaudeResponse = {
+            id: 'welcome-123',
+            model: 'claude-3-sonnet',
+            role: 'assistant',
+            content: 'Olá! Como posso ajudar?',
+            stop_reason: 'end_turn',
+            stop_sequence: null,
+            usage: { input_tokens: 5, output_tokens: 10 }
+        };
+        
+        MockedClaudeService.prototype.sendMessage.mockResolvedValue(mockWelcomeResponse);
         service = new AIService(mockConfig);
     });
 

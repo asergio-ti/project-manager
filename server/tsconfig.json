@@ -1,21 +1,23 @@
 {
   "compilerOptions": {
-    "target": "es2017",
+    "target": "es2018",
     "module": "commonjs",
-    "lib": ["es2017", "es7", "es6"],
-    "declaration": true,
-    "outDir": "dist",
+    "lib": ["es2018"],
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
-      "@server/*": ["src/*"],
-      "@schemas/*": ["src/schemas/*"],
-      "@domains/*": ["src/domains/*"],
-      "@types/*": ["src/domains/types/*"]
-    }
+      "@/*": ["src/*"]
+    },
+    "types": ["jest", "node"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*", "src/**/*.test.ts"],
+  "exclude": ["node_modules"]
 }

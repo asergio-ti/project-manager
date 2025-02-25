@@ -17,26 +17,46 @@ export class AIService {
     }
 
     async startConversation(projectId: string, phase: 'DVP' | 'DRS' | 'DAS' | 'DADI'): Promise<ConversationState> {
-        const initialState: ConversationState = {
-            projectId,
-            messages: [],
-            currentPhase: phase,
-            context: {
-                completedFields: [],
-                pendingFields: []
-            }
-        };
+        try {
+            // Configurar estado inicial
+            const initialState: ConversationState = {
+                projectId,
+                messages: [],
+                currentPhase: phase,
+                context: {
+                    completedFields: [],
+                    pendingFields: []
+                }
+            };
 
-        // Adicionar mensagem inicial do assistente
-        const welcomeMessage = await this.createAssistantMessage(
-            'Olá! Sou seu assistente do Project Manager. Vou te ajudar a documentar seu projeto. Vamos começar com algumas perguntas sobre a visão geral do projeto.',
-            { projectId, phase }
-        );
+            // Registrar conversa antes de qualquer operação
+            this.conversations.set(projectId, initialState);
 
-        initialState.messages.push(welcomeMessage);
-        this.conversations.set(projectId, initialState);
+            // Obter mensagem inicial do Claude
+            const welcomeResponse = await this.claudeService.sendMessage(
+                [{ role: 'assistant', content: 'Olá! Como posso ajudar?' }]
+            );
 
-        return initialState;
+            // Adicionar mensagem inicial do assistente com contexto mínimo
+            const welcomeMessage = {
+                id: Date.now().toString(),
+                role: 'assistant' as const,
+                content: welcomeResponse.content,
+                timestamp: new Date(),
+                context: {
+                    projectId,
+                    phase
+                }
+            };
+
+            initialState.messages.push(welcomeMessage);
+
+            return initialState;
+        } catch (error) {
+            // Remover conversa em caso de erro
+            this.conversations.delete(projectId);
+            throw new Error('Erro ao iniciar conversa');
+        }
     }
 
     async processMessage(projectId: string, content: string): Promise<ChatMessage> {
@@ -50,57 +70,96 @@ export class AIService {
             projectId,
             phase: conversation.currentPhase
         });
-        conversation.messages.push(userMessage);
 
-        // Converter mensagens para formato do Claude
-        const claudeHistory = this.convertToCloudeMessages(conversation.messages);
-
-        // Analisar contexto usando Claude
-        const analysisResponse = await this.claudeService.analyzeContext(content, claudeHistory);
-        console.log('Resposta do analyzeContext:', analysisResponse.content);
-        let analysis: ContextAnalysis;
         try {
-            analysis = JSON.parse(analysisResponse.content);
-        } catch (error) {
-            console.error('Erro ao fazer parse da resposta:', error);
-            // Se a resposta não for um JSON válido, criar uma análise padrão
-            analysis = {
-                detectedPhase: conversation.currentPhase,
-                detectedFields: [],
-                suggestions: [],
-                nextQuestion: undefined
-            };
-        }
+            // Converter mensagens para formato do Claude
+            const claudeHistory = this.convertToCloudeMessages(conversation.messages);
 
-        // Gerar resposta do assistente usando Claude
-        const responseMessage = await this.claudeService.generateResponse(
-            content,
-            analysisResponse.content,
-            claudeHistory
-        );
-
-        // Criar mensagem do assistente
-        const assistantMessage = this.createAssistantMessage(
-            responseMessage.content,
-            {
-                projectId,
-                phase: conversation.currentPhase,
-                confidence: 0.9 // TODO: Calcular confiança baseado na análise
+            // Analisar contexto da mensagem
+            let analysisResponse;
+            try {
+                analysisResponse = await this.claudeService.analyzeContext(content, claudeHistory);
+            } catch (error: any) {
+                if (error.message?.includes('Erro na API do Claude: Erro desconhecido')) {
+                    throw new Error('Erro inesperado ao processar mensagem');
+                }
+                if (error.message?.includes('Erro na API do Claude')) {
+                    throw error;
+                }
+                throw new Error('Erro inesperado ao processar mensagem');
             }
-        );
 
-        conversation.messages.push(assistantMessage);
+            let analysis: ContextAnalysis;
+            try {
+                const parsedAnalysis = JSON.parse(analysisResponse.content);
+                if (this.isValidAnalysisFormat(parsedAnalysis)) {
+                    analysis = parsedAnalysis;
+                } else {
+                    analysis = this.createDefaultAnalysis(conversation.currentPhase);
+                }
+            } catch (error) {
+                analysis = this.createDefaultAnalysis(conversation.currentPhase);
+            }
 
-        // Atualizar estado da conversa
-        conversation.context.lastAnalysis = analysis;
-        if (analysis.nextQuestion) {
-            conversation.context.lastQuestion = analysis.nextQuestion;
+            // Atualizar campos baseado na análise
+            this.updateFieldsStatus(conversation, analysis);
+
+            // Gerar resposta do assistente usando Claude
+            let responseMessage;
+            try {
+                responseMessage = await this.claudeService.generateResponse(
+                    content,
+                    analysisResponse.content,
+                    claudeHistory
+                );
+
+                // Validar resposta do assistente
+                if (!responseMessage?.content) {
+                    throw new Error('Resposta inválida do assistente');
+                }
+            } catch (error: any) {
+                if (error.message === 'Erro na API do Claude: Resposta inválida') {
+                    throw new Error('Resposta inválida do assistente');
+                }
+                if (error.message?.includes('Erro na API do Claude: Erro desconhecido')) {
+                    throw new Error('Erro inesperado ao processar mensagem');
+                }
+                if (error.message?.includes('Erro na API do Claude')) {
+                    throw error;
+                }
+                throw new Error('Erro inesperado ao processar mensagem');
+            }
+
+            // Criar mensagem do assistente
+            const assistantMessage = this.createAssistantMessage(
+                responseMessage.content,
+                {
+                    projectId,
+                    phase: conversation.currentPhase,
+                    suggestions: analysis.suggestions.map(s => s.description),
+                    confidence: this.calculateConfidence(analysis),
+                    detectedFields: analysis.detectedFields
+                }
+            );
+
+            // Atualizar estado da conversa
+            conversation.messages.push(userMessage);
+            conversation.messages.push(assistantMessage);
+            conversation.context.lastAnalysis = analysis;
+            if (analysis.nextQuestion) {
+                conversation.context.lastQuestion = analysis.nextQuestion;
+            }
+
+            return assistantMessage;
+        } catch (error: any) {
+            if (error.message === 'Resposta inválida do assistente') {
+                throw error;
+            }
+            if (error.message?.includes('Erro na API do Claude')) {
+                throw error;
+            }
+            throw new Error('Erro inesperado ao processar mensagem');
         }
-
-        // Atualizar campos completados/pendentes
-        this.updateFieldsStatus(conversation, analysis);
-
-        return assistantMessage;
     }
 
     private convertToCloudeMessages(messages: ChatMessage[]): ClaudeMessage[] {
@@ -121,12 +180,17 @@ export class AIService {
     }
 
     private createAssistantMessage(content: string, context: MessageContext): ChatMessage {
+        const messageContext = { ...context };
+        if (context.suggestions && context.suggestions.length > 0) {
+            messageContext.suggestions = context.suggestions;
+        }
+
         return {
             id: Date.now().toString(),
             role: 'assistant',
-            content,
+            content: content,
             timestamp: new Date(),
-            context
+            context: messageContext
         };
     }
 
@@ -141,5 +205,63 @@ export class AIService {
                     .filter(f => f !== field.field);
             }
         }
+    }
+
+    private isValidAnalysisFormat(analysis: any): analysis is ContextAnalysis {
+        return (
+            analysis &&
+            typeof analysis === 'object' &&
+            // Validar campos obrigatórios
+            Array.isArray(analysis.detectedFields) &&
+            Array.isArray(analysis.suggestions) &&
+            // Validar estrutura dos campos detectados
+            analysis.detectedFields.every((field: any) => 
+                typeof field === 'object' &&
+                typeof field.phase === 'string' &&
+                typeof field.field === 'string' &&
+                (field.confidence === undefined || typeof field.confidence === 'number') &&
+                field.value !== undefined
+            ) &&
+            // Validar fase do projeto
+            (!analysis.detectedPhase || ['DVP', 'DRS', 'DAS', 'DADI'].includes(analysis.detectedPhase)) &&
+            // Validar sugestões
+            analysis.suggestions.every((suggestion: any) => 
+                typeof suggestion === 'object' &&
+                typeof suggestion.type === 'string' &&
+                ['field_update', 'next_question', 'validation'].includes(suggestion.type) &&
+                typeof suggestion.description === 'string' &&
+                typeof suggestion.confidence === 'number'
+            ) &&
+            // Validar nextQuestion opcional
+            (analysis.nextQuestion === undefined || typeof analysis.nextQuestion === 'string')
+        );
+    }
+
+    private createDefaultAnalysis(phase: 'DVP' | 'DRS' | 'DAS' | 'DADI'): ContextAnalysis {
+        return {
+            detectedPhase: phase,
+            detectedFields: [],
+            suggestions: [
+                {
+                    type: 'next_question',
+                    description: 'Forneça mais informações sobre o projeto',
+                    confidence: 0.8
+                }
+            ],
+            nextQuestion: 'Pode me dar mais detalhes sobre o que precisa ser documentado?'
+        };
+    }
+
+    private calculateConfidence(analysis: ContextAnalysis): number {
+        if (!analysis.detectedFields.length) {
+            return 0.5;
+        }
+
+        const avgConfidence = analysis.detectedFields.reduce(
+            (sum, field) => sum + (field.confidence || 0),
+            0
+        ) / analysis.detectedFields.length;
+
+        return Math.min(Math.max(avgConfidence, 0), 1);
     }
 } 

@@ -1,0 +1,314 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 12207 Software Life Cycle Processes Schema",
+  "description": "Schema para processos de ciclo de vida de software seguindo ISO/IEC 12207:2017",
+  "type": "object",
+  "required": ["lifecycleProcesses"],
+  "properties": {
+    "lifecycleProcesses": {
+      "type": "object",
+      "required": ["agreement", "organizational", "technical", "support"],
+      "properties": {
+        "agreement": {
+          "type": "object",
+          "required": ["acquisition", "supply"],
+          "properties": {
+            "acquisition": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            },
+            "supply": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "organizational": {
+          "type": "object",
+          "required": ["lifecycle_management", "infrastructure_management", "project_portfolio_management", "human_resource_management", "quality_management"],
+          "properties": {
+            "lifecycle_management": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            },
+            "infrastructure_management": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            },
+            "project_portfolio_management": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "technical": {
+          "type": "object",
+          "required": ["requirements", "architecture", "design", "implementation", "verification", "validation", "operation", "maintenance"],
+          "properties": {
+            "requirements": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            },
+            "architecture": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "support": {
+          "type": "object",
+          "required": ["documentation", "configuration_management", "quality_assurance", "verification", "validation", "review", "audit", "problem_resolution"],
+          "properties": {
+            "documentation": {
+              "type": "object",
+              "required": ["activities", "tasks", "outcomes"],
+              "properties": {
+                "activities": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/activity"
+                  }
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/task"
+                  }
+                },
+                "outcomes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/outcome"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "activity": {
+      "type": "object",
+      "required": ["id", "name", "description", "purpose", "outcomes"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único da atividade"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome da atividade"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição detalhada da atividade"
+        },
+        "purpose": {
+          "type": "string",
+          "description": "Propósito da atividade"
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/outcome"
+          }
+        }
+      }
+    },
+    "task": {
+      "type": "object",
+      "required": ["id", "name", "description", "inputs", "outputs"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único da tarefa"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome da tarefa"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição detalhada da tarefa"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Entradas necessárias para a tarefa"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Saídas produzidas pela tarefa"
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "required": ["id", "description", "criteria"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único do resultado"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição do resultado esperado"
+        },
+        "criteria": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Critérios de avaliação do resultado"
+        }
+      }
+    }
+  }
+} 

@@ -1,0 +1,105 @@
+{
+  "documentTypes": {
+    "DVP": {
+      "baseStandards": ["ISO/IEC 29110"],
+      "sections": [
+        {
+          "name": "Visão do Projeto",
+          "file": "docs/dvp/DVP_vision.json",
+          "schema": "schemas/iso/software/ISO_29110_schema.json#/definitions/project_vision"
+        },
+        {
+          "name": "Modelo de Negócio",
+          "file": "docs/dvp/DVP_businessModel.json",
+          "schema": "schemas/iso/software/ISO_29110_schema.json#/definitions/business_model"
+        }
+      ]
+    },
+    "DRS": {
+      "baseStandards": ["ISO/IEC 25010", "ISO/IEC 12207"],
+      "sections": [
+        {
+          "name": "Introdução",
+          "file": "docs/drs/DRS_introduction.json",
+          "schema": "schemas/iso/lifecycle/ISO_12207_schema.json#/definitions/requirements_introduction"
+        },
+        {
+          "name": "Requisitos Funcionais",
+          "file": "docs/drs/DRS_functionalRequirements.json",
+          "schema": "schemas/iso/quality/ISO_25010_schema.json#/definitions/functional_suitability"
+        },
+        {
+          "name": "Casos de Uso",
+          "file": "docs/drs/DRS_useCases.json",
+          "schema": "schemas/iso/lifecycle/ISO_12207_schema.json#/definitions/use_cases"
+        },
+        {
+          "name": "Regras de Negócio",
+          "file": "docs/drs/DRS_businessRules.json",
+          "schema": "schemas/iso/lifecycle/ISO_12207_schema.json#/definitions/business_rules"
+        }
+      ]
+    },
+    "DAS": {
+      "baseStandards": ["ISO/IEC 42010", "ISO/IEC 15026"],
+      "sections": [
+        {
+          "name": "Introdução",
+          "file": "docs/das/DAS_introduction.json",
+          "schema": "schemas/iso/assurance/ISO_15026_schema.json#/definitions/architecture_introduction"
+        },
+        {
+          "name": "Visões Arquiteturais",
+          "file": "docs/das/DAS_architecturalViews.json",
+          "schema": "schemas/iso/assurance/ISO_15026_schema.json#/definitions/architectural_views"
+        },
+        {
+          "name": "Decisões Arquiteturais",
+          "file": "docs/das/DAS_architecturalDecisions.json",
+          "schema": "schemas/iso/assurance/ISO_15026_schema.json#/definitions/architectural_decisions"
+        },
+        {
+          "name": "Componentes",
+          "file": "docs/das/DAS_components.json",
+          "schema": "schemas/iso/assurance/ISO_15026_schema.json#/definitions/components"
+        }
+      ]
+    },
+    "DADI": {
+      "baseStandards": ["ISO/IEC 27001", "ISO/IEC 16085"],
+      "sections": [
+        {
+          "name": "Controle de Documentos",
+          "file": "docs/dadi/DADI_documentControl.json",
+          "schema": "schemas/iso/security/ISO_27001_schema.json#/definitions/document_control"
+        },
+        {
+          "name": "Segurança",
+          "file": "docs/dadi/DADI_security.json",
+          "schema": "schemas/iso/security/ISO_27001_schema.json#/definitions/security_controls"
+        },
+        {
+          "name": "Monitoramento",
+          "file": "docs/dadi/DADI_monitoring.json",
+          "schema": "schemas/iso/security/ISO_27001_schema.json#/definitions/monitoring"
+        },
+        {
+          "name": "Containerização",
+          "file": "docs/dadi/DADI_containerization.json",
+          "schema": "schemas/iso/security/ISO_27001_schema.json#/definitions/containerization"
+        },
+        {
+          "name": "Ambiente de Desenvolvimento",
+          "file": "docs/dadi/DADI_developmentEnvironment.json",
+          "schema": "schemas/iso/security/ISO_27001_schema.json#/definitions/development_environment"
+        }
+      ]
+    }
+  },
+  "defaultValues": {
+    "metadata": {
+      "version": "1.0.0",
+      "status": "draft"
+    }
+  }
+} 

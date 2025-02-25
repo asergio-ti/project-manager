@@ -1,17 +1,23 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "target": "es2018",
+    "module": "commonjs",
+    "lib": ["es2018"],
     "outDir": "./dist",
-    "rootDir": ".",
+    "rootDir": "./src",
     "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "resolveJsonModule": true
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    },
+    "types": ["jest", "node"]
   },
-  "include": ["./**/*"],
-  "exclude": ["node_modules", "dist"]
-} 
+  "include": ["src/**/*", "src/**/*.test.ts"],
+  "exclude": ["node_modules"]
+}

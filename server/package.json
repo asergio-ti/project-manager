@@ -2,20 +2,47 @@
   "name": "project-manager-server",
   "version": "1.0.0",
   "description": "Servidor para o Project Manager",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "start": "ts-node index.ts",
-    "dev": "nodemon --exec ts-node index.ts"
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "clean": "rimraf dist",
+    "test": "node --expose-gc ./node_modules/.bin/jest --runInBand --detectOpenHandles --forceExit",
+    "test:watch": "node --expose-gc ./node_modules/.bin/jest --runInBand --watch",
+    "test:coverage": "node --expose-gc ./node_modules/.bin/jest --runInBand --coverage",
+    "test:ci": "node --expose-gc ./node_modules/.bin/jest --runInBand --ci --coverage",
+    "test:debug": "node --expose-gc --inspect-brk ./node_modules/.bin/jest --runInBand",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\""
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "@types/axios": "^0.14.4",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "winston": "^3.11.0"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.14",
+    "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.0",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
+    "eslint": "^8.56.0",
+    "jest": "^29.7.0",
     "nodemon": "^3.0.3",
+    "prettier": "^3.2.2",
+    "rimraf": "^5.0.5",
+    "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^5.3.3"
   }
-} 
+}

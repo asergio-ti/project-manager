@@ -1,0 +1,308 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ISO/IEC 25010 Software Quality Schema",
+  "description": "Schema para qualidade de software seguindo ISO/IEC 25010:2011",
+  "type": "object",
+  "required": ["qualityModel"],
+  "properties": {
+    "qualityModel": {
+      "type": "object",
+      "required": ["characteristics"],
+      "properties": {
+        "characteristics": {
+          "type": "object",
+          "required": [
+            "functionalSuitability",
+            "performanceEfficiency",
+            "compatibility",
+            "usability",
+            "reliability",
+            "security",
+            "maintainability",
+            "portability"
+          ],
+          "properties": {
+            "functionalSuitability": {
+              "type": "object",
+              "required": ["description", "subcharacteristics", "metrics"],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "description": "Descrição da característica"
+                },
+                "subcharacteristics": {
+                  "type": "object",
+                  "required": ["functional_completeness", "functional_correctness", "functional_appropriateness"],
+                  "properties": {
+                    "functional_completeness": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    },
+                    "functional_correctness": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    },
+                    "functional_appropriateness": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "metrics": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/metric"
+                  }
+                }
+              }
+            },
+            "performanceEfficiency": {
+              "type": "object",
+              "required": ["description", "subcharacteristics", "metrics"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "subcharacteristics": {
+                  "type": "object",
+                  "required": ["time_behaviour", "resource_utilization", "capacity"],
+                  "properties": {
+                    "time_behaviour": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    },
+                    "resource_utilization": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    },
+                    "capacity": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "metrics": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/metric"
+                  }
+                }
+              }
+            },
+            "compatibility": {
+              "type": "object",
+              "required": ["description", "subcharacteristics", "metrics"],
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "subcharacteristics": {
+                  "type": "object",
+                  "required": ["co_existence", "interoperability"],
+                  "properties": {
+                    "co_existence": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    },
+                    "interoperability": {
+                      "type": "object",
+                      "required": ["description", "metrics"],
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "metrics": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/definitions/metric"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "metrics": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/metric"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "measurements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["metric_id", "value", "date", "context"],
+            "properties": {
+              "metric_id": {
+                "type": "string",
+                "description": "ID da métrica sendo medida"
+              },
+              "value": {
+                "type": "number",
+                "description": "Valor medido"
+              },
+              "date": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Data e hora da medição"
+              },
+              "context": {
+                "type": "object",
+                "description": "Contexto da medição"
+              }
+            }
+          }
+        },
+        "evaluations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["characteristic", "rating", "justification"],
+            "properties": {
+              "characteristic": {
+                "type": "string",
+                "description": "Característica avaliada"
+              },
+              "rating": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Avaliação entre 0 e 1"
+              },
+              "justification": {
+                "type": "string",
+                "description": "Justificativa da avaliação"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "metric": {
+      "type": "object",
+      "required": ["id", "name", "description", "formula", "interpretation"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Identificador único da métrica"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nome da métrica"
+        },
+        "description": {
+          "type": "string",
+          "description": "Descrição detalhada da métrica"
+        },
+        "formula": {
+          "type": "string",
+          "description": "Fórmula de cálculo da métrica"
+        },
+        "interpretation": {
+          "type": "string",
+          "description": "Como interpretar os resultados da métrica"
+        },
+        "thresholds": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "description": "Valor mínimo aceitável"
+            },
+            "max": {
+              "type": "number",
+              "description": "Valor máximo aceitável"
+            },
+            "target": {
+              "type": "number",
+              "description": "Valor alvo"
+            }
+          }
+        }
+      }
+    }
+  }
+} 
